@@ -1,0 +1,12 @@
+.selection{
+    cursor: pointer;
+    transition: all 2s;
+}
+.selection-click{
+    height: 97%;
+    width: 97%;
+}
+.selection:hover{
+    height: 102%;
+    width: 102%;
+}
