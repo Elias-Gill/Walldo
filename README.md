@@ -5,7 +5,7 @@ changes). There are a lot of apps like this, but in most cases those are bloat (
 and they aren't fast and simple to use. That's why I decide to create this app for my personal use.
 
 ## Electron, that's awfull man...
-Yes, i know, electron is well know to be the opositte of blasingly fast, but I'm a idle person, so, i don't wanna spend
+Yes, i know, electron is well know to be the opositte of blasingly fast but I'm a idle person, so, i don't wanna spend
 time (wich i don't have) trying to make something with some magic language with his horrible libraries. With
 HTML, CSS and JS is really easy to make UI's.
 
