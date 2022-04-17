@@ -1,4 +1,3 @@
-
 const fs = window.require('fs');
 // busca imagenes dentro de las carpetas configuradas
 function lector(carpetas){
@@ -10,7 +9,7 @@ function lector(carpetas){
                 console.log(err);
             } else {
                 for (let i in res) {
-                    let aux = carpetas[carpeta]+res[i]
+                    let aux = "file://"+carpetas[carpeta]+res[i]
                     imagenes.push(aux);
                 }
             }
