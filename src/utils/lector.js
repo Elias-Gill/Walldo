@@ -1,19 +1,22 @@
 
-// funcion que busca imagenes dentro de las carpetas configuradas
-function lector(){
-    // TODO agregar la funcion que lee el archivo de configuracion y despues itera las carpetas
+const fs = window.require('fs');
+// busca imagenes dentro de las carpetas configuradas
+function lector(carpetas){
     //se guarda en un array las imagenes encontradas en la carpeta
-    let imagenes = importAll(require.context('/home/elias/Imagenes/fondos', true, /\.(jpg$|png$)/));
+    let imagenes = [];
+    for (let carpeta in carpetas){
+        fs.readdir(carpetas[carpeta], function(err, res){
+            if (err) {
+                console.log(err);
+            } else {
+                for (let i in res) {
+                    let aux = carpetas[carpeta]+res[i]
+                    imagenes.push(aux);
+                }
+            }
+        });
+    }
+    console.log(imagenes);
     return imagenes;
 } 
-
-function importAll(r) {
-    //retorna todas las imagenes que se encontraron en esa carpeta
-    let images = [];
-    r.keys().forEach(key => {
-        images.push({ pathLong: r(key), pathShort: key })
-    });
-    return images;
-}
-
 exports.lector = lector;

@@ -1,6 +1,6 @@
 .selection{
     cursor: pointer;
-    transition: all 4000ms;
+    transition: .4s;
 }
 .selection-click{
     height: 97%;

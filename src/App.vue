@@ -6,7 +6,7 @@
             <div v-for="image in images" :key="image" class="column is-one-quarter">
                 <div class="card">
                     <div  class="card-image selection">
-                        <img :src="image.pathLong" alt="">
+                        <img :src="image" alt="">
                     </div>
                 </div>
             </div>
@@ -17,16 +17,21 @@
 
 <script>
 const buscar_imagenes = require('./utils/lector.js').lector
+
+const fs = window.require('fs');
+const configFile = '/home/elias/Documentos/electron-app/configuracion/configuracion.json';
+let carpetas = JSON.parse(fs.readFileSync(configFile));
+
 export default {
     name: 'app',
     data () {
         return {
-            contador: 1,
             images: []
         }    
     },
     mounted() {
-        this.images = buscar_imagenes(); // cuando se monta, cargar las imagenes
+        this.images = buscar_imagenes(carpetas); // cuando se monta, cargar las imagenes
+        console.log(this.images);
     },
     // TODO seguir agregando los metodos para agregar carpetas o para refrescar la pagina
 }
