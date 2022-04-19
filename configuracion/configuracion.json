@@ -1,5 +1,10 @@
 {
-    "carpeta1": "/home/elias/Documentos/fondos/real_life/",
-    "carpeta2": "/home/elias/Documentos/fondos/neon/",
-    "carpeta3": "/home/elias/Documentos/fondos/IDK/"
+    "configs":{
+        "explorer_path": ""
+    },
+    "folders": {
+        "neon": "/home/elias/Documentos/fondos/real_life/",
+        "matriz": "/home/elias/Documentos/fondos/neon/",
+        "nuevo": "/home/elias/Documentos/fondos/IDK/"
+    }
 }

@@ -16,12 +16,7 @@
 </template>
 
 <script>
-const buscar_imagenes = require('./utils/lector.js').lector
-
-const fs = window.require('fs');
-const configFile = '/home/elias/Documentos/electron-app/configuracion/configuracion.json';
-let carpetas = JSON.parse(fs.readFileSync(configFile));
-
+const buscarImagenes = require('./utils/file_manager.js').search_images
 export default {
     name: 'app',
     data () {
@@ -30,7 +25,7 @@ export default {
         }    
     },
     mounted() {
-        this.images = buscar_imagenes(carpetas); // cuando se monta, cargar las imagenes
+        this.images = buscarImagenes(); // cuando se monta, cargar las imagenes
         console.log(this.images);
     },
     // TODO seguir agregando los metodos para agregar carpetas o para refrescar la pagina
