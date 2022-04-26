@@ -14,6 +14,3 @@ Just download the project and there will be an .exe, you know what to do after.
 It has to work ... maybe ... who knows, just try it ;)
 
 
-
-Besitos, besitos chau chau
-
