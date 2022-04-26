@@ -16,7 +16,7 @@
 </template>
 
 <script>
-const buscarImagenes = require('./utils/file_manager.js').search_images
+const buscarImagenes = require('./utils/file_manager.js').findAllImages
 export default {
     name: 'app',
     data () {
@@ -26,7 +26,8 @@ export default {
     },
     mounted() {
         this.images = buscarImagenes(); // cuando se monta, cargar las imagenes
-        console.log(this.images);
+
+        /* console.log(this.images); */
     },
     // TODO seguir agregando los metodos para agregar carpetas o para refrescar la pagina
 }
