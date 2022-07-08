@@ -1,5 +1,4 @@
 module github.com/elias-gill/walldo-in-go
-retract v1.1.3
 
 go 1.18
 
@@ -39,3 +38,5 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	honnef.co/go/js/dom v0.0.0-20210725211120-f030747120f2 // indirect
 )
+
+retract v1.1.3
