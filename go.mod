@@ -1,5 +1,5 @@
 module github.com/elias-gill/walldo-in-go
-retract v0.1.0
+retract v1.1.3
 
 go 1.18
 
