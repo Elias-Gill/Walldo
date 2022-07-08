@@ -31,12 +31,12 @@ func main() {
 	// botones
 	refresh_button := widget.NewButton("Restore", func() {
 		// utils.Config_preferences()
-        print("No implementado")
+		print("No implementado")
 	})
 
 	configs_button := widget.NewButton("Preferences", func() {
 		// utils.Config_preferences()
-        print("No implementado")
+		print("No implementado")
 	})
 
 	hbox := container.New(layout.NewHBoxLayout(), layout.NewSpacer(), refresh_button, configs_button)
