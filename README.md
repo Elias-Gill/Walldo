@@ -16,7 +16,7 @@ Walldo is written in pure Go so of course you have to install [Golang](https://g
 ### Windows
 After you have installed Go, simply open a new terminal (cmd) and run:
 ````
-go install -ldflags -H=windowsgui github.com/elias-gill/waldo-in-go@latest
+go install -ldflags -H=windowsgui github.com/elias-gill/walldo-in-go@latest
 ````
 Now Walldo must be available in your search bar as "waldo-in-go".
 You can create a direct access and change the icon if you want.
@@ -24,7 +24,7 @@ You can create a direct access and change the icon if you want.
 ### Linux
 Note: Linux is not the main target, I recommend looking for Feh or Nitrogen.
 ````
-go install github.com/elias-gill/waldo-in-go@latest
+go install github.com/elias-gill/walldo-in-go@latest
 ````
 Now you can run "walldo-in-go" on your terminal. If you are using some Desktop Enviroment you can create a direct 
 acces for the command.
