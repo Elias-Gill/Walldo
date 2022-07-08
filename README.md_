@@ -1,0 +1,26 @@
+# Walldo-in-Go
+A simple (static)wallpaper changer written in Go with the main goal to be light and fast.
+Mainly inspired by Nitrogen, Walldo allows you to set your "wallpapers" path and list all your images in on single and
+good lookin screen, change your wallpaper as fast as you can think and keep working. Nothing more and nothing less,
+simple and functional.
+
+#### Dependendies (IMPORTANT)
+For now Walldo relies on a external tool called
+"Libvips" wich has to be installed before the first run (instructions bellow).
+And of course you have to install [Golang](https://go.dev/doc/install).
+
+## Instalation
+After you have installed Go and Libvips just open a new terminal (cmd) and run:
+````
+go install github.com/elias-gill/waldo-in-go@latest
+````
+Now Walldo must be available in your search bar (write "waldo-in-go"). You can create a direct acces and change the icon if you want.
+
+### Libvips instalation
+Enter [here](https://github.com/libvips/build-win64-mxe/releases/tag/v8.12.2) and download "vips-dev-w64-all-8.12.2.zip" (or vips-dev-w32-all-8.12.2.zip, take care, this is not tested yet).
+Extract the .zip file and copy the folder into "C:\", then open the "enviroment variables settings" and add the vips folder into the "Path" variable.
+Restart your computer and your ready to Go.
+
+## Future goals
+- Add al simple button to get a random wallpaper from the internet.
+- Replace libvips with another pure go library with the less perfomance lost possible.
