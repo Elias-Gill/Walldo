@@ -1,7 +1,6 @@
 package utils
 
 import (
-
 	"github.com/reujab/wallpaper"
 )
 // const CurrentWallpaper = wallpaper.Get()

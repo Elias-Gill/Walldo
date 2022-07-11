@@ -1,24 +1,26 @@
 package main
 
 import (
+	"image/color"
+
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
+	explorer "github.com/elias-gill/walldo-in-go/file_explorer"
 	"github.com/elias-gill/walldo-in-go/utils"
-	"image/color"
 )
 
 func main() {
 	// instanciar la nueva ventana
-	myApp := app.New()
+	myApp := app.NewWithID("walldo")
 	w := myApp.NewWindow("Walldo in go")
 	w.Resize(fyne.NewSize(800, 500))
 
 	// generar la grilla de imagenes
-	grid := utils.NewContentGrid()
+	grid, grid_content := utils.NewContentGrid(&myApp)
 
 	// titulo de la app
 	titulo := canvas.NewText("Wallpapers with Go", color.White)
@@ -30,18 +32,25 @@ func main() {
 
 	// botones
 	refresh_button := widget.NewButton("Restore", func() {
-		// utils.Config_preferences()
-		print("No implementado")
+        utils.SetGridContent(grid_content)
 	})
 
 	configs_button := widget.NewButton("Preferences", func() {
-		// utils.Config_preferences()
-		print("No implementado")
+		// abrir el menu de configuraciones
+		explorer.ConfigWindow(&w)
 	})
 
 	hbox := container.New(layout.NewHBoxLayout(), layout.NewSpacer(), refresh_button, configs_button)
 	content := container.New(layout.NewBorderLayout(titulo, hbox, grid, nil), titulo, grid, hbox)
 	w.SetContent(content)
 	w.SetFixedSize(true)
+
+    // rellenar las imagenes solo despues de iniciar
+    // corre en una go routine para poder mostrar el menu grafico a la vez 
+    // que se generan las tumbnails
+    myApp.Lifecycle().SetOnStarted(func(){
+        go utils.SetGridContent(grid_content) 
+    })
+
 	w.ShowAndRun()
 }
