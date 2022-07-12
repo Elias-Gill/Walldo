@@ -5,6 +5,8 @@ Mainly inspired by Nitrogen (more like a knockoff  ¯\_( ͡❛͜ʖ ͡❛)_/¯ ),
 and displays them on a single screen.
 Change your wallpaper as fast as you want. Nothing more and nothing less, simple and functional.
 
+https://user-images.githubusercontent.com/79729891/178411925-53f0ed36-f6f4-4055-b398-61de74fd512c.mp4
+
 #### A wallpaper changer app ? Why ?... 
 As a person who likes to change his wallpaper very often, I was looking for an app that would allow me to do it in a 
 simple way and as fast as possible. In Linux there are many applications that can do that, 
