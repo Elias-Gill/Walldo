@@ -1,5 +1,6 @@
 # Walldo-in-Go
 A simple wallpaper changer written in Go with the main goal of being light and fast.
+
 Mainly inspired by Nitrogen (more like a knockoff  ¯\_( ͡❛͜ʖ ͡❛)_/¯ ), Walldo searches for your images, lists them all 
 and displays them on a single screen.
 Change your wallpaper as fast as you want. Nothing more and nothing less, simple and functional.
