@@ -3,7 +3,7 @@ module github.com/elias-gill/walldo-in-go
 go 1.18
 
 require (
-	fyne.io/fyne/v2 v2.2.2
+	fyne.io/fyne/v2 v2.2.3
 	github.com/disintegration/imaging v1.6.2
 	github.com/reujab/wallpaper v0.0.0-20210630195606-5f9f655b3740
 )

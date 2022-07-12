@@ -1,6 +1,6 @@
 # Walldo-in-Go
 A simple wallpaper changer written in Go with the main goal of being light and fast.
-Mainly inspired by Nitrogen (more like a cheap knockoff  ¯\_( ͡❛͜ʖ ͡❛)_/¯ ), Walldo searches for your images, lists them all 
+Mainly inspired by Nitrogen (more like a knockoff  ¯\_( ͡❛͜ʖ ͡❛)_/¯ ), Walldo searches for your images, lists them all 
 and displays them on a single screen.
 Change your wallpaper as fast as you want. Nothing more and nothing less, simple and functional.
 
@@ -18,7 +18,7 @@ After you have installed Go, simply open a new terminal (cmd) and run:
 ````
 go install -ldflags -H=windowsgui github.com/elias-gill/walldo-in-go@latest
 ````
-Now Walldo must be available in your search bar as "waldo-in-go".
+Now Walldo must be available in your search bar ```⊞ Win + S``` as "waldo-in-go".
 You can create a direct access and change the icon if you want.
 
 ### Linux
@@ -30,8 +30,8 @@ Now you can run "walldo-in-go" on your terminal. If you are using some Desktop E
 acces for the command.
 
 ## Goals
-- Be some sort of replace for Nitrogen or Feh for Windows. 
-- Be faster and lighter than other similar apps availables.
+- Be the replace for Nitrogen or Feh on Windows Systems. 
+- Be faster and lighter than other similar apps.
 
 ### Comming features (maybe)
 - A button to get a random wallpaper from the internet.

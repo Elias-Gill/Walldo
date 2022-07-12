@@ -9,7 +9,7 @@ import (
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
-	explorer "github.com/elias-gill/walldo-in-go/file_explorer"
+	dialogs "github.com/elias-gill/walldo-in-go/dialogs"
 	"github.com/elias-gill/walldo-in-go/utils"
 )
 
@@ -18,9 +18,14 @@ func main() {
 	myApp := app.NewWithID("walldo")
 	w := myApp.NewWindow("Walldo in go")
 	w.Resize(fyne.NewSize(800, 500))
+	var content *fyne.Container
+
+	// configuracion de usuario (parte estetica)
+	gridSize := myApp.Preferences().StringWithFallback("gridSize", "default")
+	layoutStyle := myApp.Preferences().StringWithFallback("layout", "default")
 
 	// generar la grilla de imagenes
-	grid, grid_content := utils.NewContentGrid(&myApp)
+	grid, grid_content := utils.NewContentGrid(gridSize)
 
 	// titulo de la app
 	titulo := canvas.NewText("Wallpapers with Go", color.White)
@@ -30,27 +35,34 @@ func main() {
 	titulo.Alignment = fyne.TextAlignCenter
 	titulo.TextSize = 18
 
-	// botones
-	refresh_button := widget.NewButton("Restore", func() {
-        utils.SetGridContent(grid_content)
+	// botones principales
+	refresh_button := widget.NewButton("Reload", func() {
+		// actualizar configuracion y recargar imagenes
+		gridSize = myApp.Preferences().StringWithFallback("gridSize", "default")
+		layoutStyle = myApp.Preferences().StringWithFallback("layout", "default")
+
+		grid_content.Layout = layout.NewGridWrapLayout(utils.SetGridSize(gridSize))
+		utils.SetNewContent(grid_content, layoutStyle)
+
+		grid.Refresh()
 	})
 
+	// abrir el menu de configuraciones
 	configs_button := widget.NewButton("Preferences", func() {
-		// abrir el menu de configuraciones
-		explorer.ConfigWindow(&w)
+		dialogs.ConfigWindow(&w, myApp, refresh_button)
 	})
 
 	hbox := container.New(layout.NewHBoxLayout(), layout.NewSpacer(), refresh_button, configs_button)
-	content := container.New(layout.NewBorderLayout(titulo, hbox, grid, nil), titulo, grid, hbox)
+	content = container.New(layout.NewBorderLayout(titulo, hbox, grid, nil), titulo, grid, hbox)
 	w.SetContent(content)
 	w.SetFixedSize(true)
 
-    // rellenar las imagenes solo despues de iniciar
-    // corre en una go routine para poder mostrar el menu grafico a la vez 
-    // que se generan las tumbnails
-    myApp.Lifecycle().SetOnStarted(func(){
-        go utils.SetGridContent(grid_content) 
-    })
+	// rellenar las imagenes solo despues de iniciar
+	// corre en una go routine para poder mostrar el menu grafico a la vez
+	// que se generan las tumbnails
+	myApp.Lifecycle().SetOnStarted(func() {
+		go utils.SetNewContent(grid_content, layoutStyle)
+	})
 
 	w.ShowAndRun()
 }
