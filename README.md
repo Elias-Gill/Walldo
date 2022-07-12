@@ -18,7 +18,7 @@ After you have installed Go, simply open a new terminal (cmd) and run:
 ````
 go install -ldflags -H=windowsgui github.com/elias-gill/walldo-in-go@latest
 ````
-Now Walldo must be available in your search bar ```⊞ Win + S``` as "waldo-in-go".
+Now Walldo must be available in your search bar ```Win```+```S``` as "waldo-in-go".
 You can create a direct access and change the icon if you want.
 
 ### Linux
