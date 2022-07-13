@@ -40,3 +40,5 @@ acces for the command.
 
 ### Comming features (maybe)
 - A button to get a random wallpaper from the internet.
+- Another button to set a random wallpaper.
+- More layouts like a list or a list with the image info
