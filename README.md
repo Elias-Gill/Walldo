@@ -5,9 +5,12 @@ Mainly inspired by Nitrogen (more like a knockoff  ¯\_( ͡❛͜ʖ ͡❛)_/¯ ),
 and displays them on a single screen.
 Change your wallpaper as fast as you want. Nothing more and nothing less, simple and functional.
 
+### Currently supported formats
+- JPG
+- PNG
+- JPEG
 
 https://user-images.githubusercontent.com/79729891/178412559-6814c48e-c154-4e37-abb8-588bf4076645.mp4
-
 
 #### A wallpaper changer app ? Why ?... 
 As a person who likes to change his wallpaper very often, I was looking for an app that would allow me to do it in a 
