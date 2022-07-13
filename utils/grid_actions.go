@@ -74,7 +74,6 @@ func SetGridSize(tamano string) fyne.Size {
 // Retorna la grilla de imagenes a ser mostradas.
 func NewContentGrid(gridSize string) (*fyne.Container, *fyne.Container) {
 	content_grid := container.New(layout.NewGridWrapLayout(SetGridSize(gridSize)))
-	grid := container.NewScroll(content_grid) // make the grid actually scrollable
-	grid.SetMinSize(fyne.NewSize(820, 500))
-	return container.NewCenter(grid), content_grid
+	grid := container.New(layout.NewPaddedLayout(), container.NewScroll(content_grid)) // make the grid actually scrollable
+	return grid, content_grid
 }

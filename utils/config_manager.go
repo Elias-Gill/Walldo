@@ -38,7 +38,7 @@ func readConfigFile() map[string][]string {
 	}
 
 	// Si no se encuentra el archivo de configuracion entonces lo crea
-    fileContent, err := os.Open(configDir)
+	fileContent, err := os.Open(configDir)
 	if err != nil {
 		fileContent = crearConfig(configDir, configPath)
 	}
@@ -55,10 +55,10 @@ func readConfigFile() map[string][]string {
 // crea el arhivo de configuracion por defecto dependiendo del OS
 // La data es archivo con "Paths": vacio
 func crearConfig(dir string, path string) *os.File {
-    // crear las carpetas necesarias
+	// crear las carpetas necesarias
 	os.MkdirAll(path, 0777)
 	os.MkdirAll(path+"resized_images", 0777)
-    os.Create(path+"config.json")
+	os.Create(path + "config.json")
 
 	var data *[]byte
 	data = setJsonData()

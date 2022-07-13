@@ -28,7 +28,7 @@ func main() {
 	grid, grid_content := utils.NewContentGrid(gridSize)
 
 	// titulo de la app
-	titulo := canvas.NewText("Wallpapers with Go", color.White)
+	titulo := canvas.NewText("Select your wallpaper", color.White)
 	titulo.TextStyle = fyne.TextStyle{
 		Bold: true,
 	}
@@ -53,13 +53,11 @@ func main() {
 	})
 
 	hbox := container.New(layout.NewHBoxLayout(), layout.NewSpacer(), refresh_button, configs_button)
-	content = container.New(layout.NewBorderLayout(titulo, hbox, grid, nil), titulo, grid, hbox)
+	content = container.New(layout.NewBorderLayout(titulo, hbox, nil, nil), titulo, grid, hbox)
 	w.SetContent(content)
-	w.SetFixedSize(true)
 
 	// rellenar las imagenes solo despues de iniciar
-	// corre en una go routine para poder mostrar el menu grafico a la vez
-	// que se generan las tumbnails
+	// corre en una go routine de manera concurrente
 	myApp.Lifecycle().SetOnStarted(func() {
 		go utils.SetNewContent(grid_content, layoutStyle)
 	})

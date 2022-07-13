@@ -1,11 +1,12 @@
 package utils
+
 import (
+	"github.com/disintegration/imaging"
 	"log"
 	"os"
 	"path/filepath"
 	"runtime"
 	"strings"
-	"github.com/disintegration/imaging"
 )
 
 // Hace el resize de la imagen y la guarda en el destino
