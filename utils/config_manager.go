@@ -9,7 +9,8 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
-	"runtime"
+
+	global "github.com/elias-gill/walldo-in-go/globals"
 )
 
 // Retorna solo las carpetas configuradas por el usuario
@@ -18,29 +19,11 @@ func ConfiguredPaths() []string {
 }
 
 // leer la configuracion del usuario
-// La carpeta donde se busca es en ~/.config/walldo/config.json (unix)
-// ~/AppData/Local/walldo/config.json (windows)
 func readConfigFile() map[string][]string {
-	sys_os := runtime.GOOS
-	configDir, err := os.UserHomeDir() // home del usuario
-	configPath := configDir            // path de las configuraciones
-
-	// determinar la direccion del archivo de config
-	switch sys_os {
-	case "windows":
-		configDir += "/AppData/Local/walldo/config.json"
-		configPath += "/AppData/Local/walldo/"
-
-	default:
-		// sistemas Unix (Mac y Linux)
-		configDir += "/.config/walldo/config.json"
-		configPath += "/.config/walldo/"
-	}
-
 	// Si no se encuentra el archivo de configuracion entonces lo crea
-	fileContent, err := os.Open(configDir)
+	fileContent, err := os.Open(global.ConfigDir)
 	if err != nil {
-		fileContent = crearConfig(configDir, configPath)
+		fileContent = crearConfig(global.ConfigDir, global.ConfigPath)
 	}
 	defer fileContent.Close()
 
@@ -50,6 +33,11 @@ func readConfigFile() map[string][]string {
 	json.Unmarshal([]byte(byteResult), &res)
 
 	return res
+}
+
+
+type Path struct {
+	Paths []string
 }
 
 // crea el arhivo de configuracion por defecto dependiendo del OS
@@ -63,10 +51,6 @@ func crearConfig(dir string, path string) *os.File {
 	var data *[]byte
 	data = setJsonData()
 	return writeJsonData(data, dir)
-}
-
-type Path struct {
-	Paths []string
 }
 
 // retornar la data por defecto del arhivo de configuracion

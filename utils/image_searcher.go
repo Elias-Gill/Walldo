@@ -63,7 +63,7 @@ func listarImagenes() {
 				return filepath.SkipDir
 			}
 			// ignorar directorios
-			if !info.IsDir() {
+			if !info.IsDir() && extensionIsValid(file) {
 				images = append(images, file)
 			}
 			return nil
@@ -74,6 +74,18 @@ func listarImagenes() {
 		}
 	}
 	original_images = images
+}
+
+// comprobar que la extensio del archivo sea la correcta
+// Solo jpg, png y jpeg
+func extensionIsValid (file string) bool {
+    // aislar la extension
+    aux := strings.Split(file, ".")
+    file = aux[len(aux)-1]
+
+    validos := map[string]int {"jpg": 1, "jpeg": 1, "png": 1}
+    _, res := validos[file]
+    return res
 }
 
 // Retorna nombre un nombre para la imagen reescalada
