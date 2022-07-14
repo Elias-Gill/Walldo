@@ -1,23 +1,24 @@
 package utils
 
 import (
+	"github.com/elias-gill/walldo-in-go/globals"
 	"github.com/reujab/wallpaper"
 )
 
 // const CurrentWallpaper = wallpaper.Get()
 
 func SetWallpaper(imageDir string) error {
+    WallaperFitMode()
 	return wallpaper.SetFromFile(imageDir)
-
 }
 
 /* func SetWallpaperFromUrl() {
     err := wallpaper.SetFromURL("https://i.imgur.com/pIwrYeM.jpg")
 } */
 
-func WallaperFitMode(mode string) error {
+func WallaperFitMode() error {
 	// TODO  poner este switch con un map (diccionarios)
-	switch mode {
+	switch globals.FillStrategy {
 	case "Fit":
 		return wallpaper.SetMode(wallpaper.Fit)
 	case "Crop":

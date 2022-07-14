@@ -69,8 +69,9 @@ func main() {
 	global.Window.ShowAndRun()
 }
 
+// seleccionar el estilo de wallpaper
 func buton(ref *widget.Button) *widget.Select {
-    return widget.NewSelect([]string{"fill", "crop", "fullscreen"}, func(sel string) {
+    return widget.NewSelect([]string{"Fit", "Crop", "Span"}, func(sel string) {
         global.FillStrategy = sel
 	})
 }
