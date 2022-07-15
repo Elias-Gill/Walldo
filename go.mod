@@ -1,12 +1,11 @@
-module github.com/elias-gill/waldo-in-go
+module github.com/elias-gill/walldo-in-go
 
 go 1.18
 
 require (
 	fyne.io/fyne/v2 v2.2.3
 	github.com/disintegration/imaging v1.6.2
-	github.com/elias-gill/walldo-in-go v1.1.7
-	github.com/elias-gill/wallpaper v0.1.0
+	github.com/elias-gill/wallpaper v0.1.1
 )
 
 require (
@@ -24,7 +23,6 @@ require (
 	github.com/gopherjs/gopherjs v1.17.2 // indirect
 	github.com/jsummers/gobmp v0.0.0-20151104160322-e2ba15ffa76e // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
-	github.com/reujab/wallpaper v0.0.0-20210630195606-5f9f655b3740 // indirect
 	github.com/srwiley/oksvg v0.0.0-20220128195007-1f435e4c2b44 // indirect
 	github.com/srwiley/rasterx v0.0.0-20220615024203-67b7089efd25 // indirect
 	github.com/stretchr/testify v1.8.0 // indirect
