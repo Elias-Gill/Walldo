@@ -21,12 +21,8 @@ func main() {
     global.Window.Resize(fyne.NewSize(800, 500))
 	var content *fyne.Container
 
-	// configuracion de usuario (parte estetica)
-	gridSize := global.GridSize
-	layoutStyle := global.LayoutStyle
-
 	// generar la grilla de imagenes
-	grid, grid_content := utils.NewContentGrid(gridSize)
+	grid, grid_content := utils.NewContentGrid()
 
 	// titulo principal
 	titulo := canvas.NewText("Select your wallpaper", color.White)
@@ -39,11 +35,8 @@ func main() {
 	// botones principales
 	refresh_button := widget.NewButton("Reload", func() {
 		// actualizar configuracion y recargar imagenes
-		gridSize = global.MyApp.Preferences().StringWithFallback("gridSize", "default")
-		layoutStyle = global.MyApp.Preferences().StringWithFallback("layout", "default")
-
-		grid_content.Layout = layout.NewGridWrapLayout(utils.SetGridSize(gridSize))
-		utils.SetNewContent(grid_content, layoutStyle)
+		grid_content.Layout = layout.NewGridWrapLayout(utils.SetGridSize())
+		utils.SetNewContent(grid_content)
 
 		grid.Refresh()
 	})
@@ -53,8 +46,8 @@ func main() {
 		dialogs.ConfigWindow(&global.Window, global.MyApp, refresh_button)
 	})
 
-    strategy_selector := buton(refresh_button)
-    strategy_selector.SetSelected("fullscreen")
+    strategy_selector := select_fill_style(refresh_button)
+    strategy_selector.SetSelected(global.FillStrategy)
 
 	hbox := container.New(layout.NewHBoxLayout(), strategy_selector,layout.NewSpacer(), refresh_button, configs_button)
 	content = container.New(layout.NewBorderLayout(titulo, hbox, nil, nil), titulo, grid, hbox)
@@ -63,14 +56,14 @@ func main() {
 	// rellenar las imagenes solo despues de iniciar
 	// corre en una go routine de manera concurrente
 	global.MyApp.Lifecycle().SetOnStarted(func() {
-		go utils.SetNewContent(grid_content, layoutStyle)
+		go utils.SetNewContent(grid_content)
 	})
 
 	global.Window.ShowAndRun()
 }
 
 // seleccionar el estilo de wallpaper
-func buton(ref *widget.Button) *widget.Select {
+func select_fill_style(ref *widget.Button) *widget.Select {
     return widget.NewSelect([]string{"Fit", "Crop", "Span"}, func(sel string) {
         global.FillStrategy = sel
 	})

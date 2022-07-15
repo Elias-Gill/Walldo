@@ -8,6 +8,7 @@ import (
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
+	"github.com/elias-gill/walldo-in-go/globals"
 )
 
 var original_images []string
@@ -15,7 +16,7 @@ var resized_images []string
 
 // rellenar la grilla de imagenes de manera asincrona y utilizando
 // concurrencia
-func SetNewContent(contenedor *fyne.Container, style string) {
+func SetNewContent(contenedor *fyne.Container) {
 	listarImagenes()                   // buscar las imagenes
 	getResizedImages(&original_images) // images reescaladas
 
@@ -25,8 +26,8 @@ func SetNewContent(contenedor *fyne.Container, style string) {
 
 		// definir el formato de la aplicacion
 		// TODO agregar un formato de lista
-		switch style {
-		case "borderless":
+		switch globals.GridTitles {
+		case "Borderless":
 			contenedor.Add(cont)
 
 		default:
@@ -60,8 +61,8 @@ func rellenarContenedor(contenedor *fyne.Container, i int) *fyne.Container {
 }
 
 // retorna un tamano dependiendo de la configuracion del usuario
-func SetGridSize(tamano string) fyne.Size {
-	switch tamano {
+func SetGridSize() fyne.Size {
+	switch globals.GridSize {
 	case "small":
 		return fyne.NewSize(110, 100)
 	case "large":
@@ -72,8 +73,8 @@ func SetGridSize(tamano string) fyne.Size {
 }
 
 // Retorna la grilla de imagenes a ser mostradas.
-func NewContentGrid(gridSize string) (*fyne.Container, *fyne.Container) {
-	content_grid := container.New(layout.NewGridWrapLayout(SetGridSize(gridSize)))
+func NewContentGrid() (*fyne.Container, *fyne.Container) {
+	content_grid := container.New(layout.NewGridWrapLayout(SetGridSize()))
 	grid := container.New(layout.NewPaddedLayout(), container.NewScroll(content_grid)) // make the grid actually scrollable
 	return grid, content_grid
 }
