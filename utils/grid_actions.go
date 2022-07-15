@@ -12,6 +12,7 @@ import (
 )
 
 var original_images []string
+var original_paths []string
 var resized_images []string
 
 // rellenar la grilla de imagenes de manera asincrona y utilizando

@@ -46,7 +46,10 @@ func main() {
 		dialogs.ConfigWindow(&global.Window, global.MyApp, refresh_button)
 	})
 
-    strategy_selector := select_fill_style(refresh_button)
+    // selector de modo de escalado de imagen
+    strategy_selector := widget.NewSelect([]string{"Fill", "Rescale", "Center", "Max", "Tile"}, func(sel string) {
+        global.FillStrategy = sel
+	})
     strategy_selector.SetSelected(global.FillStrategy)
 
 	hbox := container.New(layout.NewHBoxLayout(), strategy_selector,layout.NewSpacer(), refresh_button, configs_button)
@@ -60,11 +63,4 @@ func main() {
 	})
 
 	global.Window.ShowAndRun()
-}
-
-// seleccionar el estilo de wallpaper
-func select_fill_style(ref *widget.Button) *widget.Select {
-    return widget.NewSelect([]string{"Fit", "Crop", "Span"}, func(sel string) {
-        global.FillStrategy = sel
-	})
 }

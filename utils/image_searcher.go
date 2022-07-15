@@ -1,12 +1,14 @@
 package utils
 
 import (
-	"github.com/disintegration/imaging"
 	"log"
 	"os"
 	"path/filepath"
 	"runtime"
+	"sort"
 	"strings"
+
+	"github.com/disintegration/imaging"
 )
 
 // Hace el resize de la imagen y la guarda en el destino
@@ -48,7 +50,6 @@ func getResizedImages(original_images *[]string) {
 func listarImagenes() {
 	// traer carpetas del archivo de configuracion
 	folders := ConfiguredPaths()
-	var images []string
 
 	// recorrer recursivamente cada una de las carpetas del usuario
 	for _, folder := range folders {
@@ -64,7 +65,7 @@ func listarImagenes() {
 			}
 			// ignorar directorios
 			if !info.IsDir() && extensionIsValid(file) {
-				images = append(images, file)
+				original_images = append(original_images, file)
 			}
 			return nil
 		})
@@ -73,7 +74,13 @@ func listarImagenes() {
 			log.Print(err)
 		}
 	}
-	original_images = images
+}
+
+func ordenarImagenes(metodo string) {
+    // TODO  agregar mas metodos de ordenamiento
+    if metodo == "default"{
+        sort.Strings(original_images)
+    }
 }
 
 // comprobar que la extensio del archivo sea la correcta

@@ -8,7 +8,7 @@ import (
 // const CurrentWallpaper = wallpaper.Get()
 
 func SetWallpaper(imageDir string) error {
-    mode, _ := wallpaper.SetMode(WallaperFitMode())
+    mode, _ := wallpaper.SetMode(WallpaperFitMode())
 	return wallpaper.SetFromFile(imageDir, mode)
 }
 
@@ -16,21 +16,19 @@ func SetWallpaper(imageDir string) error {
     err := wallpaper.SetFromURL("https://i.imgur.com/pIwrYeM.jpg")
 } */
 
-func WallaperFitMode() wallpaper.Mode {
+func WallpaperFitMode() wallpaper.Mode {
 	// TODO  poner este switch con un map (diccionarios)
 	switch globals.FillStrategy {
-	case "Fit":
+	case "Fill":
 		return wallpaper.Fit
-	case "Crop":
+	case "Rescale":
 		return wallpaper.Crop
 	case "Center":
 		return wallpaper.Center
-	case "Span":
+	case "Max":
 		return wallpaper.Span
 	case "Tile":
 		return wallpaper.Tile
-	case "Stretch":
-		return wallpaper.Stretch
 	}
     return wallpaper.Fit
 }
