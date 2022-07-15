@@ -1,11 +1,12 @@
-module github.com/elias-gill/walldo-in-go
+module github.com/elias-gill/waldo-in-go
 
 go 1.18
 
 require (
 	fyne.io/fyne/v2 v2.2.3
 	github.com/disintegration/imaging v1.6.2
-	github.com/reujab/wallpaper v0.0.0-20210630195606-5f9f655b3740
+	github.com/elias-gill/walldo-in-go v1.1.7
+	github.com/elias-gill/wallpaper v0.1.0
 )
 
 require (
@@ -23,6 +24,7 @@ require (
 	github.com/gopherjs/gopherjs v1.17.2 // indirect
 	github.com/jsummers/gobmp v0.0.0-20151104160322-e2ba15ffa76e // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
+	github.com/reujab/wallpaper v0.0.0-20210630195606-5f9f655b3740 // indirect
 	github.com/srwiley/oksvg v0.0.0-20220128195007-1f435e4c2b44 // indirect
 	github.com/srwiley/rasterx v0.0.0-20220615024203-67b7089efd25 // indirect
 	github.com/stretchr/testify v1.8.0 // indirect
@@ -31,12 +33,10 @@ require (
 	golang.org/x/image v0.0.0-20220617043117-41969df76e82 // indirect
 	golang.org/x/mobile v0.0.0-20220518205345-8578da9835fd // indirect
 	golang.org/x/net v0.0.0-20220706163947-c90051bbdb60 // indirect
-	golang.org/x/sys v0.0.0-20220708085239-5a0f0661e09d // indirect
+	golang.org/x/sys v0.0.0-20220715151400-c0bba94af5f8 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	gopkg.in/ini.v1 v1.66.6 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	honnef.co/go/js/dom v0.0.0-20210725211120-f030747120f2 // indirect
 )
-
-retract v1.1.3
