@@ -19,13 +19,13 @@ func SetWallpaper(imageDir string) error {
 func WallpaperFitMode() wallpaper.Mode {
 	// TODO  poner este switch con un map (diccionarios)
 	switch globals.FillStrategy {
-	case "Fill":
+	case "Zoom Fill":
 		return wallpaper.Fit
-	case "Rescale":
+	case "Scale":
 		return wallpaper.Crop
 	case "Center":
 		return wallpaper.Center
-	case "Max":
+	case "Original":
 		return wallpaper.Span
 	case "Tile":
 		return wallpaper.Tile

@@ -47,8 +47,9 @@ func main() {
 	})
 
     // selector de modo de escalado de imagen
-    strategy_selector := widget.NewSelect([]string{"Fill", "Rescale", "Center", "Max", "Tile"}, func(sel string) {
+    strategy_selector := widget.NewSelect([]string{"Zoom Fill", "Scale", "Center", "Original", "Tile"}, func(sel string) {
         global.FillStrategy = sel
+        global.MyApp.Preferences().SetString("FillStrategy", sel)
 	})
     strategy_selector.SetSelected(global.FillStrategy)
 

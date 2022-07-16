@@ -17,7 +17,7 @@ var GridSize = MyApp.Preferences().StringWithFallback("GridSize", "default")
 var GridTitles = MyApp.Preferences().StringWithFallback("GridTitles", "Borderless")
 
 var LayoutStyle = MyApp.Preferences().StringWithFallback("Layout", "Grid")
-var FillStrategy = MyApp.Preferences().StringWithFallback("FillStrategy", "Fit")
+var FillStrategy = MyApp.Preferences().StringWithFallback("FillStrategy", "Zoom Fill")
  
 // archivos de config
 var ConfigDir, _ = os.UserHomeDir() // home del usuario
