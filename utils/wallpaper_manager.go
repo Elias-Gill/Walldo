@@ -7,11 +7,6 @@ import (
 
 // const CurrentWallpaper = wallpaper.Get()
 
-func SetWallpaper(imageDir string) error {
-    mode, _ := wallpaper.SetMode(WallpaperFitMode())
-	return wallpaper.SetFromFile(imageDir, mode)
-}
-
 /* func SetWallpaperFromUrl() {
     err := wallpaper.SetFromURL("https://i.imgur.com/pIwrYeM.jpg")
 } */
