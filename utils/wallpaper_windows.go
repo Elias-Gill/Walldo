@@ -1,6 +1,11 @@
-//go:build windows
+// go:build windows
 
 package utils
+
+import (
+	"github.com/elias-gill/walldo-in-go/globals"
+	"github.com/elias-gill/wallpaper"
+)
 
 func SetWallpaper(imageDir string) error {
 	wallpaper.SetMode(WallpaperFitMode())
