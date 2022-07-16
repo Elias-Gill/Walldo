@@ -1,3 +1,5 @@
+//go:build !windows
+
 package utils
 
 import (
@@ -5,11 +7,10 @@ import (
 	"github.com/elias-gill/wallpaper"
 )
 
-// const CurrentWallpaper = wallpaper.Get()
-
-/* func SetWallpaperFromUrl() {
-    err := wallpaper.SetFromURL("https://i.imgur.com/pIwrYeM.jpg")
-} */
+func SetWallpaper(imageDir string) error {
+	mode, _ := wallpaper.SetMode(WallpaperFitMode())
+	return wallpaper.SetFromFile(imageDir, mode)
+}
 
 func WallpaperFitMode() wallpaper.Mode {
 	// TODO  poner este switch con un map (diccionarios)
@@ -25,7 +26,7 @@ func WallpaperFitMode() wallpaper.Mode {
 	case "Tile":
 		return wallpaper.Tile
 	}
-    return wallpaper.Fit
+	return wallpaper.Fit
 }
 
 // retorna el wallpaper actual
