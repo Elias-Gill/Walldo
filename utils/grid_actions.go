@@ -11,18 +11,14 @@ import (
 	"github.com/elias-gill/walldo-in-go/globals"
 )
 
-var original_images []string
-var original_paths []string
-var resized_images []string
-
 // rellenar la grilla de imagenes de manera asincrona y utilizando
 // concurrencia
 func SetNewContent(contenedor *fyne.Container) {
 	listarImagenes()                   // buscar las imagenes
-	getResizedImages(&original_images) // images reescaladas
+	getResizedImages() // images reescaladas
 
 	contenedor.RemoveAll()
-	for i := range original_images {
+	for i := range globals.Original_images {
 		cont := rellenarContenedor(contenedor, i)
 
 		// definir el formato de la aplicacion
@@ -32,7 +28,7 @@ func SetNewContent(contenedor *fyne.Container) {
 			contenedor.Add(cont)
 
 		default:
-			card := widget.NewCard("", aislarNombreImagen(original_images[i]), cont)
+			card := widget.NewCard("", aislarNombreImagen(globals.Original_images[i]), cont)
 			contenedor.Add(card)
 		}
 		contenedor.Refresh()
@@ -48,11 +44,11 @@ func rellenarContenedor(contenedor *fyne.Container, i int) *fyne.Container {
 	button.OnTapped = func() {
 		value, _ := strconv.Atoi(button.Text)
 		// el boton contiene el index de la imagen original
-		SetWallpaper(original_images[value])
+		SetWallpaper(globals.Original_images[value])
 	}
 	// imagen rescalada
 	resizeImage(i)
-	aux := canvas.NewImageFromFile(resized_images[i])
+	aux := canvas.NewImageFromFile(globals.Resized_images[i])
 	aux.ScaleMode = canvas.ImageScaleFastest
 	aux.FillMode = canvas.ImageFillContain
 

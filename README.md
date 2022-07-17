@@ -46,3 +46,7 @@ acces for the command.
 - A preaty search bar with parallel fuzzy fynding
 - Another button to set a random wallpaper.
 - More layouts like a list or a list with the image info
+
+## Mentions
+To [ktr0731](https://github.com/ktr07310). The fuzzy finder engine is his entire work.
+To [reujab](https://github.com/reujab/wallpaper). The library for changing wallapapers is a fork of his original module.

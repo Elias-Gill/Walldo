@@ -9,13 +9,14 @@ import (
 	"strings"
 
 	"github.com/disintegration/imaging"
+	"github.com/elias-gill/walldo-in-go/globals"
 )
 
 // Hace el resize de la imagen y la guarda en el destino
 // evita generar un archivo si la imagen ya fue reescalada previamente
 func resizeImage(i int) {
-	destino := resized_images[i]
-	image := original_images[i]
+	destino := globals.Resized_images[i]
+	image := globals.Original_images[i]
 
 	if _, e := os.Stat(destino); e != nil { // si no existe
 		src, _ := imaging.Open(image)
@@ -25,7 +26,7 @@ func resizeImage(i int) {
 }
 
 // Actualiza el array "resized_images" con las direcciones de las nuevas imagenes reescaladas
-func getResizedImages(original_images *[]string) {
+func getResizedImages() {
 	var res []string
 	sys_os := runtime.GOOS
 	path, _ := os.UserHomeDir() // home del usuario
@@ -38,11 +39,11 @@ func getResizedImages(original_images *[]string) {
 	}
 
 	// anadir una nueva entrada para la imagen reescalada en el arreglo de nombres
-	for _, image := range *original_images {
+	for _, image := range globals.Original_images {
 		destino := path + aislarNombreImagenReescalada(image) + ".jpg"
 		res = append(res, destino) // guardar la nueva direccion
 	}
-	resized_images = res // guardar la imagenes
+	globals.Resized_images = res // guardar la imagenes
 }
 
 // Retorna las imagenes recursivamente en las carpetas configuradas
@@ -65,7 +66,7 @@ func listarImagenes() {
 			}
 			// ignorar directorios
 			if !info.IsDir() && extensionIsValid(file) {
-				original_images = append(original_images, file)
+				globals.Original_images = append(globals.Original_images, file)
 			}
 			return nil
 		})
@@ -79,7 +80,7 @@ func listarImagenes() {
 func ordenarImagenes(metodo string) {
     // TODO  agregar mas metodos de ordenamiento
     if metodo == "default"{
-        sort.Strings(original_images)
+        sort.Strings(globals.Original_images)
     }
 }
 
