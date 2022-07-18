@@ -50,6 +50,7 @@ func getResizedImages() {
 // por el usuario
 func listarImagenes() {
 	// traer carpetas del archivo de configuracion
+    globals.Original_images = []string{}
 	folders := ConfiguredPaths()
 
 	// recorrer recursivamente cada una de las carpetas del usuario

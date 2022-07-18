@@ -44,16 +44,17 @@ func NewFuzzyDialog(w fyne.Window) {
 			o.(*widget.Label).SetText(data[i])
 		})
 
-	c := container.New(layout.NewBorderLayout(fuzzy_searcher, nil, nil, nil), fuzzy_searcher, fuzzy_list)
-	x := dialog.NewCustom("Fuzzy searh", "Cancel", c, globals.Window)
-	x.Resize(fyne.NewSize(500, 300))
+	cont := container.New(layout.NewBorderLayout(fuzzy_searcher, nil, nil, nil), fuzzy_searcher, fuzzy_list)
+	dial := dialog.NewCustom("Fuzzy searh", "Cancel", cont, globals.Window)
+	dial.Resize(fyne.NewSize(500, 300))
 
+    // opciones
 	fuzzy_searcher.OnChanged = entryChanged
 	fuzzy_searcher.SetPlaceHolder("Search Image")
 	fuzzy_list.OnSelected = listSelected
 
     data = [5]string{}
-	x.Show()
+	dial.Show()
 }
 
 // change the wallpaper with the given selection

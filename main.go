@@ -18,7 +18,7 @@ func main() {
 	global.SetGlobalValues()
 
 	// instanciar la nueva ventana
-	global.Window.Resize(fyne.NewSize(800, 500))
+	global.Window.Resize(fyne.NewSize(950, 600))
 	var content *fyne.Container
 	// generar la grilla de imagenes
 	grid, grid_content := utils.NewContentGrid()

@@ -14,7 +14,7 @@ import (
 // rellenar la grilla de imagenes de manera asincrona y utilizando
 // concurrencia
 func SetNewContent(contenedor *fyne.Container) {
-	listarImagenes()                   // buscar las imagenes
+	listarImagenes()   // buscar las imagenes
 	getResizedImages() // images reescaladas
 
 	contenedor.RemoveAll()
