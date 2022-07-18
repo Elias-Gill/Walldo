@@ -20,7 +20,6 @@ func main() {
 	// instanciar la nueva ventana
 	global.Window.Resize(fyne.NewSize(800, 500))
 	var content *fyne.Container
-
 	// generar la grilla de imagenes
 	grid, grid_content := utils.NewContentGrid()
 
@@ -32,19 +31,25 @@ func main() {
 	titulo.Alignment = fyne.TextAlignCenter
 	titulo.TextSize = 18
 
-	// botones principales
-    ico, _ := fyne.LoadResourceFromPath("./assets/reload.ico")
-    refresh_button := widget.NewButton("  ", func() {
+	// reload button
+	ico := fyne.ThemeIconName("viewRefresh")
+	refresh_button := widget.NewButtonWithIcon("", global.MyApp.Settings().Theme().Icon(ico), func() {
 		// actualizar configuracion y recargar imagenes
 		grid_content.Layout = layout.NewGridWrapLayout(utils.SetGridSize())
 		utils.SetNewContent(grid_content)
 
 		grid.Refresh()
 	})
-	rf := container.New(layout.NewMaxLayout(), widget.NewIcon(ico),refresh_button)
+
+	// buscador de imagenes con algoritmo difuso
+	ico = fyne.ThemeIconName("search")
+	fuzzy_button := widget.NewButtonWithIcon("", global.MyApp.Settings().Theme().Icon(ico), func() {
+		dialogs.NewFuzzyDialog(global.Window)
+	})
 
 	// abrir el menu de configuraciones
-	configs_button := widget.NewButton("Preferences", func() {
+	ico = fyne.ThemeIconName("settings")
+	configs_button := widget.NewButtonWithIcon("Preferences", global.MyApp.Settings().Theme().Icon(ico), func() {
 		dialogs.ConfigWindow(&global.Window, global.MyApp, refresh_button)
 	})
 
@@ -55,13 +60,7 @@ func main() {
 	})
 	strategy_selector.SetSelected(global.FillStrategy)
 
-	// buscador de imagenes con algoritmo difuso
-    ico, _ = fyne.LoadResourceFromPath("./assets/search.ico")
-	b := container.New(layout.NewMaxLayout(), widget.NewIcon(ico),widget.NewButton("  ", func() {
-		dialogs.NewFuzzyDialog(global.Window)
-	}))
-
-	hbox := container.New(layout.NewHBoxLayout(), strategy_selector, b, layout.NewSpacer(), rf, configs_button)
+	hbox := container.New(layout.NewHBoxLayout(), strategy_selector, fuzzy_button, layout.NewSpacer(), refresh_button, configs_button)
 	content = container.New(layout.NewBorderLayout(titulo, hbox, nil, nil), titulo, grid, hbox)
 	global.Window.SetContent(content)
 

@@ -44,3 +44,4 @@ func SetGlobalValues() {
 		ConfigPath += "/.config/walldo/"
 	}
 }
+
