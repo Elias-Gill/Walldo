@@ -18,7 +18,7 @@ func resizeImage(i int) {
 	destino := globals.Resized_images[i]
 	image := globals.Original_images[i]
 
-	if _, e := os.Stat(destino); e != nil { // si no existe
+	if _, err := os.Stat(destino); err != nil { // si aun no tiene Thumbnail
 		src, _ := imaging.Open(image)
 		src = imaging.Thumbnail(src, 200, 150, imaging.Box)
 		imaging.Save(src, destino)

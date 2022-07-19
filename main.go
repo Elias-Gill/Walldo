@@ -19,7 +19,6 @@ func main() {
 
 	// instanciar la nueva ventana
 	global.Window.Resize(fyne.NewSize(950, 600))
-	var content *fyne.Container
 	// generar la grilla de imagenes
 	grid, grid_content := utils.NewContentGrid()
 
@@ -32,26 +31,23 @@ func main() {
 	titulo.TextSize = 18
 
 	// reload button
-	ico := fyne.ThemeIconName("viewRefresh")
-	refresh_button := widget.NewButtonWithIcon("", global.MyApp.Settings().Theme().Icon(ico), func() {
+	refresh_button := newButton("", func() {
 		// actualizar configuracion y recargar imagenes
 		grid_content.Layout = layout.NewGridWrapLayout(utils.SetGridSize())
 		utils.SetNewContent(grid_content)
 
 		grid.Refresh()
-	})
+	}, "viewRefresh")
 
 	// buscador de imagenes con algoritmo difuso
-	ico = fyne.ThemeIconName("search")
-	fuzzy_button := widget.NewButtonWithIcon("", global.MyApp.Settings().Theme().Icon(ico), func() {
+	fuzzy_button := newButton("", func() {
 		dialogs.NewFuzzyDialog(global.Window)
-	})
+	}, "search")
 
 	// abrir el menu de configuraciones
-	ico = fyne.ThemeIconName("settings")
-	configs_button := widget.NewButtonWithIcon("Preferences", global.MyApp.Settings().Theme().Icon(ico), func() {
+	configs_button := newButton("Preferences", func() {
 		dialogs.ConfigWindow(&global.Window, global.MyApp, refresh_button)
-	})
+	}, "settings")
 
 	// selector de modo de escalado de imagen
 	strategy_selector := widget.NewSelect([]string{"Zoom Fill", "Scale", "Center", "Original", "Tile"}, func(sel string) {
@@ -60,15 +56,25 @@ func main() {
 	})
 	strategy_selector.SetSelected(global.FillStrategy)
 
+    // contenido de la aplicacion
 	hbox := container.New(layout.NewHBoxLayout(), strategy_selector, fuzzy_button, layout.NewSpacer(), refresh_button, configs_button)
-	content = container.New(layout.NewBorderLayout(titulo, hbox, nil, nil), titulo, grid, hbox)
+	content := container.New(layout.NewBorderLayout(titulo, hbox, nil, nil), titulo, grid, hbox)
 	global.Window.SetContent(content)
 
 	// rellenar las imagenes solo despues de iniciar
-	// corre en una go routine de manera concurrente
+	// corre en una go routine de manera concurrente (velocidad absurda)
 	global.MyApp.Lifecycle().SetOnStarted(func() {
 		go utils.SetNewContent(grid_content)
 	})
 
 	global.Window.ShowAndRun()
+}
+
+// retornar un nuevo boton con el icono especificado y la funcion especifica
+func newButton(name string, f func(), icon ...string) *widget.Button {
+	if len(icon) > 0 {
+		ico := fyne.ThemeIconName(icon[0])
+		return widget.NewButtonWithIcon(name, global.MyApp.Settings().Theme().Icon(ico), f)
+	}
+	return widget.NewButton(name, f)
 }
