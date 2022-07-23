@@ -49,18 +49,18 @@ func WithMode(m Mode) Option {
 // FindAll tries to find out sub-strings from slice that match the passed argument in.
 // The returned slice is sorted by similarity scores in descending order.
 func FindAll(in string, slice []string) []Matched {
-    if len(slice) <= 1 {
-        ret := []Matched{}
-        for i := range slice {
-            aux := Matched {
-                Idx: i,
-                Pos: [2]int{0,0},
-                score: 0,
-            }
-            ret = append(ret, aux)
-        }
-        return ret
-    }
+	if len(slice) <= 1 {
+		ret := []Matched{}
+		for i := range slice {
+			aux := Matched{
+				Idx:   i,
+				Pos:   [2]int{0, 0},
+				score: 0,
+			}
+			ret = append(ret, aux)
+		}
+		return ret
+	}
 
 	var opt opt
 	m := match(in, slice, opt)

@@ -19,7 +19,7 @@ func SetNewContent(contenedor *fyne.Container) {
 
 	contenedor.RemoveAll()
 	for i := range globals.Original_images {
-		cont := rellenarContenedor(contenedor, i)
+		cont := fillContainer(contenedor, i)
 
 		// definir el formato de la aplicacion
 		// TODO agregar un formato de lista
@@ -39,7 +39,7 @@ func SetNewContent(contenedor *fyne.Container) {
 // Cada imagen tiene asignado un boton, boton que contiene como texto la posicion de dicha imagen
 // en el arreglo de imagenes originales
 // Al acabar refresca el contenido
-func rellenarContenedor(contenedor *fyne.Container, i int) *fyne.Container {
+func fillContainer(fyneContainer *fyne.Container, i int) *fyne.Container {
 	button := widget.NewButton(strconv.Itoa(i), nil)
 	button.OnTapped = func() {
 		value, _ := strconv.Atoi(button.Text)

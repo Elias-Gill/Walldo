@@ -11,28 +11,30 @@ import (
 	"github.com/elias-gill/walldo-in-go/utils"
 )
 
-var data = []string{}
-var fuzzy_list *widget.List
+var (
+	data       = []string{}
+	fuzzy_list *widget.List
+)
 
 // refresh the content search list with every keystroke
 func entryChanged(entry string) {
-    data = []string{}
+	data = []string{}
 	if len(entry) >= 1 {
-        // search for the matching results
+		// search for the matching results
 		aux := matching.FindAll(entry, globals.Original_images)
-        // display the results
+		// display the results
 		for i := 0; i < len(aux); i++ {
-                data = append(data, globals.Original_images[aux[i].Idx])
-            }
+			data = append(data, globals.Original_images[aux[i].Idx])
 		}
+	}
 	fuzzy_list.Refresh()
 }
 
 // Create a new Fuzzy finder dialog and displays it
 func NewFuzzyDialog(w fyne.Window) {
 	// variables
-    fuzzy_searcher := widget.NewEntry()
-    // list of results
+	fuzzy_searcher := widget.NewEntry()
+	// list of results
 	fuzzy_list = widget.NewList(
 		func() int {
 			return len(data)
@@ -48,7 +50,7 @@ func NewFuzzyDialog(w fyne.Window) {
 	dial := dialog.NewCustom("Fuzzy search", "Cancel", cont, globals.Window)
 	dial.Resize(fyne.NewSize(500, 300))
 
-    // opciones
+	// opciones
 	fuzzy_searcher.OnChanged = entryChanged
 	fuzzy_searcher.SetPlaceHolder("Search Image")
 	fuzzy_list.OnSelected = listSelected

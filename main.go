@@ -56,7 +56,7 @@ func main() {
 	})
 	strategy_selector.SetSelected(global.FillStrategy)
 
-    // contenido de la aplicacion
+	// contenido de la aplicacion
 	hbox := container.New(layout.NewHBoxLayout(), strategy_selector, fuzzy_button, layout.NewSpacer(), refresh_button, configs_button)
 	content := container.New(layout.NewBorderLayout(titulo, hbox, nil, nil), titulo, grid, hbox)
 	global.Window.SetContent(content)

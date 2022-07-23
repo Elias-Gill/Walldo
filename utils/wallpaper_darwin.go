@@ -1,4 +1,4 @@
-// go:build windows
+// go:build darwin
 
 package utils
 
@@ -7,6 +7,5 @@ import (
 )
 
 func SetWallpaper(imageDir string) error {
-	wallpaper.SetMode(WallpaperFitMode())
 	return wallpaper.SetFromFile(imageDir)
 }
