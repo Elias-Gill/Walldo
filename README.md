@@ -20,7 +20,7 @@ simple way and as fast as possible. In Linux there are many applications that ca
 but in Windows most of them are very slow and bloated.
 
 ## Instalation
-##### Dependendies 
+### Dependencies 
 Walldo is written in pure Go so of course you have to install [Golang](https://go.dev/doc/install).
 
 ### Windows
