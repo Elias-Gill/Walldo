@@ -40,7 +40,7 @@ After the first run you would find a folder in C:/Users/<your user>/AppData/Loca
   "Path": ["C:/Users/walldo/Desktop/fondos", "C:/Users\walldo/Desktop/wallpapers2"]
 }
 
-PLEASE DON'T put "\" instead put "/" as a separator.
+PLEASE DON'T put Windows like backslashes, instead put "/" as the folder separator.
 You can simply reload Walldo with the reload button that is on the bottom right.
 
 ### Linux
