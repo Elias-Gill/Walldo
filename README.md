@@ -61,5 +61,5 @@ The same rule aplies here, after the first run you have to add the folders into 
 - More layouts like a list with captions.
 
 ## Mentions
-To [ktr0731](https://github.com/ktr07310). The fuzzy finder engine is his entire work.
-To [reujab](https://github.com/reujab/wallpaper). The library for changing wallapapers is a fork of his original module.
+- To [ktr0731](https://github.com/ktr07310). The fuzzy finder engine is his entire work.
+- To [reujab](https://github.com/reujab/wallpaper). The library for changing wallapapers is a fork of his original module.
