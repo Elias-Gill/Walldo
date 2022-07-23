@@ -34,7 +34,7 @@ You can create a direct access and change the icon if you want.
 #### Important
 After the first run you would find a folder in C:/Users/your user/AppData/Local/walldo , there is a file called config.json, in that file you have to put your backgrounds folders (if a folder contains other folders you only have to put the main folder, Walldo will search through all of them). If you have more than one main folder you can put them to.
 
-**Example: **
+##### *Example:*
 ```
 {
   "Path": ["C:/Users/walldo/Desktop/fondos", "C:/Users\walldo/Desktop/wallpapers2"]
