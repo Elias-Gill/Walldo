@@ -37,7 +37,7 @@ After the first run you would find a folder in C:/Users/your user/AppData/Local/
 ##### *Example:*
 ```
 {
-  "Path": ["C:/Users/walldo/Desktop/fondos", "C:/Users\walldo/Desktop/wallpapers2"]
+  "Path": ["C:/Users/walldo/Desktop/fondos", "C:/Users/walldo/Desktop/wallpapers2"]
 }
 ```
 PLEASE DON'T put Windows like backslashes, instead put "/" as the folder separator.
