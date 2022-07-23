@@ -32,7 +32,7 @@ Now Walldo must be available in your search bar (```Win```+```S```) as "waldo-in
 You can create a direct access and change the icon if you want.
 
 #### Important
-After the first run you would find a folder in C:/Users/<your user>/AppData/Local/walldo , there is a file called config.json, in that file you have to put your backgrounds folders (if a folder contains other folders you only have to put the main folder, Walldo will search through all of them). If you have more than one main folder you can put them to.
+After the first run you would find a folder in C:/Users/your user/AppData/Local/walldo , there is a file called config.json, in that file you have to put your backgrounds folders (if a folder contains other folders you only have to put the main folder, Walldo will search through all of them). If you have more than one main folder you can put them to.
 
 **Example: **
 
@@ -50,7 +50,7 @@ go install github.com/elias-gill/walldo-in-go@latest
 ````
 Now you can run "walldo-in-go" on your terminal. If you are using some Desktop Enviroment you can create a direct 
 acces for the command.
-The same rule aplies here, after the first run you have to add the folders into the config.json file which is on /home/<your user>/.config/walldo.
+The same rule aplies here, after the first run you have to add the folders into the config.json file which is on /home/your user/.config/walldo.
 
 ## Goals
 - Be the replace for Nitrogen or Feh on Windows Systems. 
