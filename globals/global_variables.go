@@ -15,25 +15,31 @@ var (
 
 const SYS_OS = runtime.GOOS
 
+// App initializers
 var (
 	MyApp  = app.NewWithID("walldo")
 	Window = MyApp.NewWindow("Walldo in go")
 )
 
-// configuracion
-var GridSize = MyApp.Preferences().StringWithFallback("GridSize", "default")
-var GridTitles = MyApp.Preferences().StringWithFallback("GridTitles", "Borderless")
+// Grid config variables
+var (
+	GridSize   = MyApp.Preferences().StringWithFallback("GridSize", "default")
+	GridTitles = MyApp.Preferences().StringWithFallback("GridTitles", "Borderless")
+)
 
+// Layout configs
 var (
 	LayoutStyle  = MyApp.Preferences().StringWithFallback("Layout", "Grid")
 	FillStrategy = MyApp.Preferences().StringWithFallback("FillStrategy", "Zoom Fill")
 )
 
-// archivos de config
-var ConfigDir, _ = os.UserHomeDir() // home del usuario
-var ConfigPath = ConfigDir          // path de las configuraciones
+// Config files
+var (
+	ConfigDir, _ = os.UserHomeDir() // Home folder
+	ConfigPath   = ConfigDir        // configs path
+)
 
-// Determinar la direccion del archivo de config
+// Change config values depending on the OS
 // ~/.config/walldo/config.json (unix)
 // ~/AppData/Local/walldo/config.json (windows)
 func SetGlobalValues() {

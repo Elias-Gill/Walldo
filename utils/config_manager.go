@@ -13,12 +13,12 @@ import (
 	global "github.com/elias-gill/walldo-in-go/globals"
 )
 
-// Retorna solo las carpetas configuradas por el usuario
+// Return all folders configured by the user in the configuration file
 func ConfiguredPaths() []string {
 	return readConfigFile()["Paths"]
 }
 
-// leer la configuracion del usuario
+// Reads and parse the config file
 func readConfigFile() map[string][]string {
 	// Si no se encuentra el archivo de configuracion entonces lo crea
 	fileContent, err := os.Open(global.ConfigDir)
@@ -39,10 +39,9 @@ type Path struct {
 	Paths []string
 }
 
-// crea el arhivo de configuracion por defecto dependiendo del OS
-// La data es archivo con "Paths": vacio
+// Creates the config folder and the config.json if is not created yet
 func crearConfig(dir string, path string) *os.File {
-	// crear las carpetas necesarias
+	// create the folders
 	os.MkdirAll(path, 0o777)
 	os.MkdirAll(path+"resized_images", 0o777)
 	os.Create(path + "config.json")
@@ -52,7 +51,7 @@ func crearConfig(dir string, path string) *os.File {
 	return writeJsonData(data, dir)
 }
 
-// retornar la data por defecto del arhivo de configuracion
+// This is for setting the default data of the config.json file
 func setJsonData() *[]byte {
 	content := Path{Paths: []string{""}}
 	data, err := json.Marshal(content)
@@ -62,11 +61,11 @@ func setJsonData() *[]byte {
 	return &data
 }
 
-// crea y escribe el archivo de configuraciones
-// Retorna el nuevo archivo abierto
+// Write the new file with the data specified.
+// Returns the config file opened.
 func writeJsonData(data *[]byte, fileName string) *os.File {
-	// crear el archivo para escritura
-	err := os.WriteFile(fileName, *data, 0o777) // escribir
+	// create the file and write
+	err := os.WriteFile(fileName, *data, 0o777) 
 	if err != nil {
 		log.Fatal(err)
 	}

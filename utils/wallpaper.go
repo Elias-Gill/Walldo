@@ -22,7 +22,7 @@ func WallpaperFitMode() wallpaper.Mode {
 	return wallpaper.Fit
 }
 
-// retorna el wallpaper actual
+// returns the current wallpaper
 func GetCurrentWallpaper() (string, error) {
 	return wallpaper.Get()
 }

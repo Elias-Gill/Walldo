@@ -12,33 +12,38 @@ import (
 	"github.com/elias-gill/walldo-in-go/globals"
 )
 
-// Hace el resize de la imagen y la guarda en el destino
-// evita generar un archivo si la imagen ya fue reescalada previamente
+// Resize the image to create a thumbnail.
+// If a thumbnail already exists just do nothing
 func resizeImage(i int) {
 	destino := globals.Resized_images[i]
 	image := globals.Original_images[i]
 
-	if _, err := os.Stat(destino); err != nil { // si aun no tiene Thumbnail
+	// if the thumnail does not exists
+	if _, err := os.Stat(destino); err != nil {
 		src, _ := imaging.Open(image)
 		src = imaging.Thumbnail(src, 200, 150, imaging.Box)
+		// save the thumbnail on a folder
+		// TODO  make this folder into .cache or /temp
 		imaging.Save(src, destino)
 	}
 }
 
-// Actualiza el array "resized_images" con las direcciones de las nuevas imagenes reescaladas
+// TODO  this need a redesign
+// Update the resized_images list
 func getResizedImages() {
 	var res []string
 	sys_os := runtime.GOOS
-	path, _ := os.UserHomeDir() // home del usuario
+	path, _ := os.UserHomeDir() // home folder
 
-	// determinar cual es la carpeta de config dependiendo del OS
+	// set the path depending on the current OS
 	if sys_os == "windows" {
 		path += "/AppData/Local/walldo/resized_images/"
-	} else { // sistemas Unix (Mac y Linux)
+	} else {
+		// Unix (Mac y Linux)
 		path += "/.config/walldo/resized_images/"
 	}
 
-	// anadir una nueva entrada para la imagen reescalada en el arreglo de nombres
+	// set a new entry for the resized_images list with a "unique" name
 	for _, image := range globals.Original_images {
 		destino := path + aislarNombreImagenReescalada(image) + ".jpg"
 		res = append(res, destino) // guardar la nueva direccion
@@ -46,14 +51,13 @@ func getResizedImages() {
 	globals.Resized_images = res // guardar la imagenes
 }
 
-// Retorna las imagenes recursivamente en las carpetas configuradas
-// por el usuario
-func listarImagenes() {
-	// traer carpetas del archivo de configuracion
+// Goes trought the configured folders recursivelly and list all the supported image files
+func listImagesRecursivelly() {
+	// get configured folders from the config file
 	globals.Original_images = []string{}
 	folders := ConfiguredPaths()
 
-	// recorrer recursivamente cada una de las carpetas del usuario
+	// loop trought the folder recursivelly
 	for _, folder := range folders {
 		err := filepath.Walk(folder, func(file string, info os.FileInfo, err error) error {
 			if err != nil {
@@ -61,31 +65,34 @@ func listarImagenes() {
 				return err
 			}
 
-			// ignorar git directories
+			// ignore .git files
 			if strings.Contains(file, ".git") {
 				return filepath.SkipDir
 			}
-			// ignorar directorios
+			// TODO  I have a good idea for filters here
+			// ignore directories
 			if !info.IsDir() && extensionIsValid(file) {
 				globals.Original_images = append(globals.Original_images, file)
 			}
 			return nil
 		})
+		// TODO  display a dialog error on invalid folders
 		if err != nil {
 			log.Print(err)
 		}
 	}
 }
 
-func ordenarImagenes(metodo string) {
+// sort images by name
+func sortImages(metodo string) {
 	// TODO  agregar mas metodos de ordenamiento
 	if metodo == "default" {
 		sort.Strings(globals.Original_images)
 	}
 }
 
-// comprobar que la extensio del archivo sea la correcta
-// Solo jpg, png y jpeg
+// Determine if the file has a valid extension.
+// It can be jpg, jpeg and png.
 func extensionIsValid(file string) bool {
 	// aislar la extension
 	aux := strings.Split(file, ".")
@@ -96,9 +103,10 @@ func extensionIsValid(file string) bool {
 	return res
 }
 
-// Retorna nombre un nombre para la imagen reescalada
-func aislarNombreImagen(name string) string {
-	// trasnformar las barras invertidas en windows
+// TODO  change the caption size dependending on the grid size
+// Returns the first 12 letters of the name of a image. This is for fitting into the captions
+func isolateImageName(name string) string {
+	// Change backslashes to normal ones
 	name = strings.ReplaceAll(name, `\`, `/`)
 	res := strings.Split(name, "/")
 
@@ -108,11 +116,11 @@ func aislarNombreImagen(name string) string {
 		aux = res[largo][0:12]
 		aux = aux + " ..."
 	}
-	return aux // retorna el nombre de la imagen (maximo 12 caracteres)
+	return aux
 }
 
-// Retorna un nombre para la imagen reescalada
-// retorna el nombre de la imagen como "padrearchivo"
+// Returns a new name for the resized image.
+// this name has the format parent+file
 func aislarNombreImagenReescalada(name string) string {
 	name = strings.ReplaceAll(name, `\`, `/`)
 	res := strings.Split(name, "/")

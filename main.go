@@ -14,15 +14,14 @@ import (
 )
 
 func main() {
-	// settear todas las variables globales dependiendo del OS
+	// set all global variables for the instance
 	global.SetGlobalValues()
 
-	// instanciar la nueva ventana
+	// instance a new fyne window and create a new grid layout
 	global.Window.Resize(fyne.NewSize(950, 600))
-	// generar la grilla de imagenes
 	grid, grid_content := utils.NewContentGrid()
 
-	// titulo principal
+	// main title
 	titulo := canvas.NewText("Select your wallpaper", color.White)
 	titulo.TextStyle = fyne.TextStyle{
 		Bold: true,
@@ -30,39 +29,40 @@ func main() {
 	titulo.Alignment = fyne.TextAlignCenter
 	titulo.TextSize = 18
 
-	// reload button
+	// reload button (on the bottom right)
 	refresh_button := newButton("", func() {
 		// actualizar configuracion y recargar imagenes
+		// refresh the global variables, read the new config and reload thumbnails
 		grid_content.Layout = layout.NewGridWrapLayout(utils.SetGridSize())
 		utils.SetNewContent(grid_content)
 
 		grid.Refresh()
 	}, "viewRefresh")
 
-	// buscador de imagenes con algoritmo difuso
+	// search bar with fuzzy finder
 	fuzzy_button := newButton("", func() {
 		dialogs.NewFuzzyDialog(global.Window)
 	}, "search")
 
-	// abrir el menu de configuraciones
+	// button that opens the config menu
 	configs_button := newButton("Preferences", func() {
 		dialogs.ConfigWindow(&global.Window, global.MyApp, refresh_button)
 	}, "settings")
 
-	// selector de modo de escalado de imagen
+	// image scale mode selector
 	strategy_selector := widget.NewSelect([]string{"Zoom Fill", "Scale", "Center", "Original", "Tile"}, func(sel string) {
 		global.FillStrategy = sel
 		global.MyApp.Preferences().SetString("FillStrategy", sel)
 	})
 	strategy_selector.SetSelected(global.FillStrategy)
 
-	// contenido de la aplicacion
+	// setting the app content
 	hbox := container.New(layout.NewHBoxLayout(), strategy_selector, fuzzy_button, layout.NewSpacer(), refresh_button, configs_button)
 	content := container.New(layout.NewBorderLayout(titulo, hbox, nil, nil), titulo, grid, hbox)
 	global.Window.SetContent(content)
 
-	// rellenar las imagenes solo despues de iniciar
-	// corre en una go routine de manera concurrente (velocidad absurda)
+	// load images and thumbnails concurrently just after initializing the GUI
+	// to improve user experience.
 	global.MyApp.Lifecycle().SetOnStarted(func() {
 		go utils.SetNewContent(grid_content)
 	})
@@ -70,7 +70,7 @@ func main() {
 	global.Window.ShowAndRun()
 }
 
-// retornar un nuevo boton con el icono especificado y la funcion especifica
+// template for creating a new button with the specified function and icon name
 func newButton(name string, f func(), icon ...string) *widget.Button {
 	if len(icon) > 0 {
 		ico := fyne.ThemeIconName(icon[0])
