@@ -50,7 +50,7 @@ func getResizedImages() {
 // por el usuario
 func listarImagenes() {
 	// traer carpetas del archivo de configuracion
-    globals.Original_images = []string{}
+	globals.Original_images = []string{}
 	folders := ConfiguredPaths()
 
 	// recorrer recursivamente cada una de las carpetas del usuario
@@ -71,7 +71,6 @@ func listarImagenes() {
 			}
 			return nil
 		})
-
 		if err != nil {
 			log.Print(err)
 		}
@@ -79,22 +78,22 @@ func listarImagenes() {
 }
 
 func ordenarImagenes(metodo string) {
-    // TODO  agregar mas metodos de ordenamiento
-    if metodo == "default"{
-        sort.Strings(globals.Original_images)
-    }
+	// TODO  agregar mas metodos de ordenamiento
+	if metodo == "default" {
+		sort.Strings(globals.Original_images)
+	}
 }
 
 // comprobar que la extensio del archivo sea la correcta
 // Solo jpg, png y jpeg
-func extensionIsValid (file string) bool {
-    // aislar la extension
-    aux := strings.Split(file, ".")
-    file = aux[len(aux)-1]
+func extensionIsValid(file string) bool {
+	// aislar la extension
+	aux := strings.Split(file, ".")
+	file = aux[len(aux)-1]
 
-    validos := map[string]int {"jpg": 1, "jpeg": 1, "png": 1}
-    _, res := validos[file]
-    return res
+	validos := map[string]int{"jpg": 1, "jpeg": 1, "png": 1}
+	_, res := validos[file]
+	return res
 }
 
 // Retorna nombre un nombre para la imagen reescalada

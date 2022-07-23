@@ -35,7 +35,6 @@ func readConfigFile() map[string][]string {
 	return res
 }
 
-
 type Path struct {
 	Paths []string
 }
@@ -44,8 +43,8 @@ type Path struct {
 // La data es archivo con "Paths": vacio
 func crearConfig(dir string, path string) *os.File {
 	// crear las carpetas necesarias
-	os.MkdirAll(path, 0777)
-	os.MkdirAll(path+"resized_images", 0777)
+	os.MkdirAll(path, 0o777)
+	os.MkdirAll(path+"resized_images", 0o777)
 	os.Create(path + "config.json")
 
 	var data *[]byte
@@ -67,7 +66,7 @@ func setJsonData() *[]byte {
 // Retorna el nuevo archivo abierto
 func writeJsonData(data *[]byte, fileName string) *os.File {
 	// crear el archivo para escritura
-	err := os.WriteFile(fileName, *data, 0777) // escribir
+	err := os.WriteFile(fileName, *data, 0o777) // escribir
 	if err != nil {
 		log.Fatal(err)
 	}

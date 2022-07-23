@@ -3,6 +3,7 @@ A simple wallpaper changer written in Go with the main goal of being light and f
 
 Mainly inspired by Nitrogen (more like a knockoff  ¯\_( ͡❛͜ʖ ͡❛)_/¯ ), Walldo searches for your images, lists them all 
 and displays them on a single screen.
+
 Change your wallpaper as fast as you want. Nothing more and nothing less, simple and functional.
 
 ### Currently supported formats
@@ -10,9 +11,7 @@ Change your wallpaper as fast as you want. Nothing more and nothing less, simple
 - PNG
 - JPEG
 
-
 https://user-images.githubusercontent.com/79729891/180588701-e58b76ca-60a5-4333-b573-171f988a3592.mp4
-
 
 #### A wallpaper changer app ? Why ?... 
 As a person who likes to change his wallpaper very often, I was looking for an app that would allow me to do it in a 
@@ -20,19 +19,24 @@ simple way and as fast as possible. In Linux there are many applications that ca
 but in Windows most of them are very slow and bloated.
 
 ## Instalation
-### Dependencies 
-Walldo is written in pure Go so of course you have to install [Golang](https://go.dev/doc/install).
+### System Dependencies 
+- [Go](https://go.dev/doc/install)
+
+If you want to compile this yourself, you'll need to check out [fyne-cross](https://github.com/fyne-io/fyne-cross).
+
+We don't provide precompiled builds for `macOS` because it's [not straightforward to cross-compose Fyne projects for it](https://github.com/fyne-io/fyne-cross#build-the-docker-image-for-osxdarwinapple-cross-compiling).
 
 ### Windows
-After you have installed Go, simply open a new terminal (cmd) and run:
+After installing the dependencies, open a terminal session (`cmd`) and run:
 ````
 go install -ldflags -H=windowsgui github.com/elias-gill/walldo-in-go@latest
 ````
-Now Walldo must be available in your search bar (```Win```+```S```) as "waldo-in-go".
-You can create a direct access and change the icon if you want.
+Now Walldo should be available in your search bar (`Win`+`S`) as "waldo-in-go".
+
+You can create a shortcut and change the icon if you want.
 
 #### Important
-After the first run you would find a folder in C:/Users/your user/AppData/Local/walldo , there is a file called config.json, in that file you have to put your backgrounds folders (if a folder contains other folders you only have to put the main folder, Walldo will search through all of them). If you have more than one main folder you can put them to.
+After running the application for the first time, you'll find a folder in C:/Users/your-user/AppData/Local/walldo. Inside this directory there should be a `config.json` file; you can specify your wallpaper directories in here (Walldo supports recursive directories).
 
 ##### *Example:*
 ```
@@ -40,21 +44,23 @@ After the first run you would find a folder in C:/Users/your user/AppData/Local/
   "Path": ["C:/Users/walldo/Desktop/fondos", "C:/Users/walldo/Desktop/wallpapers2"]
 }
 ```
-PLEASE DON'T put Windows like backslashes, instead put "/" as the folder separator.
-You can simply reload Walldo with the reload button that is on the bottom right.
+*NOTE: do not use backslashes*
+
+You can reload Walldo with the reload button in the bottom right.
 
 ### Linux
-For Linux is the same that is on Windows.
+After installing the dependencies, open a terminal session and run:
 ````
 go install github.com/elias-gill/walldo-in-go@latest
 ````
-Now you can run "walldo-in-go" on your terminal. If you are using some Desktop Enviroment you can create a direct 
-acces for the command.
-The same rule aplies here, after the first run you have to add the folders into the config.json file which is on /home/your user/.config/walldo.
+You can now run "walldo-in-go" in your terminal. If you are using a Desktop environment, you can create a shortcut for the command.
+
+#### Important
+After running the application for the first time, you'll find a folder in `/home/your-user/.config/walldo`. Inside this directory there should be a `config.json` file; you can specify your wallpaper directories in here (Walldo supports recursive directories).
 
 ## Goals
-- Be the replace for Nitrogen or Feh on Windows Systems. 
-- Be faster and lighter than other similar apps.
+- Be the replacement for Nitrogen or Feh on Windows Systems. 
+- Be faster and lighter than similar apps.
 
 ### Comming features (maybe)
 - A button to get a random wallpaper.

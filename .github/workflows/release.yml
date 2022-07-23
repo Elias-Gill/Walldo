@@ -1,0 +1,29 @@
+name: Release
+on: push
+
+jobs:
+  build:
+    name: Build and Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@master
+
+      - name: Setup Go Environment
+        uses: actions/setup-go@v2
+        with:
+          go-version: '^1.18.0'
+
+      - name: Build Binaries
+        run: |
+          mkdir -p fyne-cross/dist/compressed
+          go install github.com/fyne-io/fyne-cross@latest
+          fyne-cross linux -arch=amd64,arm64
+          fyne-cross windows -arch=amd64
+          cd fyne-cross/dist
+          for file in */*.tar.xz; do mv -- "$file" "compressed/walldo-${file%/*}.tar.xz"; done
+          for file in */*.zip; do mv -- "$file" "compressed/walldo-${file%/*}.zip"; done
+      - name: Upload Binaries
+        run: |
+          go install github.com/tcnksm/ghr@latest
+          ghr -t ${{ secrets.GITHUB_TOKEN }} --delete Latest fyne-cross/dist/compressed/
