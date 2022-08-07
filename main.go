@@ -18,7 +18,7 @@ func main() {
 	global.SetGlobalValues()
 
 	// instance a new fyne window and create a new grid layout
-	global.Window.Resize(fyne.NewSize(950, 600))
+	global.Window.Resize(fyne.NewSize(1020, 600))
 	grid, grid_content := utils.NewContentGrid()
 
 	// main title

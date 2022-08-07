@@ -55,7 +55,7 @@ func getResizedImages() {
 func listImagesRecursivelly() {
 	// get configured folders from the config file
 	globals.Original_images = []string{}
-	folders := ConfiguredPaths()
+	folders := GetConfiguredPaths()
 
 	// loop trought the folder recursivelly
 	for _, folder := range folders {

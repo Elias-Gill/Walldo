@@ -9,12 +9,13 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"strings"
 
 	global "github.com/elias-gill/walldo-in-go/globals"
 )
 
 // Return all folders configured by the user in the configuration file
-func ConfiguredPaths() []string {
+func GetConfiguredPaths() []string {
 	return readConfigFile()["Paths"]
 }
 
@@ -23,7 +24,7 @@ func readConfigFile() map[string][]string {
 	// Si no se encuentra el archivo de configuracion entonces lo crea
 	fileContent, err := os.Open(global.ConfigDir)
 	if err != nil {
-		fileContent = crearConfig(global.ConfigDir, global.ConfigPath)
+		fileContent = SetConfig()
 	}
 	defer fileContent.Close()
 
@@ -40,20 +41,31 @@ type Path struct {
 }
 
 // Creates the config folder and the config.json if is not created yet
-func crearConfig(dir string, path string) *os.File {
+func SetConfig(paths ...string) *os.File {
 	// create the folders
-	os.MkdirAll(path, 0o777)
-	os.MkdirAll(path+"resized_images", 0o777)
-	os.Create(path + "config.json")
+	os.MkdirAll(global.ConfigPath, 0o777)
+	os.MkdirAll(global.ConfigPath+"resized_images", 0o777)
+	os.Create(global.ConfigPath + "config.json")
 
 	var data *[]byte
-	data = setJsonData()
-	return writeJsonData(data, dir)
+    if paths[0] != ""{
+        data = setJsonData(paths[0])
+    } else {
+        data = setJsonData("")
+    }
+	return writeJsonData(data, global.ConfigDir)
 }
 
 // This is for setting the default data of the config.json file
-func setJsonData() *[]byte {
-	content := Path{Paths: []string{""}}
+func setJsonData(paths string) *[]byte {
+    // necesary due to a strange error with slashes in the fyne input
+    aux := strings.Split(strings.ReplaceAll(paths, " ", ""), ",")
+    for x, i := range aux {
+        aux[x] = strings.ReplaceAll(i, `"\`, "")
+    }
+
+    // set the paths and the json content
+	content := Path{Paths: aux}
 	data, err := json.Marshal(content)
 	if err != nil {
 		log.Fatal(err)
@@ -65,7 +77,7 @@ func setJsonData() *[]byte {
 // Returns the config file opened.
 func writeJsonData(data *[]byte, fileName string) *os.File {
 	// create the file and write
-	err := os.WriteFile(fileName, *data, 0o777) 
+	err := os.WriteFile(fileName, *data, 0o777)
 	if err != nil {
 		log.Fatal(err)
 	}

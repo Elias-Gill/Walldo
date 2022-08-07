@@ -14,7 +14,7 @@ import (
 // Fill the grid with images and refresh the container on each step
 func SetNewContent(contenedor *fyne.Container) {
 	listImagesRecursivelly() // search original images
-	getResizedImages()       
+	getResizedImages()
 
 	contenedor.RemoveAll()
 	for i := range globals.Original_images {
