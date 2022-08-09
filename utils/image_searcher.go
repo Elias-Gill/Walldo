@@ -4,7 +4,6 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"runtime"
 	"sort"
 	"strings"
 
@@ -15,8 +14,8 @@ import (
 // Resize the image to create a thumbnail.
 // If a thumbnail already exists just do nothing
 func resizeImage(i int) {
-	destino := globals.Resized_images[i]
-	image := globals.Original_images[i]
+	destino := globals.ResizedImages[i]
+	image := globals.OriginalImages[i]
 
 	// if the thumnail does not exists
 	if _, err := os.Stat(destino); err != nil {
@@ -32,29 +31,20 @@ func resizeImage(i int) {
 // Update the resized_images list
 func getResizedImages() {
 	var res []string
-	sys_os := runtime.GOOS
-	path, _ := os.UserHomeDir() // home folder
-
-	// set the path depending on the current OS
-	if sys_os == "windows" {
-		path += "/AppData/Local/walldo/resized_images/"
-	} else {
-		// Unix (Mac y Linux)
-		path += "/.config/walldo/resized_images/"
-	}
+    path := globals.ConfigPath + "/resized_images/"
 
 	// set a new entry for the resized_images list with a "unique" name
-	for _, image := range globals.Original_images {
-		destino := path + aislarNombreImagenReescalada(image) + ".jpg"
-		res = append(res, destino) // guardar la nueva direccion
+	for _, image := range globals.OriginalImages {
+		dest := path + isolateResizedImageName(image) + ".jpg"
+		res = append(res, dest) // guardar la nueva direccion
 	}
-	globals.Resized_images = res // guardar la imagenes
+	globals.ResizedImages = res // guardar la imagenes
 }
 
 // Goes trought the configured folders recursivelly and list all the supported image files
 func listImagesRecursivelly() {
 	// get configured folders from the config file
-	globals.Original_images = []string{}
+	globals.OriginalImages = []string{}
 	folders := GetConfiguredPaths()
 
 	// loop trought the folder recursivelly
@@ -72,7 +62,7 @@ func listImagesRecursivelly() {
 			// TODO  I have a good idea for filters here
 			// ignore directories
 			if !info.IsDir() && extensionIsValid(file) {
-				globals.Original_images = append(globals.Original_images, file)
+				globals.OriginalImages = append(globals.OriginalImages, file)
 			}
 			return nil
 		})
@@ -87,14 +77,14 @@ func listImagesRecursivelly() {
 func sortImages(metodo string) {
 	// TODO  agregar mas metodos de ordenamiento
 	if metodo == "default" {
-		sort.Strings(globals.Original_images)
+		sort.Strings(globals.OriginalImages)
 	}
 }
 
 // Determine if the file has a valid extension.
-// It can be jpg, jpeg and png.
+// It can be jpg, jpeg or png.
 func extensionIsValid(file string) bool {
-	// aislar la extension
+	// isolate file extension
 	aux := strings.Split(file, ".")
 	file = aux[len(aux)-1]
 
@@ -121,7 +111,7 @@ func isolateImageName(name string) string {
 
 // Returns a new name for the resized image.
 // this name has the format parent+file
-func aislarNombreImagenReescalada(name string) string {
+func isolateResizedImageName(name string) string {
 	name = strings.ReplaceAll(name, `\`, `/`)
 	res := strings.Split(name, "/")
 

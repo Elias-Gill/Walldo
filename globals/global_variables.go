@@ -8,9 +8,9 @@ import (
 )
 
 var (
-	Original_images []string
+	OriginalImages []string
 	Original_paths  []string
-	Resized_images  []string
+	ResizedImages  []string
 )
 
 const SYS_OS = runtime.GOOS

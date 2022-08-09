@@ -17,20 +17,19 @@ func SetNewContent(contenedor *fyne.Container) {
 	getResizedImages()
 
 	contenedor.RemoveAll()
-	for i := range globals.Original_images {
-		cont := fillContainer(contenedor, i)
+	for i := range globals.OriginalImages {
+        cont := fillContainer(contenedor, i)
+        // define grid format
+        // TODO agregar un formato de lista
+        switch globals.GridTitles {
+        case "Borderless":
+            contenedor.Add(cont)
 
-		// define grid format
-		// TODO agregar un formato de lista
-		switch globals.GridTitles {
-		case "Borderless":
-			contenedor.Add(cont)
-
-		default:
-			card := widget.NewCard("", isolateImageName(globals.Original_images[i]), cont)
-			contenedor.Add(card)
-		}
-		contenedor.Refresh()
+        default:
+            card := widget.NewCard("", isolateImageName(globals.OriginalImages[i]), cont)
+            contenedor.Add(card)
+    }
+        contenedor.Refresh()
 	}
 }
 
@@ -42,12 +41,12 @@ func fillContainer(fyneContainer *fyne.Container, i int) *fyne.Container {
 	button.OnTapped = func() {
 		value, _ := strconv.Atoi(button.Text)
 		// the button has the index of the original image
-		SetWallpaper(globals.Original_images[value])
+		SetWallpaper(globals.OriginalImages[value])
 	}
 	// TODO  maybe this need a refactor
 	// resize the image and get the thumbnail
 	resizeImage(i)
-	aux := canvas.NewImageFromFile(globals.Resized_images[i])
+	aux := canvas.NewImageFromFile(globals.ResizedImages[i])
 	aux.ScaleMode = canvas.ImageScaleFastest
 	aux.FillMode = canvas.ImageFillContain
 
