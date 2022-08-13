@@ -35,7 +35,14 @@ Now Walldo should be available in your search bar (`Win`+`S`) as "waldo-in-go".
 
 You can create a shortcut and change the icon if you want.
 
-#### First run
+### Linux
+After installing the dependencies, open a terminal session and run:
+````
+go install github.com/elias-gill/walldo-in-go@latest
+````
+You can now run "walldo-in-go" in your terminal. If you are using a Desktop environment, you can create a shortcut for the command.
+
+### First run
  After the first run you have to setup your wallpapers folder. To do this open the config menu ( “⚙” button) and put your folders absolute path. 
 You can put more than one folder separating them with commas
  
@@ -45,17 +52,6 @@ You can reload Walldo with the reload button ("⟳") in the bottom right.
   C:/Users/walldo/Desktop/fondos, C:/Users/walldo/Desktop/wallpapers2
 ```
 *NOTE: do not use backslashes (\), instead use normal slashes (/)*
-
-
-### Linux
-After installing the dependencies, open a terminal session and run:
-````
-go install github.com/elias-gill/walldo-in-go@latest
-````
-You can now run "walldo-in-go" in your terminal. If you are using a Desktop environment, you can create a shortcut for the command.
-
-#### Important
-After running the application for the first time, you'll find a folder in `/home/your-user/.config/walldo`. Inside this directory there should be a `config.json` file; you can specify your wallpaper directories in here (Walldo supports recursive directories).
 
 ## Goals
 - Be the replacement for Nitrogen or Feh on Windows Systems. 
