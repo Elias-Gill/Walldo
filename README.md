@@ -42,7 +42,7 @@ go install github.com/elias-gill/walldo-in-go@latest
 ````
 You can now run "walldo-in-go" in your terminal. If you are using a Desktop environment, you can create a shortcut for the command.
 
-### First run
+## First run
  After the first run you have to setup your wallpapers folder. To do this open the config menu ( “⚙” button) and put your folders absolute path. 
 You can put more than one folder separating them with commas
  
