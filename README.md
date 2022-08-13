@@ -51,7 +51,7 @@ You can reload Walldo with the reload button ("⟳") in the bottom right.
 ```
   C:/Users/walldo/Desktop/fondos, C:/Users/walldo/Desktop/wallpapers2
 ```
-*NOTE: do not use backslashes (\), instead use normal slashes (/)*
+*NOTE: do not use backslashes ("\"), instead use normal slashes (/)*
 
 ## Goals
 - Be the replacement for Nitrogen or Feh on Windows Systems. 
