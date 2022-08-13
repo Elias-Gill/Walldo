@@ -35,18 +35,17 @@ Now Walldo should be available in your search bar (`Win`+`S`) as "waldo-in-go".
 
 You can create a shortcut and change the icon if you want.
 
-#### Important
-After running the application for the first time, you'll find a folder in C:/Users/your-user/AppData/Local/walldo. Inside this directory there should be a `config.json` file; you can specify your wallpaper directories in here (Walldo supports recursive directories).
-
-##### *Example:*
+#### First run
+ After the first run you have to setup your wallpapers folder. To do this open the config menu ( “⚙” button) and put your folders absolute path. 
+You can put more than one folder separating them with commas
+ 
+You can reload Walldo with the reload button ("⟳") in the bottom right.
+##### *Path format example:*
 ```
-{
-  "Path": ["C:/Users/walldo/Desktop/fondos", "C:/Users/walldo/Desktop/wallpapers2"]
-}
+  C:/Users/walldo/Desktop/fondos, C:/Users/walldo/Desktop/wallpapers2
 ```
-*NOTE: do not use backslashes*
+*NOTE: do not use backslashes (\), instead use normal slashes (/)*
 
-You can reload Walldo with the reload button in the bottom right.
 
 ### Linux
 After installing the dependencies, open a terminal session and run:
