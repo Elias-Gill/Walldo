@@ -31,7 +31,7 @@ func resizeImage(i int) {
 // Update the resized_images list
 func getResizedImages() {
 	var res []string
-    path := globals.ConfigPath + "/resized_images/"
+	path := globals.ConfigPath + "/resized_images/"
 
 	// set a new entry for the resized_images list with a "unique" name
 	for _, image := range globals.OriginalImages {

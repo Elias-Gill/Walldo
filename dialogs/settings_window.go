@@ -37,8 +37,8 @@ func ConfigWindow(win *fyne.Window, app fyne.App, refresh *widget.Button) {
 		})
 	layout_selector.SetSelected(globals.LayoutStyle)
 
-    // entry to display and set the configured paths
-    input := newEntryPaths()
+	// entry to display and set the configured paths
+	input := newEntryPaths()
 
 	// Window content
 	cont := []*widget.FormItem{
@@ -50,7 +50,7 @@ func ConfigWindow(win *fyne.Window, app fyne.App, refresh *widget.Button) {
 
 	// Create the new dialog window (the main container)
 	dia := dialog.NewForm("Settings", "Confirm", "Cancel", cont,
-        // function to refresh the content with the new given config
+		// function to refresh the content with the new given config
 		func(status bool) {
 			if status {
 				// update fyne config API
@@ -63,37 +63,37 @@ func ConfigWindow(win *fyne.Window, app fyne.App, refresh *widget.Button) {
 				globals.GridSize = sel_grid_size
 				globals.LayoutStyle = sel_layout_style
 
-                // update configured paths
-                f := utils.SetConfig(input.Text)
-                f.Close()
+				// update configured paths
+				f := utils.SetConfig(input.Text)
+				f.Close()
 
 				// refresh the main window
 				refresh.OnTapped()
 			}
 		}, *win)
-    dia.Resize(fyne.NewSize(400, 400))
+	dia.Resize(fyne.NewSize(400, 400))
 
 	dia.Show()
 }
 
 // function to create a new entry for changing the configured paths
-func newEntryPaths () *widget.Entry{
-    input := widget.NewEntry()
-    input.SetPlaceHolder(`C:/User/fondos, C:/Example/images`)
+func newEntryPaths() *widget.Entry {
+	input := widget.NewEntry()
+	input.SetPlaceHolder(`C:/User/fondos, C:/Example/images`)
 
-    // get the current configured paths and display them
-    var c string
-    aux := utils.GetConfiguredPaths()
-    for count, i := range aux{
-        c += i 
-        if (count < len(aux)-1){
-            c += ", "
-        }
-    }
+	// get the current configured paths and display them
+	var c string
+	aux := utils.GetConfiguredPaths()
+	for count, i := range aux {
+		c += i
+		if count < len(aux)-1 {
+			c += ", "
+		}
+	}
 
-    if c != ""{
-        input.SetText(c)
-    }
+	if c != "" {
+		input.SetText(c)
+	}
 
-    return input
+	return input
 }

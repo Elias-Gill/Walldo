@@ -18,18 +18,18 @@ func SetNewContent(contenedor *fyne.Container) {
 
 	contenedor.RemoveAll()
 	for i := range globals.OriginalImages {
-        cont := fillContainer(contenedor, i)
-        // define grid format
-        // TODO agregar un formato de lista
-        switch globals.GridTitles {
-        case "Borderless":
-            contenedor.Add(cont)
+		cont := fillContainer(contenedor, i)
+		// define grid format
+		// TODO agregar un formato de lista
+		switch globals.GridTitles {
+		case "Borderless":
+			contenedor.Add(cont)
 
-        default:
-            card := widget.NewCard("", isolateImageName(globals.OriginalImages[i]), cont)
-            contenedor.Add(card)
-    }
-        contenedor.Refresh()
+		default:
+			card := widget.NewCard("", isolateImageName(globals.OriginalImages[i]), cont)
+			contenedor.Add(card)
+		}
+		contenedor.Refresh()
 	}
 }
 

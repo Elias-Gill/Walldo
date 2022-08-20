@@ -9,7 +9,7 @@ import (
 
 var (
 	OriginalImages []string
-	Original_paths  []string
+	Original_paths []string
 	ResizedImages  []string
 )
 

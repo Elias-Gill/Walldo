@@ -48,43 +48,30 @@ func SetConfig(paths ...string) *os.File {
 	os.Create(global.ConfigPath + "config.json")
 
 	var data *[]byte
-    if paths[0] != ""{
-        data = setJsonData(paths[0])
-    } else {
-        data = setJsonData("")
-    }
+	if paths[0] != "" {
+		data = setJsonData(paths[0])
+	} else {
+		data = setJsonData("")
+	}
 	return writeJsonData(data, global.ConfigDir)
 }
 
 // This is for setting the default data of the config.json file
 func setJsonData(paths string) *[]byte {
-    // Delete all white spaces from the start of the string
-    aux := strings.Split(paths, ",")
-    i := 0
-    for true {
-        if aux[i] != " " {
-            break
-        }
-        aux[i] = "";
-        i++
-    }
+	// split paths
+	aux := strings.Split(paths, ",")
 
-    // Delete all white spaces from the end of the string
-    i = len(aux)-1
-    for true {
-        if aux[i] != " " {
-            break
-        }
-        aux[i] = "";
-        i--
-    }
+	// Trim all white spaces
+	for x, e := range aux {
+		aux[x] = strings.TrimSpace(e)
+	}
 
-    // replace all backslashes with non spaces (necesary due to a weird problem with fyne inputs)
-    for x, i := range aux {
-        aux[x] = strings.ReplaceAll(i, `"\`, "")
-    }
+	// Delete all backslashes (necesary due to a weird problem with fyne inputs)
+	for x, i := range aux {
+		aux[x] = strings.ReplaceAll(i, `"\`, "")
+	}
 
-    // set the paths and the json content
+	// set the paths and the json content
 	content := Path{Paths: aux}
 	data, err := json.Marshal(content)
 	if err != nil {
