@@ -58,8 +58,28 @@ func SetConfig(paths ...string) *os.File {
 
 // This is for setting the default data of the config.json file
 func setJsonData(paths string) *[]byte {
-    // necesary due to a strange error with slashes in the fyne input
-    aux := strings.Split(strings.ReplaceAll(paths, " ", ""), ",")
+    // Delete all white spaces from the start of the string
+    aux := strings.Split(paths, ",")
+    i := 0
+    for true {
+        if aux[i] != " " {
+            break
+        }
+        aux[i] = "";
+        i++
+    }
+
+    // Delete all white spaces from the end of the string
+    i = len(aux)-1
+    for true {
+        if aux[i] != " " {
+            break
+        }
+        aux[i] = "";
+        i--
+    }
+
+    // replace all backslashes with non spaces (necesary due to a weird problem with fyne inputs)
     for x, i := range aux {
         aux[x] = strings.ReplaceAll(i, `"\`, "")
     }

@@ -26,6 +26,7 @@ func main() {
 	titulo.TextStyle = fyne.TextStyle{
 		Bold: true,
 	}
+
 	titulo.Alignment = fyne.TextAlignCenter
 	titulo.TextSize = 18
 
