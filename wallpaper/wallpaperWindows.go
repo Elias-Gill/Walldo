@@ -1,6 +1,6 @@
 // go:build windows
 
-package utils
+package wallpaper
 
 import (
 	"github.com/elias-gill/wallpaper"

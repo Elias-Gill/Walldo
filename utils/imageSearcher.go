@@ -93,7 +93,6 @@ func extensionIsValid(file string) bool {
 	return res
 }
 
-// TODO  change the caption size dependending on the grid size
 // Returns the first 12 letters of the name of a image. This is for fitting into the captions
 func isolateImageName(name string) string {
 	// Change backslashes to normal ones

@@ -10,41 +10,31 @@ import (
 
 // Configuration window
 func ConfigWindow(win *fyne.Window, app fyne.App, refresh *widget.Button) {
-	var sel_grid_style string
-	var sel_grid_size string
-	var sel_layout_style string
+	var selGridStyle string
+	var selGridSize string
 
 	// selector to determine grid size
 	grid_size_selector := widget.NewRadioGroup([]string{"large", "default", "small"},
 		func(sel string) {
-			sel_grid_size = sel
+			selGridSize = sel
 		})
 	grid_size_selector.SetSelected(globals.GridSize)
 
 	// grid style selector (Borderless or captions)
-	grid_style_selector := widget.NewRadioGroup(
+	gridStyleSelector := widget.NewRadioGroup(
 		[]string{"Borderless", "Captions"},
 		func(sel string) {
-			sel_grid_style = sel
+			selGridStyle = sel
 		})
-	grid_style_selector.SetSelected(globals.GridTitles)
-
-	// Layout style selector (grid or rows)
-	layout_selector := widget.NewRadioGroup(
-		[]string{"Grid", "Rows"},
-		func(sel string) {
-			sel_layout_style = sel
-		})
-	layout_selector.SetSelected(globals.LayoutStyle)
+	gridStyleSelector.SetSelected(globals.GridTitles)
 
 	// entry to display and set the configured paths
 	input := newEntryPaths()
 
 	// Window content
 	cont := []*widget.FormItem{
-		widget.NewFormItem("Layout", layout_selector),
 		widget.NewFormItem("Images size", grid_size_selector),
-		widget.NewFormItem("Grid style", grid_style_selector),
+		widget.NewFormItem("Grid style", gridStyleSelector),
 		widget.NewFormItem("", input),
 	}
 
@@ -54,14 +44,12 @@ func ConfigWindow(win *fyne.Window, app fyne.App, refresh *widget.Button) {
 		func(status bool) {
 			if status {
 				// update fyne config API
-				globals.MyApp.Preferences().SetString("GridTitles", sel_grid_style)
-				globals.MyApp.Preferences().SetString("GridSize", sel_grid_size)
-				globals.MyApp.Preferences().SetString("Layout", sel_layout_style)
+				globals.MyApp.Preferences().SetString("GridTitles", selGridStyle)
+				globals.MyApp.Preferences().SetString("GridSize", selGridSize)
 
 				// update global variables
-				globals.GridTitles = sel_grid_style
-				globals.GridSize = sel_grid_size
-				globals.LayoutStyle = sel_layout_style
+				globals.GridTitles = selGridStyle
+				globals.GridSize = selGridSize
 
 				// update configured paths
 				f := utils.SetConfig(input.Text)

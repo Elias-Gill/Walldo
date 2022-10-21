@@ -17,27 +17,25 @@ func main() {
 	// set all global variables for the instance
 	global.SetGlobalValues()
 
-	// instance a new fyne window and create a new grid layout
+	// instance a new fyne window and create a new layout
 	global.Window.Resize(fyne.NewSize(1020, 600))
-	grid, grid_content := utils.NewContentGrid()
+	mainContent := fyne.NewContainer()
+	mainContent.Layout = utils.DefineLayout()
+	mainContainer := container.New(layout.NewPaddedLayout(), container.NewScroll(mainContent)) // make the container scrollable
 
 	// main title
-	titulo := canvas.NewText("Select your wallpaper", color.White)
-	titulo.TextStyle = fyne.TextStyle{
-		Bold: true,
-	}
-
-	titulo.Alignment = fyne.TextAlignCenter
-	titulo.TextSize = 18
+	title := canvas.NewText("Select your wallpaper", color.White)
+	title.TextStyle = fyne.TextStyle{Bold: true}
+	title.Alignment = fyne.TextAlignCenter
+	title.TextSize = 18
 
 	// reload button (on the bottom right)
 	refresh_button := newButton("", func() {
 		// actualizar configuracion y recargar imagenes
 		// refresh the global variables, read the new config and reload thumbnails
-		grid_content.Layout = layout.NewGridWrapLayout(utils.SetGridSize())
-		utils.SetNewContent(grid_content)
-
-		grid.Refresh()
+		mainContent.Layout = utils.DefineLayout()
+		utils.CompleteCards(mainContent)
+		mainContainer.Refresh()
 	}, "viewRefresh")
 
 	// search bar with fuzzy finder
@@ -59,15 +57,16 @@ func main() {
 
 	// setting the app content
 	hbox := container.New(layout.NewHBoxLayout(), strategy_selector, fuzzy_button, layout.NewSpacer(), refresh_button, configs_button)
-	content := container.New(layout.NewBorderLayout(titulo, hbox, nil, nil), titulo, grid, hbox)
+	content := container.New(layout.NewBorderLayout(title, hbox, nil, nil), title, mainContainer, hbox)
 	global.Window.SetContent(content)
 
 	// load images and thumbnails concurrently just after initializing the GUI
 	// to improve user experience.
 	global.MyApp.Lifecycle().SetOnStarted(func() {
-		go utils.SetNewContent(grid_content)
+		go utils.CompleteCards(mainContent)
 	})
 
+	// run app
 	global.Window.ShowAndRun()
 }
 
