@@ -8,7 +8,7 @@ import (
 	"fyne.io/fyne/v2/widget"
 	"github.com/elias-gill/walldo-in-go/fuzzyEngine/matching"
 	"github.com/elias-gill/walldo-in-go/globals"
-	"github.com/elias-gill/walldo-in-go/wallpaper"
+	"github.com/elias-gill/walldo-in-go/utils"
 )
 
 var (
@@ -60,5 +60,5 @@ func NewFuzzyDialog(w fyne.Window) {
 
 // change the wallpaper with the given selection
 func listSelected(id int) {
-	wallpaper.SetWallpaper(data[id])
+	utils.SetWallpaper(data[id])
 }

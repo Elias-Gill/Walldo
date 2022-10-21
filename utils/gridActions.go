@@ -7,7 +7,6 @@ import (
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 	"github.com/elias-gill/walldo-in-go/globals"
-	"github.com/elias-gill/walldo-in-go/wallpaper"
 	"strconv"
 )
 
@@ -47,7 +46,7 @@ func generateFyneContent(i int) *fyne.Container {
 	button.OnTapped = func() {
 		value, _ := strconv.Atoi(button.Text)
 		// the button has the index of the original image
-		wallpaper.SetWallpaper(globals.OriginalImages[value])
+		SetWallpaper(globals.OriginalImages[value])
 	}
 
 	// resize the image and get the thumbnail

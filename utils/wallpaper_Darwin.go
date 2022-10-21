@@ -1,6 +1,6 @@
 // go:build darwin
 
-package wallpaper
+package utils
 
 import (
 	"github.com/elias-gill/wallpaper"
