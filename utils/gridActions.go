@@ -3,7 +3,6 @@ package utils
 
 import (
 	"runtime"
-	"strconv"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
@@ -25,7 +24,7 @@ func CompleteCards(c *fyne.Container) {
 	listImagesRecursivelly() // search original images
 	getResizedImages()
 
-    // save all images into a go channel to manage concurrently load/generate thumbnails
+	// save all images into a go channel to manage concurrently load/generate thumbnails
 	channel := make(chan int, len(globals.OriginalImages))
 	for i := range globals.OriginalImages {
 		channel <- i
@@ -38,7 +37,7 @@ func CompleteCards(c *fyne.Container) {
 	print("\n Usando ", runtime.NumCPU()-2, " Hilos")
 }
 
-// recibes the channel with the list of images and creates a new card of 
+// recibes the channel with the list of images and creates a new card of
 func addNewCard(chanel chan int, c *fyne.Container) {
 	for i := range chanel {
 		content := generateFyneContent(i)
@@ -61,11 +60,10 @@ func addNewCard(chanel chan int, c *fyne.Container) {
 // Every component has a container, a button with the position of an image
 // from the images list and a thumbnail
 func generateFyneContent(i int) *fyne.Container {
-	button := widget.NewButton(strconv.Itoa(i), nil)
+	button := widget.NewButton("", nil)
 	button.OnTapped = func() {
-		value, _ := strconv.Atoi(button.Text)
 		// the button has the index of the original image
-		SetWallpaper(globals.OriginalImages[value])
+		SetWallpaper(globals.OriginalImages[i])
 	}
 
 	// resize the image and get the thumbnail

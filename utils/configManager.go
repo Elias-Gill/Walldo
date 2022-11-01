@@ -10,6 +10,7 @@ import (
 	"log"
 	"os"
 	"strings"
+
 	global "github.com/elias-gill/walldo-in-go/globals"
 )
 

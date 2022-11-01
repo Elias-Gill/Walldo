@@ -9,7 +9,7 @@ import (
 
 var (
 	OriginalImages []string
-	Original_paths []string
+	Original_paths []string // TODO  add a path filter in the future
 	ResizedImages  []string
 )
 
