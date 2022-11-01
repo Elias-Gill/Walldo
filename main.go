@@ -30,7 +30,7 @@ func main() {
 	title.TextSize = 18
 
 	// reload button (on the bottom right)
-	refresh_button := newButton("", func() {
+	refreshButton := newButton("", func() {
 		// actualizar configuracion y recargar imagenes
 		// refresh the global variables, read the new config and reload thumbnails
 		mainContent.Layout = utils.DefineLayout()
@@ -39,31 +39,31 @@ func main() {
 	}, "viewRefresh")
 
 	// search bar with fuzzy finder
-	fuzzy_button := newButton("", func() {
+	fuzzyButton := newButton("", func() {
 		dialogs.NewFuzzyDialog(global.Window)
 	}, "search")
 
 	// button that opens the config menu
-	configs_button := newButton("Preferences", func() {
-		dialogs.ConfigWindow(&global.Window, global.MyApp, refresh_button)
+	configsButton := newButton("Preferences", func() {
+		dialogs.ConfigWindow(&global.Window, global.MyApp, refreshButton)
 	}, "settings")
 
 	// image scale mode selector
-	strategy_selector := widget.NewSelect([]string{"Zoom Fill", "Scale", "Center", "Original", "Tile"}, func(sel string) {
+	strategySelector := widget.NewSelect([]string{"Zoom Fill", "Scale", "Center", "Original", "Tile"}, func(sel string) {
 		global.FillStrategy = sel
 		global.MyApp.Preferences().SetString("FillStrategy", sel)
 	})
-	strategy_selector.SetSelected(global.FillStrategy)
+	strategySelector.SetSelected(global.FillStrategy)
 
 	// setting the app content
-	hbox := container.New(layout.NewHBoxLayout(), strategy_selector, fuzzy_button, layout.NewSpacer(), refresh_button, configs_button)
+	hbox := container.New(layout.NewHBoxLayout(), strategySelector, fuzzyButton, layout.NewSpacer(), refreshButton, configsButton)
 	content := container.New(layout.NewBorderLayout(title, hbox, nil, nil), title, mainContainer, hbox)
 	global.Window.SetContent(content)
 
 	// load images and thumbnails concurrently just after initializing the GUI
 	// to improve user experience.
 	global.MyApp.Lifecycle().SetOnStarted(func() {
-		go utils.CompleteCards(mainContent)
+		utils.CompleteCards(mainContent)
 	})
 
 	// run app

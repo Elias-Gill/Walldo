@@ -1,13 +1,16 @@
+// TODO: refactor the logic for thumbnails and loading
 package utils
 
 import (
+	"runtime"
+	"strconv"
+
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 	"github.com/elias-gill/walldo-in-go/globals"
-	"strconv"
 )
 
 // Fill the grid with images and refresh the container on each step
@@ -21,7 +24,23 @@ func CompleteCards(c *fyne.Container) {
 	c.RemoveAll()
 	listImagesRecursivelly() // search original images
 	getResizedImages()
+
+    // save all images into a go channel to manage concurrently load/generate thumbnails
+	channel := make(chan int, len(globals.OriginalImages))
 	for i := range globals.OriginalImages {
+		channel <- i
+	}
+
+	// create more "threads" to increase performance
+	for i := 0; i < runtime.NumCPU()-2; i++ {
+		go addNewCard(channel, c)
+	}
+	print("\n Usando ", runtime.NumCPU()-2, " Hilos")
+}
+
+// recibes the channel with the list of images and creates a new card of 
+func addNewCard(chanel chan int, c *fyne.Container) {
+	for i := range chanel {
 		content := generateFyneContent(i)
 
 		switch globals.GridTitles {
@@ -71,25 +90,3 @@ func SetGridSize() fyne.Size {
 		return fyne.NewSize(150, 130)
 	}
 }
-
-/*
-func SetNewContent(contenedor *fyne.Container) {
-	listImagesRecursivelly() // search original images
-	getResizedImages()
-
-	contenedor.RemoveAll()
-	for i := range globals.OriginalImages {
-		cont := fillContainer(contenedor, i)
-		// define grid format
-
-		switch globals.GridTitles {
-		case "Borderless":
-			contenedor.Add(cont)
-
-		default:
-			card := widget.NewCard("", isolateImageName(globals.OriginalImages[i]), cont)
-			contenedor.Add(card)
-		}
-		contenedor.Refresh()
-	}
-} */
