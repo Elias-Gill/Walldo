@@ -35,8 +35,9 @@ var (
 
 // Config files
 var (
-	ConfigDir, _ = os.UserHomeDir() // Home folder
-	ConfigPath   = ConfigDir        // configs path
+	ConfigFile     string
+	ConfigPath     string
+	ThumbnailsPath string
 )
 
 // Change config values depending on the OS
@@ -44,15 +45,18 @@ var (
 // ~/AppData/Local/walldo/config.json (windows)
 func SetGlobalValues() {
 	os.Setenv("FYNE_THEME", "dark")
+	o, _ := os.UserHomeDir()
 
 	switch SYS_OS {
 	case "windows":
-		ConfigDir += "/AppData/Local/walldo/config.json"
-		ConfigPath += "/AppData/Local/walldo/"
+		ConfigFile = o + "/AppData/Local/walldo/config.json"
+		ConfigPath = o + "/AppData/Local/walldo/"
+		ThumbnailsPath = o + "/AppData/Local/walldo/resized_images/"
 
 	default:
 		// sistemas Unix (Mac y Linux)
-		ConfigDir += "/.config/walldo/config.json"
-		ConfigPath += "/.config/walldo/"
+		ConfigFile = o + "/.config/walldo/config.json"
+		ConfigPath = o + "/.config/walldo/"
+		ThumbnailsPath = o + "/.config/walldo/resized_images/"
 	}
 }

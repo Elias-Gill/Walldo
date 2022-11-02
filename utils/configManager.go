@@ -22,9 +22,9 @@ func GetConfiguredPaths() []string {
 // Reads and parse the config file
 func readConfigFile() map[string][]string {
 	// Si no se encuentra el archivo de configuracion entonces lo crea
-	fileContent, err := os.Open(global.ConfigDir)
+	fileContent, err := os.Open(global.ConfigFile)
 	if err != nil {
-		fileContent = SetConfig()
+		fileContent = SetConfig("")
 	}
 	defer fileContent.Close()
 
@@ -41,19 +41,19 @@ type Path struct {
 }
 
 // Creates the config folder and the config.json if is not created yet
-func SetConfig(paths ...string) *os.File {
+func SetConfig(paths string) *os.File {
 	// create the folders
-	os.MkdirAll(global.ConfigPath, 0o777)
+	// os.MkdirAll(global.ConfigPath, 0o777)
 	os.MkdirAll(global.ConfigPath+"resized_images", 0o777)
 	os.Create(global.ConfigPath + "config.json")
 
 	var data *[]byte
-	if paths[0] != "" {
-		data = setJsonData(paths[0])
+	if paths != "" {
+		data = setJsonData(paths)
 	} else {
 		data = setJsonData("")
 	}
-	return writeJsonData(data, global.ConfigDir)
+	return writeJsonData(data, global.ConfigFile)
 }
 
 // This is for setting the default data of the config.json file

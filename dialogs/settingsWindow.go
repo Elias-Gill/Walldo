@@ -1,6 +1,8 @@
 package dialogs
 
 import (
+	"strings"
+
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
@@ -52,7 +54,8 @@ func ConfigWindow(win *fyne.Window, app fyne.App, refresh *widget.Button) {
 				globals.GridSize = selGridSize
 
 				// update configured paths
-				f := utils.SetConfig(input.Text)
+				paths := formatInput(input.Text)
+				f := utils.SetConfig(paths)
 				f.Close()
 
 				// refresh the main window
@@ -64,10 +67,22 @@ func ConfigWindow(win *fyne.Window, app fyne.App, refresh *widget.Button) {
 	dia.Show()
 }
 
+// format the input of the user
+func formatInput(s string) string {
+	var res string
+	for _, i := range strings.Split(s, "\n") {
+		aux := strings.TrimSpace(i)
+		strings.Replace(aux, ",", "", 1)
+		res += aux
+	}
+	return res
+}
+
 // function to create a new entry for changing the configured paths
 func newEntryPaths() *widget.Entry {
 	input := widget.NewEntry()
-	input.SetPlaceHolder(`C:/User/fondos, C:/Example/images`)
+	input.MultiLine = true
+	input.SetPlaceHolder(`C:/User/fondos, \nC:/Example/images`)
 
 	// get the current configured paths and display them
 	var c string
@@ -75,7 +90,7 @@ func newEntryPaths() *widget.Entry {
 	for count, i := range aux {
 		c += i
 		if count < len(aux)-1 {
-			c += ", "
+			c += ",\n"
 		}
 	}
 

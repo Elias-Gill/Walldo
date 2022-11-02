@@ -35,7 +35,7 @@ func main() {
 		// refresh the global variables, read the new config and reload thumbnails
 		mainContent.Layout = utils.DefineLayout()
 		utils.CompleteCards(mainContent)
-		mainContainer.Refresh()
+		// mainContainer.Refresh()
 	}, "viewRefresh")
 
 	// search bar with fuzzy finder
