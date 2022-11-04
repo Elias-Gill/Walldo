@@ -18,10 +18,9 @@ func main() {
 	global.SetGlobalValues()
 
 	// instance a new fyne window and create a new layout
-	global.Window.Resize(fyne.NewSize(1020, 600))
-	mainContent := fyne.NewContainer()
-	mainContent.Layout = utils.DefineLayout()
-	mainContainer := container.New(layout.NewPaddedLayout(), container.NewScroll(mainContent)) // make the container scrollable
+	contentContainer := fyne.NewContainer()
+	contentContainer.Layout = utils.DefineLayout()
+	mainFrame := container.New(layout.NewPaddedLayout(), container.NewScroll(contentContainer)) // make the container scrollable
 
 	// main title
 	title := canvas.NewText("Select your wallpaper", color.White)
@@ -33,9 +32,8 @@ func main() {
 	refreshButton := newButton("", func() {
 		// actualizar configuracion y recargar imagenes
 		// refresh the global variables, read the new config and reload thumbnails
-		mainContent.Layout = utils.DefineLayout()
-		utils.CompleteCards(mainContent)
-		// mainContainer.Refresh()
+		contentContainer.Layout = utils.DefineLayout()
+		utils.CompleteCards(contentContainer)
 	}, "viewRefresh")
 
 	// search bar with fuzzy finder
@@ -57,13 +55,20 @@ func main() {
 
 	// setting the app content
 	hbox := container.New(layout.NewHBoxLayout(), strategySelector, fuzzyButton, layout.NewSpacer(), refreshButton, configsButton)
-	content := container.New(layout.NewBorderLayout(title, hbox, nil, nil), title, mainContainer, hbox)
+	content := container.New(layout.NewBorderLayout(title, hbox, nil, nil), title, mainFrame, hbox)
 	global.Window.SetContent(content)
 
-	// load images and thumbnails concurrently just after initializing the GUI
-	// to improve user experience.
+	// load images and thumbnails just after initializing the GUI
 	global.MyApp.Lifecycle().SetOnStarted(func() {
-		utils.CompleteCards(mainContent)
+		utils.CompleteCards(contentContainer)
+	})
+
+	// save the window size on close
+	global.Window.SetOnClosed(func() {
+        println(global.Window.Canvas().Size().Height)
+        println(global.Window.Canvas().Size().Width)
+		global.MyApp.Preferences().SetFloat("WindowHeight", float64(global.Window.Canvas().Size().Height))
+		global.MyApp.Preferences().SetFloat("WindowWidth", float64(global.Window.Canvas().Size().Width))
 	})
 
 	// run app

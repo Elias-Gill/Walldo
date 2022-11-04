@@ -14,37 +14,34 @@ import (
 // Resize the image to create a thumbnail.
 // If a thumbnail already exists just do nothing
 func resizeImage(i int) {
-	destino := globals.ResizedImages[i]
-	image := globals.OriginalImages[i]
+	destino := globals.Thumbnails[i]
+	image := globals.ImagesList[i]
 
 	// if the thumnail does not exists
 	if _, err := os.Stat(destino); err != nil {
 		src, _ := imaging.Open(image)
 		src = imaging.Thumbnail(src, 200, 150, imaging.Box)
 		// save the thumbnail on a folder
-		// TODO  make this folder into .cache or /temp
 		imaging.Save(src, destino)
 	}
 }
 
 // TODO  this need a redesign
-// Update the resized_images list
-func getResizedImages() {
+// Update the Thumbnails list
+func getThumbnails() {
 	var res []string
 	// set a new entry for the resized_images list with a "unique" name
-	for _, image := range globals.OriginalImages {
-		dest := globals.ThumbnailsPath + isolateResizedImageName(image) + ".jpg"
+	for _, image := range globals.ImagesList {
+		dest := globals.ThumbnailsPath + getThumbnailName(image) + ".jpg"
 		res = append(res, dest) // store the path of the new resized image
 	}
-	globals.ResizedImages = res // save the result globaly
+	globals.Thumbnails = res // save the result globaly
 }
 
-// TODO  I have a good idea for filters here
-// TODO  display a dialog error on invalid folders
 // Goes trought the configured folders recursivelly and list all the supported image files
 func listImagesRecursivelly() {
 	// get configured folders from the config file
-	globals.OriginalImages = []string{}
+	globals.ImagesList = []string{}
 	folders := GetConfiguredPaths()
 
 	// loop trought the folder recursivelly
@@ -61,7 +58,7 @@ func listImagesRecursivelly() {
 			}
 			// ignore directories
 			if !info.IsDir() && extensionIsValid(file) {
-				globals.OriginalImages = append(globals.OriginalImages, file)
+				globals.ImagesList = append(globals.ImagesList, file)
 			}
 			return nil
 		})
@@ -75,7 +72,7 @@ func listImagesRecursivelly() {
 // sort images by name
 func sortImages(metodo string) {
 	if metodo == "default" {
-		sort.Strings(globals.OriginalImages)
+		sort.Strings(globals.ImagesList)
 	}
 }
 
@@ -109,7 +106,7 @@ func isolateImageName(name string) string {
 
 // Returns a new name for the resized image.
 // this name has the format parent+file
-func isolateResizedImageName(name string) string {
+func getThumbnailName(name string) string {
 	name = strings.ReplaceAll(name, `\`, `/`)
 	res := strings.Split(name, "/")
 

@@ -4,21 +4,26 @@ import (
 	"os"
 	"runtime"
 
+	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 )
 
 var (
-	OriginalImages []string
-	Original_paths []string // TODO  add a path filter in the future
-	ResizedImages  []string
+	ImagesList []string
+	Thumbnails []string
 )
 
 const SYS_OS = runtime.GOOS
 
 // App initializers
 var (
-	MyApp  = app.NewWithID("walldo")
-	Window = MyApp.NewWindow("Walldo in go")
+	MyApp        = app.NewWithID("walldo")
+	Window       = MyApp.NewWindow("Walldo in go")
+    WindowHeight = 600
+    WindowWidth  = 1020
+    // TODO: solve "save window size" on close
+	/* WindowHeight = MyApp.Preferences().FloatWithFallback("WindowHeight", 600)
+	WindowWidth  = MyApp.Preferences().FloatWithFallback("WindowWidth", 1020) */
 )
 
 // Grid config variables
@@ -46,6 +51,7 @@ var (
 func SetGlobalValues() {
 	os.Setenv("FYNE_THEME", "dark")
 	o, _ := os.UserHomeDir()
+	Window.Resize(fyne.NewSize(float32(WindowWidth), float32(WindowHeight)))
 
 	switch SYS_OS {
 	case "windows":

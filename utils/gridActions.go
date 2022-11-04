@@ -1,4 +1,3 @@
-// TODO: refactor the logic for thumbnails and loading
 package utils
 
 import (
@@ -14,19 +13,27 @@ import (
 
 // Fill the grid with images and refresh the container on each step
 func DefineLayout() fyne.Layout {
-	// maybe in the future i can add more layouts
-	return layout.NewGridWrapLayout(SetGridSize())
+	// default card size
+	size := fyne.NewSize(150, 130)
+	// custom grid sizes
+	switch globals.GridSize {
+	case "small":
+		size = fyne.NewSize(110, 100)
+	case "large":
+		size = fyne.NewSize(195, 175)
+	}
+	return layout.NewGridWrapLayout(size)
 }
 
 // fills the container with the correspondent content
 func CompleteCards(c *fyne.Container) {
 	c.RemoveAll()
 	listImagesRecursivelly() // search original images
-	getResizedImages()
+	getThumbnails()
 
 	// save all images into a go channel to manage concurrently load/generate thumbnails
-	channel := make(chan int, len(globals.OriginalImages))
-	for i := range globals.OriginalImages {
+	channel := make(chan int, len(globals.ImagesList))
+	for i := range globals.ImagesList {
 		channel <- i
 	}
 
@@ -49,7 +56,7 @@ func addNewCard(chanel chan int, c *fyne.Container) {
 
 		// normal grid with captions
 		default:
-			card := widget.NewCard("", isolateImageName(globals.OriginalImages[i]), content)
+			card := widget.NewCard("", isolateImageName(globals.ImagesList[i]), content)
 			c.Add(card)
 		}
 		c.Refresh()
@@ -63,28 +70,16 @@ func generateFyneContent(i int) *fyne.Container {
 	button := widget.NewButton("", nil)
 	button.OnTapped = func() {
 		// the button has the index of the original image
-		SetWallpaper(globals.OriginalImages[i])
+		SetWallpaper(globals.ImagesList[i])
 	}
 
-	// resize the image and get the thumbnail
+	// resize the image and get the thumbnails
 	resizeImage(i)
-	aux := canvas.NewImageFromFile(globals.ResizedImages[i])
+	aux := canvas.NewImageFromFile(globals.Thumbnails[i])
 	aux.ScaleMode = canvas.ImageScaleFastest
 	aux.FillMode = canvas.ImageFillContain
 
 	// A bit of "magia" (With the max layout we can overlap the button and the thumbnail)
 	cont := container.NewMax(aux, button)
 	return cont
-}
-
-// Return a new size depending on the users config
-func SetGridSize() fyne.Size {
-	switch globals.GridSize {
-	case "small":
-		return fyne.NewSize(110, 100)
-	case "large":
-		return fyne.NewSize(195, 175)
-	default:
-		return fyne.NewSize(150, 130)
-	}
 }

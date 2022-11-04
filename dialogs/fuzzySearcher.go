@@ -21,10 +21,10 @@ func entryChanged(entry string) {
 	data = []string{}
 	if len(entry) >= 1 {
 		// search for the matching results
-		aux := matching.FindAll(entry, globals.OriginalImages)
+		aux := matching.FindAll(entry, globals.ImagesList)
 		// display the results
 		for i := 0; i < len(aux); i++ {
-			data = append(data, globals.OriginalImages[aux[i].Idx])
+			data = append(data, globals.ImagesList[aux[i].Idx])
 		}
 	}
 	fuzzy_list.Refresh()
