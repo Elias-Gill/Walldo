@@ -9,13 +9,14 @@ import (
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 	"github.com/elias-gill/walldo-in-go/globals"
+	"github.com/elias-gill/walldo-in-go/wallpaper"
 )
 
-// Fill the grid with images and refresh the container on each step
+// Generates and return a new layout acording to the user configurations
 func DefineLayout() fyne.Layout {
 	// default card size
 	size := fyne.NewSize(150, 130)
-	// custom grid sizes
+	// other grid sizes
 	switch globals.GridSize {
 	case "small":
 		size = fyne.NewSize(110, 100)
@@ -70,7 +71,7 @@ func generateFyneContent(i int) *fyne.Container {
 	button := widget.NewButton("", nil)
 	button.OnTapped = func() {
 		// the button has the index of the original image
-		SetWallpaper(globals.ImagesList[i])
+		wallpaper.SetWallpaper(globals.ImagesList[i])
 	}
 
 	// resize the image and get the thumbnails

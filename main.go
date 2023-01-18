@@ -30,7 +30,6 @@ func main() {
 
 	// reload button (on the bottom right)
 	refreshButton := newButton("", func() {
-		// actualizar configuracion y recargar imagenes
 		// refresh the global variables, read the new config and reload thumbnails
 		contentContainer.Layout = utils.DefineLayout()
 		utils.CompleteCards(contentContainer)
@@ -40,6 +39,11 @@ func main() {
 	fuzzyButton := newButton("", func() {
 		dialogs.NewFuzzyDialog(global.Window)
 	}, "search")
+
+    // button with unsplash random image
+	unsplashButton := newButton("", func() {
+        utils.SetRandomImage()
+	}, "mediaPhoto")
 
 	// button that opens the config menu
 	configsButton := newButton("Preferences", func() {
@@ -51,10 +55,19 @@ func main() {
 		global.FillStrategy = sel
 		global.MyApp.Preferences().SetString("FillStrategy", sel)
 	})
+	// default selection
 	strategySelector.SetSelected(global.FillStrategy)
 
 	// setting the app content
-	hbox := container.New(layout.NewHBoxLayout(), strategySelector, fuzzyButton, layout.NewSpacer(), refreshButton, configsButton)
+	hbox := container.New(layout.NewHBoxLayout(),
+		strategySelector,
+		fuzzyButton,
+		layout.NewSpacer(),
+		unsplashButton,
+		layout.NewSpacer(),
+		refreshButton,
+		configsButton,
+	)
 	content := container.New(layout.NewBorderLayout(title, hbox, nil, nil), title, mainFrame, hbox)
 	global.Window.SetContent(content)
 
@@ -65,8 +78,8 @@ func main() {
 
 	// save the window size on close
 	global.Window.SetOnClosed(func() {
-        println(global.Window.Canvas().Size().Height)
-        println(global.Window.Canvas().Size().Width)
+		println(global.Window.Canvas().Size().Height)
+		println(global.Window.Canvas().Size().Width)
 		global.MyApp.Preferences().SetFloat("WindowHeight", float64(global.Window.Canvas().Size().Height))
 		global.MyApp.Preferences().SetFloat("WindowWidth", float64(global.Window.Canvas().Size().Width))
 	})
@@ -76,9 +89,9 @@ func main() {
 }
 
 // template for creating a new button with the specified function and icon name
-func newButton(name string, f func(), icon ...string) *widget.Button {
+func newButton(name string, f func(), icon string) *widget.Button {
 	if len(icon) > 0 {
-		ico := fyne.ThemeIconName(icon[0])
+		ico := fyne.ThemeIconName(icon)
 		return widget.NewButtonWithIcon(name, global.MyApp.Settings().Theme().Icon(ico), f)
 	}
 	return widget.NewButton(name, f)
