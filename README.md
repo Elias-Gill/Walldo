@@ -64,3 +64,4 @@ You can reload Walldo with the reload button ("⟳") in the bottom right.
 ## Mentions
 - To [ktr0731](https://github.com/ktr07310). The fuzzy finder engine is his entire work.
 - To [reujab](https://github.com/reujab/wallpaper). The library for changing wallapapers is a fork of his original module.
+- 
