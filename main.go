@@ -8,7 +8,8 @@ import (
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
-	dialogs "github.com/elias-gill/walldo-in-go/dialogs"
+	dialogs "github.com/elias-gill/walldo-in-go/gui/dialogs"
+	gui "github.com/elias-gill/walldo-in-go/gui"
 	global "github.com/elias-gill/walldo-in-go/globals"
 	"github.com/elias-gill/walldo-in-go/utils"
 )
@@ -19,7 +20,7 @@ func main() {
 
 	// instance a new fyne window and create a new layout
 	contentContainer := fyne.NewContainer()
-	contentContainer.Layout = utils.DefineLayout()
+	contentContainer.Layout = gui.DefineLayout()
 	mainFrame := container.New(layout.NewPaddedLayout(), container.NewScroll(contentContainer)) // make the container scrollable
 
 	// main title
@@ -31,8 +32,8 @@ func main() {
 	// reload button (on the bottom right)
 	refreshButton := newButton("", func() {
 		// refresh the global variables, read the new config and reload thumbnails
-		contentContainer.Layout = utils.DefineLayout()
-		utils.CompleteCards(contentContainer)
+		contentContainer.Layout = gui.DefineLayout()
+		gui.CompleteCards(contentContainer)
 	}, "viewRefresh")
 
 	// search bar with fuzzy finder
@@ -73,7 +74,7 @@ func main() {
 
 	// load images and thumbnails just after initializing the GUI
 	global.MyApp.Lifecycle().SetOnStarted(func() {
-		utils.CompleteCards(contentContainer)
+		gui.CompleteCards(contentContainer)
 	})
 
 	// save the window size on close

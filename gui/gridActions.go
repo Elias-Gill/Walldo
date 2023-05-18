@@ -8,7 +8,7 @@ import (
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
-	"github.com/elias-gill/walldo-in-go/globals"
+    "github.com/elias-gill/walldo-in-go/globals"
 	"github.com/elias-gill/walldo-in-go/wallpaper"
 )
 

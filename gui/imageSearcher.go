@@ -9,6 +9,7 @@ import (
 
 	"github.com/disintegration/imaging"
 	"github.com/elias-gill/walldo-in-go/globals"
+	"github.com/elias-gill/walldo-in-go/utils"
 )
 
 // Resize the image to create a thumbnail.
@@ -42,7 +43,7 @@ func getThumbnails() {
 func listImagesRecursivelly() {
 	// get configured folders from the config file
 	globals.ImagesList = []string{}
-	folders := GetConfiguredPaths()
+	folders := utils.GetConfiguredPaths()
 
 	// loop trought the folder recursivelly
 	for _, folder := range folders {
