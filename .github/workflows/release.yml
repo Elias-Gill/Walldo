@@ -23,7 +23,7 @@ jobs:
           mkdir -p fyne-cross/dist/compressed
           go install github.com/fyne-io/fyne-cross@latest
           fyne-cross linux -arch=amd64,arm64
-          fyne-cross windows -arch=amd64
+          fyne-cross windows -arch=amd64 -app-id "com.github.walldo"
           cd fyne-cross/dist
           for file in */*.tar.xz; do mv -- "$file" "compressed/walldo-${file%/*}.tar.xz"; done
           for file in */*.zip; do mv -- "$file" "compressed/walldo-${file%/*}.zip"; done
