@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"log"
 	"runtime"
 
 	"fyne.io/fyne/v2"
@@ -8,7 +9,7 @@ import (
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
-    "github.com/elias-gill/walldo-in-go/globals"
+	"github.com/elias-gill/walldo-in-go/globals"
 	"github.com/elias-gill/walldo-in-go/wallpaper"
 )
 
@@ -71,7 +72,10 @@ func generateFyneContent(i int) *fyne.Container {
 	button := widget.NewButton("", nil)
 	button.OnTapped = func() {
 		// the button has the index of the original image
-		wallpaper.SetWallpaper(globals.ImagesList[i])
+		err := wallpaper.SetWallpaper(globals.ImagesList[i])
+        if err != nil {
+            log.Println(err.Error())
+        }
 	}
 
 	// resize the image and get the thumbnails

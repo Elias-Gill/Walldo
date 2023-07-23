@@ -68,8 +68,10 @@ github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/disintegration/imaging v1.6.2 h1:w1LecBlG2Lnp8B3jk5zSuNqd7b4DXhcjwek1ei82L+c=
 github.com/disintegration/imaging v1.6.2/go.mod h1:44/5580QXChDfwIclfc/PCwrr44amcmDAg8hxG0Ewe4=
-github.com/elias-gill/wallpaper v0.1.1 h1:T+sbW+OT6MWHdSAiZYPeDbTa77voJlPiV4o9YxTJIJM=
-github.com/elias-gill/wallpaper v0.1.1/go.mod h1:rhwuaRN+Js3XRBRxXJ26iBNaKYmU6ukDyVVQEf1Asz0=
+github.com/elias-gill/wallpaper v0.1.3 h1:A/MsJgxCOGdkGg+CMhnd/o+5+NckfR6j4b8V+gl1gG8=
+github.com/elias-gill/wallpaper v0.1.3/go.mod h1:rhwuaRN+Js3XRBRxXJ26iBNaKYmU6ukDyVVQEf1Asz0=
+github.com/elias-gill/wallpaper v0.1.4 h1:4BV114R11YlWi0FeqGcW8qxFDWu4OnanDqyePGUujVE=
+github.com/elias-gill/wallpaper v0.1.4/go.mod h1:rhwuaRN+Js3XRBRxXJ26iBNaKYmU6ukDyVVQEf1Asz0=
 github.com/envoyproxy/go-control-plane v0.9.0/go.mod h1:YTl/9mNaCwkRvm6d1a2C3ymFceY/DCBVvsKhRF0iEA4=
 github.com/envoyproxy/go-control-plane v0.9.1-0.20191026205805-5f8ba28d4473/go.mod h1:YTl/9mNaCwkRvm6d1a2C3ymFceY/DCBVvsKhRF0iEA4=
 github.com/envoyproxy/go-control-plane v0.9.4/go.mod h1:6rpuAdCZL397s3pYoYcLgu1mIlRU8Am5FuJP05cCM98=

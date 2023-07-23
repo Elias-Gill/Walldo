@@ -5,7 +5,7 @@ go 1.18
 require (
 	fyne.io/fyne/v2 v2.2.3
 	github.com/disintegration/imaging v1.6.2
-	github.com/elias-gill/wallpaper v0.1.1
+	github.com/elias-gill/wallpaper v0.1.4
 )
 
 require (
