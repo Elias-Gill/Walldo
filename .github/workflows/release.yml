@@ -18,11 +18,6 @@ jobs:
         with:
           go-version: "^1.18.0"
 
-      - name: Install Docker
-        run: |
-          curl -fsSL https://get.docker.com -o get-docker.sh
-          sh get-docker.sh
-
       - name: Build Binaries
         run: |
           mkdir -p fyne-cross/dist/compressed
