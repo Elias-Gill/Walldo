@@ -80,8 +80,8 @@ func SetupGui() {
 		c.fillGridWithCards()
 	})
 
-	// save the window size on close
-	global.Window.SetOnClosed(func() {
+    // save the window size on close
+    global.MyApp.Lifecycle().SetOnStopped(func() {
 		println(global.Window.Canvas().Size().Height)
 		println(global.Window.Canvas().Size().Width)
 		global.MyApp.Preferences().SetFloat("WindowHeight", float64(global.Window.Canvas().Size().Height))

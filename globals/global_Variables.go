@@ -1,6 +1,7 @@
 package globals
 
 import (
+	"log"
 	"os"
 	"runtime"
 
@@ -18,7 +19,7 @@ const SYS_OS = runtime.GOOS
 var (
 	MyApp        = app.NewWithID("walldo")
 	Window       = MyApp.NewWindow("Walldo in go")
-    WindowHeight = MyApp.Preferences().FloatWithFallback("WindowHeight", 600)
+	WindowHeight = MyApp.Preferences().FloatWithFallback("WindowHeight", 600)
 	WindowWidth  = MyApp.Preferences().FloatWithFallback("WindowWidth", 1020)
 )
 
@@ -46,19 +47,22 @@ var (
 // ~/AppData/Local/walldo/config.json (windows)
 func SetupEnvVariables() {
 	os.Setenv("FYNE_THEME", "dark")
-	o, _ := os.UserHomeDir()
+	home, err := os.UserHomeDir()
+	if err != nil {
+		log.Fatal("Cannot establish users home directory: ", err.Error())
+	}
 	Window.Resize(fyne.NewSize(float32(WindowWidth), float32(WindowHeight)))
 
 	switch SYS_OS {
 	case "windows":
-		ConfigFile = o + "/AppData/Local/walldo/config.json"
-		ConfigPath = o + "/AppData/Local/walldo/"
-		ThumbnailsPath = o + "/AppData/Local/walldo/resized_images/"
+		ConfigPath = home + "/AppData/Local/walldo/"
+		ConfigFile = home + "/AppData/Local/walldo/config.json"
+		ThumbnailsPath = home + "/AppData/Local/walldo/resized_images/"
 
 	default:
 		// sistemas Unix (Mac y Linux)
-		ConfigFile = o + "/.config/walldo/config.json"
-		ConfigPath = o + "/.config/walldo/"
-		ThumbnailsPath = o + "/.config/walldo/resized_images/"
+		ConfigPath = home + "/.config/walldo/"
+		ConfigFile = home + "/.config/walldo/config.json"
+		ThumbnailsPath = home + "/.config/walldo/resized_images/"
 	}
 }
