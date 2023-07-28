@@ -54,6 +54,19 @@ You can reload Walldo with the reload button ("⟳") in the bottom right.
 ```
 *NOTE: do not use backslashes, instead use normal slashes (/)*
 
+## Important (Linux users)
+Walldo supports a variaty of desktop enviroments:
+- Gnome
+- LXDE
+- XFCE
+- Cinnamon 
+- Mate 
+- KDE
+- Deepin
+
+For non desktop enviroments Walldo relies on [Feh](https://wiki.archlinux.org/title/Feh) for setting your wallpaper.
+For wayland support (like sway) you need [swaybg](https://github.com/swaywm/swaybg) installed.
+
 ## Goals
 + Be the replacement for Nitrogen or Feh on Windows Systems. 
 + Be faster and lighter than similar apps.
