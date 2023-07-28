@@ -1,7 +1,3 @@
-/*
-    Paquete que se encarga de leer, administrar y actualizar las configuraciones
-del usuario
-*/
 package utils
 
 import (

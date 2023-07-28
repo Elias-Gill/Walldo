@@ -10,7 +10,6 @@ import (
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 	"github.com/elias-gill/walldo-in-go/globals"
-	global "github.com/elias-gill/walldo-in-go/globals"
 	"github.com/elias-gill/walldo-in-go/utils"
 	"github.com/elias-gill/walldo-in-go/wallpaper"
 )
@@ -90,13 +89,4 @@ func generateCardContent(image string) *fyne.Container {
 	// A bit of "magia" (With the max layout we can overlap the button and the thumbnail)
 	cont := container.NewMax(aux, button)
 	return cont
-}
-
-// template for creating a new button with a custom icon
-func newButton(name string, f func(), icon string) *widget.Button {
-	if len(icon) > 0 {
-		ico := fyne.ThemeIconName(icon)
-		return widget.NewButtonWithIcon(name, global.MyApp.Settings().Theme().Icon(ico), f)
-	}
-	return widget.NewButton(name, f)
 }

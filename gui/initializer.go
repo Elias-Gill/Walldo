@@ -88,3 +88,12 @@ func SetupGui() {
 		global.MyApp.Preferences().SetFloat("WindowWidth", float64(global.Window.Canvas().Size().Width))
 	})
 }
+
+// template for creating a new button with a custom icon
+func newButton(name string, f func(), icon string) *widget.Button {
+    if len(icon) > 0 {
+        ico := fyne.ThemeIconName(icon)
+        return widget.NewButtonWithIcon(name, global.MyApp.Settings().Theme().Icon(ico), f)
+    }
+    return widget.NewButton(name, f)
+}
