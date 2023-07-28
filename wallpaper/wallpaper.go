@@ -6,7 +6,6 @@ import (
 )
 
 func WallpaperFitMode() wallpaper.Mode {
-	// TODO  poner este switch con un map (diccionarios)
 	switch globals.FillStrategy {
 	case "Zoom Fill":
 		return wallpaper.Fit
@@ -25,4 +24,9 @@ func WallpaperFitMode() wallpaper.Mode {
 // returns the current wallpaper
 func GetCurrentWallpaper() (string, error) {
 	return wallpaper.Get()
+}
+
+func SetWallpaper(imageDir string) error {
+    mode, _ := wallpaper.SetMode(WallpaperFitMode())
+    return wallpaper.SetFromFile(imageDir, mode)
 }

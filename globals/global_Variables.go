@@ -19,11 +19,8 @@ const SYS_OS = runtime.GOOS
 var (
 	MyApp        = app.NewWithID("walldo")
 	Window       = MyApp.NewWindow("Walldo in go")
-    WindowHeight = 600
-    WindowWidth  = 1020
-    // TODO: solve "save window size" on close
-	/* WindowHeight = MyApp.Preferences().FloatWithFallback("WindowHeight", 600)
-	WindowWidth  = MyApp.Preferences().FloatWithFallback("WindowWidth", 1020) */
+    WindowHeight = MyApp.Preferences().FloatWithFallback("WindowHeight", 600)
+	WindowWidth  = MyApp.Preferences().FloatWithFallback("WindowWidth", 1020)
 )
 
 // Grid config variables
@@ -32,7 +29,7 @@ var (
 	GridTitles = MyApp.Preferences().StringWithFallback("GridTitles", "Borderless")
 )
 
-// Layout configs
+// Layout styles
 var (
 	LayoutStyle  = MyApp.Preferences().StringWithFallback("Layout", "Grid")
 	FillStrategy = MyApp.Preferences().StringWithFallback("FillStrategy", "Zoom Fill")
@@ -48,7 +45,7 @@ var (
 // Change config values depending on the OS
 // ~/.config/walldo/config.json (unix)
 // ~/AppData/Local/walldo/config.json (windows)
-func SetGlobalValues() {
+func SetupEnvVariables() {
 	os.Setenv("FYNE_THEME", "dark")
 	o, _ := os.UserHomeDir()
 	Window.Resize(fyne.NewSize(float32(WindowWidth), float32(WindowHeight)))

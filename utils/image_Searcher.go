@@ -9,12 +9,11 @@ import (
 
 	"github.com/disintegration/imaging"
 	"github.com/elias-gill/walldo-in-go/globals"
-	"github.com/elias-gill/walldo-in-go/utils"
 )
 
 // Resize the image to create a thumbnail.
 // If a thumbnail already exists just do nothing
-func resizeImage(i int) {
+func ResizeImage(i int) {
 	destino := globals.Thumbnails[i]
 	image := globals.ImagesList[i]
 
@@ -29,7 +28,7 @@ func resizeImage(i int) {
 
 // TODO  this need a redesign
 // Update the Thumbnails list
-func getThumbnails() {
+func GetThumbnails() {
 	var res []string
 	// set a new entry for the resized_images list with a "unique" name
 	for _, image := range globals.ImagesList {
@@ -40,10 +39,10 @@ func getThumbnails() {
 }
 
 // Goes trought the configured folders recursivelly and list all the supported image files
-func listImagesRecursivelly() {
+func ListImagesRecursivelly() {
 	// get configured folders from the config file
 	globals.ImagesList = []string{}
-	folders := utils.GetConfiguredPaths()
+	folders := GetConfiguredPaths()
 
 	// loop trought the folder recursivelly
 	for _, folder := range folders {
@@ -91,7 +90,7 @@ func extensionIsValid(file string) bool {
 
 // TODO  change characters size depending of the card size
 // Returns the first 12 letters of the name of a image. This is for fitting into the captions
-func isolateImageName(name string) string {
+func IsolateImageName(name string) string {
 	// Change backslashes to normal ones
 	name = strings.ReplaceAll(name, `\`, `/`)
 	res := strings.Split(name, "/")

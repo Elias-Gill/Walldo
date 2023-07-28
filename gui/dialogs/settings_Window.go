@@ -11,7 +11,7 @@ import (
 )
 
 // Configuration window
-func ConfigWindow(win *fyne.Window, app fyne.App, refresh *widget.Button) {
+func ConfigWindow(win *fyne.Window, app fyne.App, refresh func()) {
 	var selGridStyle string
 	var selGridSize string
 
@@ -59,7 +59,7 @@ func ConfigWindow(win *fyne.Window, app fyne.App, refresh *widget.Button) {
 				f.Close()
 
 				// refresh the main window
-				refresh.OnTapped()
+				refresh()
 			}
 		}, *win)
 	dia.Resize(fyne.NewSize(400, 400))
@@ -78,25 +78,22 @@ func formatInput(s string) string {
 	return res
 }
 
-// function to create a new entry for changing the configured paths
+// Creates a new input field to display the configured paths inside
 func newEntryPaths() *widget.Entry {
 	input := widget.NewEntry()
 	input.MultiLine = true
 	input.SetPlaceHolder(`C:/User/fondos, \nC:/Example/images`)
 
-	// get the current configured paths and display them
-	var c string
-	aux := utils.GetConfiguredPaths()
-	for count, i := range aux {
-		c += i
-		if count < len(aux)-1 {
-			c += ",\n"
+	// format the configured paths for the fyne input
+	p := utils.GetConfiguredPaths()
+	paths := ""
+	for i, path := range p {
+		paths += path
+		if i < len(p)-1 { // to avoid putting a extra line jump at the end
+			paths += ",\n"
 		}
 	}
-
-	if c != "" {
-		input.SetText(c)
-	}
+	input.SetText(paths)
 
 	return input
 }
