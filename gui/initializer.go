@@ -15,9 +15,8 @@ import (
 
 func SetupGui() {
 	// instance a new fyne window and create a new layout
-    c := wallpapersGrid{
-        content: fyne.NewContainer()}
-	c.defineLayout()
+	c := wallpapersGrid{content: fyne.NewContainer()}
+	c.defineCardSize()
 
 	// generate a new scrollable container for the body of the app
 	mainFrame := container.New(
@@ -33,8 +32,8 @@ func SetupGui() {
 	// reload button (on the bottom right)
 	refreshButton := newButton("", func() {
 		// refresh the global variables, read the new config and reload thumbnails
-		c.defineLayout()
-		c.fillWithCards()
+		c.defineCardSize()
+		c.fillGridWithCards()
 	}, "viewRefresh")
 
 	// search bar with fuzzy finder
@@ -42,17 +41,17 @@ func SetupGui() {
 		dialogs.NewFuzzyDialog(global.Window)
 	}, "search")
 
-	// button with unsplash random image
+    // button with unsplash random image TODO: implement
 	unsplashButton := newButton("", func() {
 		utils.SetRandomImage()
 	}, "mediaPhoto")
 
-	// button that opens the config menu
+	// button to open the config menu
 	configsButton := newButton("Preferences", func() {
 		dialogs.ConfigWindow(&global.Window, global.MyApp, func() {
 			// refresh the global variables, read the new config and reload thumbnails
-			c.defineLayout()
-			c.fillWithCards()
+			c.defineCardSize()
+			c.fillGridWithCards()
 		})
 	}, "settings")
 
@@ -61,7 +60,6 @@ func SetupGui() {
 		global.FillStrategy = sel
 		global.MyApp.Preferences().SetString("FillStrategy", sel)
 	})
-	// default selection
 	strategySelector.SetSelected(global.FillStrategy)
 
 	// setting the app content
@@ -79,14 +77,23 @@ func SetupGui() {
 
 	// load images and thumbnails just after initializing the GUI
 	global.MyApp.Lifecycle().SetOnStarted(func() {
-		c.fillWithCards()
+		c.fillGridWithCards()
 	})
 
-	// save the window size on close
-	global.Window.SetOnClosed(func() {
+    // save the window size on close
+    global.MyApp.Lifecycle().SetOnStopped(func() {
 		println(global.Window.Canvas().Size().Height)
 		println(global.Window.Canvas().Size().Width)
 		global.MyApp.Preferences().SetFloat("WindowHeight", float64(global.Window.Canvas().Size().Height))
 		global.MyApp.Preferences().SetFloat("WindowWidth", float64(global.Window.Canvas().Size().Width))
 	})
+}
+
+// template for creating a new button with a custom icon
+func newButton(name string, f func(), icon string) *widget.Button {
+    if len(icon) > 0 {
+        ico := fyne.ThemeIconName(icon)
+        return widget.NewButtonWithIcon(name, global.MyApp.Settings().Theme().Icon(ico), f)
+    }
+    return widget.NewButton(name, f)
 }

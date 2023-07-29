@@ -38,10 +38,10 @@ func SetRandomImage() {
 	req.Header.Set("Authorization", "Client-ID "+accessKey)
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
-        println(accessKey)
+		println(accessKey)
 		panic(err.Error())
 	}
-    defer res.Body.Close()
+	defer res.Body.Close()
 
 	if res.StatusCode != 200 {
 		panic(res.StatusCode)
@@ -49,18 +49,18 @@ func SetRandomImage() {
 
 	var body unsplashResponse
 	json.NewDecoder(res.Body).Decode(&body)
-    // TODO: elegir una locacion con archivos temporales (probablemente al final en el config file)
-    err = downloadFile(body.Link.Download, "/home/elias/random.jpg")
-    if err != nil {
-        panic(err)
-    }
+	// TODO: elegir una locacion con archivos temporales (probablemente al final en el config file)
+	err = downloadFile(body.Link.Download, "/home/elias/random.jpg")
+	if err != nil {
+		panic(err)
+	}
 }
 
 func downloadFile(URL, fileName string) error {
 	//Get the response bytes from the url
-	req, _:= http.NewRequest("GET", URL, nil)
+	req, _ := http.NewRequest("GET", URL, nil)
 	req.Header.Set("Authorization", "Client-ID "+accessKey)
-    response, err := http.DefaultClient.Do(req)
+	response, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return err
 	}

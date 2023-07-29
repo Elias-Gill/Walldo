@@ -8,6 +8,7 @@ import (
 	"fyne.io/fyne/v2/widget"
 	"github.com/elias-gill/walldo-in-go/fuzzyEngine/matching"
 	"github.com/elias-gill/walldo-in-go/globals"
+	"github.com/elias-gill/walldo-in-go/utils"
 	"github.com/elias-gill/walldo-in-go/wallpaper"
 )
 
@@ -19,12 +20,13 @@ var (
 // refresh the content search list with every keystroke
 func entryChanged(entry string) {
 	data = []string{}
+    imagesList := utils.GetImagesList()
 	if len(entry) >= 1 {
 		// search for the matching results
-		aux := matching.FindAll(entry, globals.ImagesList)
+		matches := matching.FindAll(entry, imagesList)
 		// display the results
-		for i := 0; i < len(aux); i++ {
-			data = append(data, globals.ImagesList[aux[i].Idx])
+		for i := 0; i < len(matches); i++ {
+			data = append(data, imagesList[matches[i].Idx])
 		}
 	}
 	fuzzy_list.Refresh()
