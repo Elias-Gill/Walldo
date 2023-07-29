@@ -16,11 +16,11 @@ import (
 )
 
 type wallpapersGrid struct {
-    content *fyne.Container
+	content *fyne.Container
 }
 
 // Generates and return a new layout acording to the user configurations
-func (c *wallpapersGrid) defineLayout() {
+func (c *wallpapersGrid) defineCardSize() {
 	// default card size
 	size := fyne.NewSize(150, 130)
 	// other grid sizes
@@ -34,15 +34,14 @@ func (c *wallpapersGrid) defineLayout() {
 }
 
 // fills the container with the correspondent content
-func (c wallpapersGrid) fillWithCards() {
+func (c wallpapersGrid) fillGridWithCards() {
 	c.content.RemoveAll()
-	utils.ListImagesRecursivelly() // search original images
-	utils.GetThumbnails()
+	imagesList := utils.ListImagesRecursivelly() // search original images
 
 	// save all images into a go channel to manage concurrently load/generate thumbnails
-	channel := make(chan int, len(globals.ImagesList))
-	for i := range globals.ImagesList {
-		channel <- i
+	channel := make(chan string, len(imagesList))
+	for _, v := range imagesList {
+		channel <- v
 	}
 
 	// create more "threads" to increase performance
@@ -53,9 +52,9 @@ func (c wallpapersGrid) fillWithCards() {
 }
 
 // Recibes the channel with the list of images and creates a new card from the every entry
-func (c wallpapersGrid) addNewCard(chanel chan int) {
-	for i := range chanel {
-		content := generateCardContent(i)
+func (c wallpapersGrid) addNewCard(chanel chan string) {
+	for image := range chanel {
+		content := generateCardContent(image)
 
 		switch globals.GridTitles {
 		// grid without captions
@@ -64,7 +63,7 @@ func (c wallpapersGrid) addNewCard(chanel chan int) {
 
 		// normal grid with captions
 		default:
-			card := widget.NewCard("", utils.IsolateImageName(globals.ImagesList[i]), content)
+			card := widget.NewCard("", utils.IsolateImageName(image), content)
 			c.content.Add(card)
 		}
 		c.content.Refresh()
@@ -73,19 +72,18 @@ func (c wallpapersGrid) addNewCard(chanel chan int) {
 
 // Creates the new component of the wallpapers grid
 // Every component has a container, a button with the position of one image from the images list and its thumbnail
-func generateCardContent(i int) *fyne.Container {
-	button := widget.NewButton("", nil)
-	button.OnTapped = func() {
+func generateCardContent(image string) *fyne.Container {
+	button := widget.NewButton("", func() {
 		// the button has the index of the original image
-		err := wallpaper.SetWallpaper(globals.ImagesList[i])
-        if err != nil {
-            log.Println(err.Error())
-        }
-	}
+		err := wallpaper.SetWallpaper(image)
+		if err != nil {
+			log.Println(err.Error())
+		}
+	})
 
-	// resize the image and get the thumbnails
-	utils.ResizeImage(i)
-	aux := canvas.NewImageFromFile(globals.Thumbnails[i])
+	// resize the image and get the thumbnail name
+	thumbail := utils.ResizeImage(image)
+	aux := canvas.NewImageFromFile(thumbail)
 	aux.ScaleMode = canvas.ImageScaleFastest
 	aux.FillMode = canvas.ImageFillContain
 
@@ -96,9 +94,9 @@ func generateCardContent(i int) *fyne.Container {
 
 // template for creating a new button with a custom icon
 func newButton(name string, f func(), icon string) *widget.Button {
-    if len(icon) > 0 {
-        ico := fyne.ThemeIconName(icon)
-        return widget.NewButtonWithIcon(name, global.MyApp.Settings().Theme().Icon(ico), f)
-    }
-    return widget.NewButton(name, f)
+	if len(icon) > 0 {
+		ico := fyne.ThemeIconName(icon)
+		return widget.NewButtonWithIcon(name, global.MyApp.Settings().Theme().Icon(ico), f)
+	}
+	return widget.NewButton(name, f)
 }

@@ -10,7 +10,6 @@ import (
 
 var (
 	ImagesList []string
-	Thumbnails []string
 )
 
 const SYS_OS = runtime.GOOS

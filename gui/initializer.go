@@ -15,9 +15,8 @@ import (
 
 func SetupGui() {
 	// instance a new fyne window and create a new layout
-    c := wallpapersGrid{
-        content: fyne.NewContainer()}
-	c.defineLayout()
+	c := wallpapersGrid{content: fyne.NewContainer()}
+	c.defineCardSize()
 
 	// generate a new scrollable container for the body of the app
 	mainFrame := container.New(
@@ -33,8 +32,8 @@ func SetupGui() {
 	// reload button (on the bottom right)
 	refreshButton := newButton("", func() {
 		// refresh the global variables, read the new config and reload thumbnails
-		c.defineLayout()
-		c.fillWithCards()
+		c.defineCardSize()
+		c.fillGridWithCards()
 	}, "viewRefresh")
 
 	// search bar with fuzzy finder
@@ -42,17 +41,17 @@ func SetupGui() {
 		dialogs.NewFuzzyDialog(global.Window)
 	}, "search")
 
-	// button with unsplash random image
+    // button with unsplash random image TODO: implement
 	unsplashButton := newButton("", func() {
 		utils.SetRandomImage()
 	}, "mediaPhoto")
 
-	// button that opens the config menu
+	// button to open the config menu
 	configsButton := newButton("Preferences", func() {
 		dialogs.ConfigWindow(&global.Window, global.MyApp, func() {
 			// refresh the global variables, read the new config and reload thumbnails
-			c.defineLayout()
-			c.fillWithCards()
+			c.defineCardSize()
+			c.fillGridWithCards()
 		})
 	}, "settings")
 
@@ -61,7 +60,6 @@ func SetupGui() {
 		global.FillStrategy = sel
 		global.MyApp.Preferences().SetString("FillStrategy", sel)
 	})
-	// default selection
 	strategySelector.SetSelected(global.FillStrategy)
 
 	// setting the app content
@@ -79,7 +77,7 @@ func SetupGui() {
 
 	// load images and thumbnails just after initializing the GUI
 	global.MyApp.Lifecycle().SetOnStarted(func() {
-		c.fillWithCards()
+		c.fillGridWithCards()
 	})
 
 	// save the window size on close
