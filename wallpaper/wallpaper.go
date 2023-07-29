@@ -21,11 +21,6 @@ func WallpaperFitMode() wallpaper.Mode {
 	return wallpaper.Fit
 }
 
-// returns the current wallpaper
-func GetCurrentWallpaper() (string, error) {
-	return wallpaper.Get()
-}
-
 func SetWallpaper(imageDir string) error {
     mode, _ := wallpaper.SetMode(WallpaperFitMode())
     return wallpaper.SetFromFile(imageDir, mode)

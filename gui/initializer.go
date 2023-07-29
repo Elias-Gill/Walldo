@@ -10,7 +10,6 @@ import (
 	"fyne.io/fyne/v2/widget"
 	global "github.com/elias-gill/walldo-in-go/globals"
 	"github.com/elias-gill/walldo-in-go/gui/dialogs"
-	"github.com/elias-gill/walldo-in-go/utils"
 )
 
 func SetupGui() {
@@ -41,11 +40,6 @@ func SetupGui() {
 		dialogs.NewFuzzyDialog(global.Window)
 	}, "search")
 
-    // button with unsplash random image TODO: implement
-	unsplashButton := newButton("", func() {
-		utils.SetRandomImage()
-	}, "mediaPhoto")
-
 	// button to open the config menu
 	configsButton := newButton("Preferences", func() {
 		dialogs.ConfigWindow(&global.Window, global.MyApp, func() {
@@ -67,7 +61,6 @@ func SetupGui() {
 		strategySelector,
 		fuzzyButton,
 		layout.NewSpacer(),
-		unsplashButton,
 		layout.NewSpacer(),
 		refreshButton,
 		configsButton,

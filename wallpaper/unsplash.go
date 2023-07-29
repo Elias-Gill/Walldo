@@ -1,4 +1,4 @@
-package utils
+package wallpaper
 
 import (
 	"encoding/json"
