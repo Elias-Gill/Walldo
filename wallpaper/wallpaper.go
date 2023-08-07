@@ -22,6 +22,6 @@ func WallpaperFitMode() wallpaper.Mode {
 }
 
 func SetWallpaper(imageDir string) error {
-    mode, _ := wallpaper.SetMode(WallpaperFitMode())
-    return wallpaper.SetFromFile(imageDir, mode)
+	mode, _ := wallpaper.SetMode(WallpaperFitMode())
+	return wallpaper.SetFromFile(imageDir, mode)
 }

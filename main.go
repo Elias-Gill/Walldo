@@ -2,12 +2,12 @@ package main
 
 import (
 	"github.com/elias-gill/walldo-in-go/globals"
-    "github.com/elias-gill/walldo-in-go/gui"
+	"github.com/elias-gill/walldo-in-go/gui"
 )
 
 func main() {
 	// set all global variables and run
 	globals.SetupEnvVariables()
-    gui.SetupGui()
+	gui.SetupGui()
 	globals.Window.ShowAndRun()
 }
