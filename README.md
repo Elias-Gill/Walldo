@@ -19,7 +19,7 @@ simple way and as fast as possible. In Linux there are many applications that ca
 but in Windows most of them are very slow and bloated.
 
 ## Instalation
-We recommned to use the available pre-compiled binaries available in the [releases](https://github.com/Elias-Gill/walldo-in-Go/releases) section (windows may complain because the binary is unisgned).
+We have pre-compiled binaries for windows and linux. Check out our [releases](https://github.com/Elias-Gill/walldo-in-Go/releases) section (windows may complain because the binary is unisgned).
 
 We don't provide precompiled builds for `macOS` because it's [not straightforward to cross-compose Fyne projects for it](https://github.com/fyne-io/fyne-cross#build-the-docker-image-for-osxdarwinapple-cross-compiling).
 
@@ -35,7 +35,7 @@ Now Walldo should be available in your search bar (`Win`+`S`) as "waldo-in-go".
 
 You can create a shortcut and change the icon if you want.
 
-### Linux
+### Linux and macOS
 After installing the dependencies, open a terminal session and run:
 ```sh
 go install github.com/elias-gill/walldo-in-go@latest
@@ -64,8 +64,8 @@ Walldo supports a variaty of desktop enviroments:
 - KDE
 - Deepin
 
-For non desktop enviroments Walldo relies on [Feh](https://wiki.archlinux.org/title/Feh) for setting your wallpaper.
-For wayland support (like sway) you need [swaybg](https://github.com/swaywm/swaybg) installed.
+For non desktop enviroments Walldo relies on [Feh](https://wiki.archlinux.org/title/Feh).
+Wayland is supported via [swaybg](https://github.com/swaywm/swaybg).
 
 ## Goals
 + Be the replacement for Nitrogen or Feh on Windows Systems. 
