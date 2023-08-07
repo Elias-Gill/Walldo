@@ -31,9 +31,9 @@ func ResizeImage(image string) string {
 // Goes trought the configured folders recursivelly and list all the supported image files.
 func ListImagesRecursivelly() []string {
 	imagesList = []string{}
-    // get configured folders from the config file
+	// get configured folders from the config file
 	folders := GetConfiguredPaths()
-    // and loop trought the folder recursivelly
+	// and loop trought the folder recursivelly
 	for _, folder := range folders {
 		err := filepath.Walk(folder, func(file string, info os.FileInfo, err error) error {
 			if err != nil {
@@ -57,11 +57,11 @@ func ListImagesRecursivelly() []string {
 	return imagesList
 }
 
-// This returns the image list. The difference from ListImagesRecursivelly is that 
+// This returns the image list. The difference from ListImagesRecursivelly is that
 // this does not have to search again through the folders in order to improve performance for the
 // fuzzy engine
 func GetImagesList() []string {
-    return imagesList
+	return imagesList
 }
 
 // Returns a new name for an image thumbnail

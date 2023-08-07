@@ -18,6 +18,12 @@ type wallpapersGrid struct {
 	content *fyne.Container
 }
 
+func NewImageGrid() wallpapersGrid {
+	res := wallpapersGrid{content: fyne.NewContainer()}
+	res.defineCardSize()
+	return res
+}
+
 // Generates and return a new layout acording to the user configurations
 func (c *wallpapersGrid) defineCardSize() {
 	// default card size

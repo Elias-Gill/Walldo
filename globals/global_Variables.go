@@ -9,10 +9,6 @@ import (
 	"fyne.io/fyne/v2/app"
 )
 
-var (
-	ImagesList []string
-)
-
 const SYS_OS = runtime.GOOS
 
 // App initializers

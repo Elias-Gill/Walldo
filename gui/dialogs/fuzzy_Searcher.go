@@ -20,7 +20,7 @@ var (
 // refresh the content search list with every keystroke
 func entryChanged(entry string) {
 	data = []string{}
-    imagesList := utils.GetImagesList()
+	imagesList := utils.GetImagesList()
 	if len(entry) >= 1 {
 		// search for the matching results
 		matches := matching.FindAll(entry, imagesList)
