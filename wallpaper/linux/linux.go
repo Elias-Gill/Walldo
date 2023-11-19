@@ -3,8 +3,6 @@ package linux
 import (
 	"os"
 	"os/exec"
-	"os/user"
-	"path/filepath"
 	"strconv"
 )
 
@@ -61,6 +59,7 @@ func LinuxSetFromFile(file string, mode ...string) error {
 	}
 }
 
+// FIX: fix changing wallpaper mode on linux
 // SetMode sets the wallpaper mode.
 // In case of non DE's this returns a string containing a feh command mode
 // You can pass this string to "SetFromFile" to change the feh mode
@@ -87,12 +86,4 @@ func linuxSetMode(mode Mode) (string, error) {
 	default:
 		return mode.setFehMode()
 	}
-}
-
-func linuxGetCacheDir() (string, error) {
-	usr, err := user.Current()
-	if err != nil {
-		return "", err
-	}
-	return filepath.Join(usr.HomeDir, ".cache"), nil
 }

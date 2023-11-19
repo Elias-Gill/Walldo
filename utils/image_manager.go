@@ -10,7 +10,7 @@ import (
 	"github.com/elias-gill/walldo-in-go/globals"
 )
 
-// this is used for GetImagesList(), so we dont need to re-search for images
+// used for GetImagesList(), so we dont need to re-search for images
 var imagesList []string
 
 // Resize the image to create a thumbnail.
@@ -21,7 +21,7 @@ func ResizeImage(image string) string {
 	// if the thumnail does not exists
 	if _, err := os.Stat(thumbPath); err != nil {
 		src, _ := imaging.Open(image)
-		src = imaging.Thumbnail(src, 200, 150, imaging.Box)
+		src = imaging.Thumbnail(src, 200, 180, imaging.NearestNeighbor)
 		// save the thumbnail on a folder
 		imaging.Save(src, thumbPath)
 	}
@@ -29,21 +29,23 @@ func ResizeImage(image string) string {
 }
 
 // Goes trought the configured folders recursivelly and list all the supported image files.
-func ListImagesRecursivelly() []string {
+func ListImagesRecursivelly() {
 	imagesList = []string{}
-	// get configured folders from the config file
 	folders := GetConfiguredPaths()
-	// and loop trought the folder recursivelly
+
+	// loop trought folders recursivelly
 	for _, folder := range folders {
 		err := filepath.Walk(folder, func(file string, info os.FileInfo, err error) error {
 			if err != nil {
 				log.Print(err)
 				return err
 			}
+
 			// ignore .git files
 			if strings.Contains(file, ".git") {
 				return filepath.SkipDir
 			}
+
 			// ignore directories
 			if !info.IsDir() && hasValidExtension(file) {
 				imagesList = append(imagesList, file)
@@ -54,7 +56,6 @@ func ListImagesRecursivelly() []string {
 			log.Print(err)
 		}
 	}
-	return imagesList
 }
 
 // This returns the image list. The difference from ListImagesRecursivelly is that

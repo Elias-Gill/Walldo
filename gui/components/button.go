@@ -7,7 +7,7 @@ import (
 )
 
 // Template for creating a new button with a custom icon.
-func NewButton(text string, f func(), icon string) *widget.Button {
+func NewButtonWithIcon(text string, f func(), icon string) *widget.Button {
     if len(icon) > 0 {
         ico := fyne.ThemeIconName(icon)
         return widget.NewButtonWithIcon(text, globals.MyApp.Settings().Theme().Icon(ico), f)

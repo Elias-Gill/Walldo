@@ -14,6 +14,7 @@ func setWaylandBackground(file string, mode string) error {
 	if mode == "" {
 		mode = "fill"
 	}
+
 	cmd := exec.Command("swaybg", "-m", mode, "-i", file)
 	err := cmd.Start()
 	if err != nil {

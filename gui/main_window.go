@@ -13,14 +13,6 @@ import (
 	"github.com/elias-gill/walldo-in-go/gui/components/dialogs"
 )
 
-const (
-	MODE_FILL     = "Zoom Fill"
-	MODE_SCALE    = "Scale"
-	MODE_CENTER   = "Center"
-	MODE_ORIGINAL = "Original"
-	MODE_TILE     = "Tile"
-)
-
 func SetupGui() {
 	// title style
 	title := canvas.NewText("Select your wallpaper", color.White)
@@ -34,30 +26,29 @@ func SetupGui() {
 		layout.NewPaddedLayout(),
 		container.NewScroll(grid.GetGridContent()))
 
-	// image name displayer
-    // TODO: find a way to change the image name when hovering over a widget
-	/* imageName := canvas.NewText("name imagen", color.White)
-	imageName.Alignment = fyne.TextAlignCenter
-	imageName.TextSize = 12 */
-
 	// reload button (on the bottom right)
-	refreshButton := components.NewButton("", grid.RefreshImgGrid, components.ICON_REFRESH)
+	refreshButton := components.NewButtonWithIcon("", grid.RefreshImgGrid, components.ICON_REFRESH)
 
 	// button to open the config menu
-	configsButton := components.NewButton("Preferences", func() {
+	configsButton := components.NewButtonWithIcon("Preferences", func() {
 		dialogs.ConfigWindow(&global.Window, global.MyApp, grid.RefreshImgGrid)
 	}, components.ICON_SETTINGS)
 
 	// fuzzy finder button
-	fuzzyButton := components.NewButton("", func() {
+	fuzzyButton := components.NewButtonWithIcon("", func() {
 		dialogs.NewFuzzyDialog(global.Window)
 	}, components.ICON_SEARCH)
 
 	// scale mode selector
-	strategySelector := widget.NewSelect([]string{MODE_FILL, MODE_TILE, MODE_SCALE, MODE_CENTER, MODE_ORIGINAL}, func(sel string) {
-		global.FillStrategy = sel
-		global.MyApp.Preferences().SetString("FillStrategy", sel)
-	})
+	strategySelector := widget.NewSelect(
+		[]string{
+			global.FILL_ZOOM, global.FILL_TILE, global.FILL_SCALE, global.FILL_CENTER, global.FILL_ORIGINAL,
+		},
+		func(sel string) {
+			global.FillStrategy = sel
+			global.MyApp.Preferences().SetString("FillStrategy", sel)
+		},
+	)
 	strategySelector.SetSelected(global.FillStrategy)
 
 	// assemble app layout
@@ -65,7 +56,7 @@ func SetupGui() {
 		strategySelector,
 		fuzzyButton,
 		layout.NewSpacer(),
-        // FUTURE: imageName,
+		// FUTURE: imageName,
 		layout.NewSpacer(),
 		refreshButton,
 		configsButton,
@@ -75,7 +66,7 @@ func SetupGui() {
 
 	// load images and thumbnails just after initializing the GUI
 	global.MyApp.Lifecycle().SetOnStarted(func() {
-		grid.FillGrid()
+		grid.RefreshImgGrid()
 	})
 
 	// save the window size on close

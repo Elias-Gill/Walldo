@@ -9,7 +9,11 @@ import (
 	"fyne.io/fyne/v2/app"
 )
 
-const SYS_OS = runtime.GOOS
+// TODO: move everything to the utils/config_manager
+type Size struct {
+	Width  float32
+	Height float32
+}
 
 // App initializers
 var (
@@ -19,14 +23,29 @@ var (
 	WindowWidth  = MyApp.Preferences().FloatWithFallback("WindowWidth", 1020)
 )
 
-// Grid config variables
+// Grid cards sizes
+const SIZE_DEFAULT = "default"
+const SIZE_SMALL = "small"
+const SIZE_LARGE = "large"
+
+var Sizes map[string]Size = map[string]Size{
+	SIZE_SMALL:   {Width: 110, Height: 100},
+	SIZE_LARGE:   {Width: 195, Height: 175},
+	SIZE_DEFAULT: {Width: 150, Height: 130},
+}
+
 var (
-	GridSize   = MyApp.Preferences().StringWithFallback("GridSize", "default")
+	GridSize = MyApp.Preferences().StringWithFallback("GridSize", SIZE_DEFAULT)
 )
 
-// Layout styles
+
+const FILL_ZOOM = "Zoom Fill"
+const FILL_SCALE = "Scale"
+const FILL_CENTER = "Center"
+const FILL_ORIGINAL = "Original"
+const FILL_TILE = "Tile"
+
 var (
-	LayoutStyle  = MyApp.Preferences().StringWithFallback("Layout", "Grid")
 	FillStrategy = MyApp.Preferences().StringWithFallback("FillStrategy", "Zoom Fill")
 )
 
@@ -37,7 +56,7 @@ var (
 	ThumbnailsPath string
 )
 
-// Change config values depending on the OS
+// Thise are the used config files
 // ~/.config/walldo/config.json (unix)
 // ~/AppData/Local/walldo/config.json (windows)
 func SetupEnvVariables() {
@@ -48,7 +67,7 @@ func SetupEnvVariables() {
 	}
 	Window.Resize(fyne.NewSize(float32(WindowWidth), float32(WindowHeight)))
 
-	switch SYS_OS {
+	switch runtime.GOOS {
 	case "windows":
 		ConfigPath = home + "/AppData/Local/walldo/"
 		ConfigFile = home + "/AppData/Local/walldo/config.json"

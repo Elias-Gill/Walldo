@@ -3,6 +3,7 @@ package components
 import (
 	"log"
 	"runtime"
+	"strings"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
@@ -20,71 +21,83 @@ type wallpapersGrid struct {
 
 func NewImageGrid() wallpapersGrid {
 	res := wallpapersGrid{content: container.NewWithoutLayout()}
-	res.defineCardSize()
+	res.fillGrid()
 	return res
 }
 
-func (c *wallpapersGrid) GetGridContent() *fyne.Container {
+func (c wallpapersGrid) GetGridContent() *fyne.Container {
 	return c.content
 }
 
 func (c *wallpapersGrid) RefreshImgGrid() {
-	c.defineCardSize()
-	c.FillGrid()
+	c.content.RemoveAll()
+	utils.ListImagesRecursivelly()
+	c.fillGrid()
 }
 
-// Generates and return a new layout acording to the user configurations
-func (c *wallpapersGrid) defineCardSize() {
-	// default card size
-	size := fyne.NewSize(150, 130)
-	// other grid sizes
-	switch globals.GridSize {
-	case "small":
-		size = fyne.NewSize(110, 100)
-	case "large":
-		size = fyne.NewSize(195, 175)
-	}
-	c.content.Layout = layout.NewGridWrapLayout(size)
+type card struct {
+	imgPath   string
+	container *fyne.Container
+	button    *widget.Button
 }
 
 // fills the container with the correspondent content
-func (c wallpapersGrid) FillGrid() {
-	c.content.RemoveAll()
-	imagesList := utils.ListImagesRecursivelly() // search original images
+func (c wallpapersGrid) fillGrid() {
+	// define the cards size
+	size := globals.Sizes[globals.GridSize]
+	c.content.Layout = layout.NewGridWrapLayout(fyne.NewSize(size.Width, size.Height))
 
-	// save all images into a go channel to manage concurrently load/generate thumbnails
-	channel := make(chan string, len(imagesList))
-	for _, v := range imagesList {
-		channel <- v
-	}
+	imagesList := utils.GetImagesList()
 
-	// create more "threads" to increase performance
-	for i := 0; i < runtime.NumCPU()-2; i++ {
-		go c.addNewCard(channel)
+	// Save all images into a go channel to manage concurrently load/generate thumbnails
+	// PERF: Addes a new container with a button (without an image) as a empty frame, this makes loading times 
+    // a lot faster. Then create some go routines to display thumbnails concurrently.
+	channel := make(chan card, len(imagesList))
+	for _, image := range imagesList {
+		channel <- c.newEmptyFrame(image)
 	}
-	print("\n Usando ", runtime.NumCPU()-2, " Hilos")
+	c.fillContainers(channel)
 }
 
-// Recibes the channel with the list of images and creates a new card from the every entry
-// WARN: needs a rework to possibly improve performace
-func (c wallpapersGrid) addNewCard(chanel chan string) {
-	for image := range chanel {
-		button := widget.NewButton("", func() {
-			// the button has the index of the original image
-			err := wallpaper.SetFromFile(image)
-			if err != nil {
-				log.Println(err.Error())
+// NOTE: keep this as a separate function
+// Creates a new container for the card with a button
+func (c *wallpapersGrid) newEmptyFrame(image string) card {
+	button := widget.NewButton("", func() {
+		err := wallpaper.SetFromFile(strings.Clone(image))
+		if err != nil {
+			log.Println(err.Error())
+		}
+	})
+	cont := container.NewMax(button)
+	c.content.Add(cont)
+
+	return card{
+		imgPath:   image,
+		container: cont,
+		button:    button,
+	}
+}
+
+// Recibes the channel with a list of "cards" (image + button inside a container).
+// generates the thumbnail for the card and refresh the container
+func (c wallpapersGrid) fillContainers(channel chan card) {
+	// create as many threads as cpus for resizing images to make thumbnails
+	print("\n Usando ", runtime.NumCPU()-2, " Hilos")
+	for i := 0; i < runtime.NumCPU()-2; i++ {
+		go func() {
+			for card := range channel {
+				// resize the image and get the thumbnail name
+				thumbail := utils.ResizeImage(card.imgPath)
+				image := canvas.NewImageFromFile(thumbail)
+				image.ScaleMode = canvas.ImageScaleFastest
+				image.FillMode = canvas.ImageFillContain
+
+				// With the max layout we can overlap the button and the thumbnail
+				card.container.RemoveAll()
+				card.container.Add(image)
+				card.container.Add(card.button)
+				card.container.Refresh()
 			}
-		})
-
-		// resize the image and get the thumbnail name
-		thumbail := utils.ResizeImage(image)
-		aux := canvas.NewImageFromFile(thumbail)
-		aux.ScaleMode = canvas.ImageScaleFastest
-		aux.FillMode = canvas.ImageFillContain
-
-		// With the max layout we can overlap the button and the thumbnail
-		c.content.Add(container.NewMax(aux, button))
-		c.content.Refresh()
+		}()
 	}
 }
