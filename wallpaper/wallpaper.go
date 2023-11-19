@@ -1,27 +1,34 @@
+//go:build linux || darwin
+
 package wallpaper
 
 import (
-	"github.com/elias-gill/walldo-in-go/globals"
-	"github.com/elias-gill/wallpaper"
+	"errors"
+	"runtime"
+
+	"github.com/elias-gill/walldo-in-go/wallpaper/linux"
 )
 
-func WallpaperFitMode() wallpaper.Mode {
-	switch globals.FillStrategy {
-	case "Zoom Fill":
-		return wallpaper.Fit
-	case "Scale":
-		return wallpaper.Crop
-	case "Center":
-		return wallpaper.Center
-	case "Original":
-		return wallpaper.Span
-	case "Tile":
-		return wallpaper.Tile
-	}
-	return wallpaper.Fit
-}
+type Mode int
 
-func SetWallpaper(imageDir string) error {
-	mode, _ := wallpaper.SetMode(WallpaperFitMode())
-	return wallpaper.SetFromFile(imageDir, mode)
+const (
+	Center Mode = iota
+	Crop
+	Fit
+	Span
+	Stretch
+	Tile
+)
+
+// ErrUnsupportedDE is thrown when Desktop is not a supported desktop environment.
+var ErrUnsupportedDE = errors.New("your desktop environment is not supported")
+
+func SetFromFile(file string) error {
+	switch runtime.GOOS {
+	case "linux":
+		return linux.LinuxSetFromFile(file)
+	case "darwin":
+		return darwinSetFromFile(file)
+	}
+    return ErrUnsupportedDE
 }
