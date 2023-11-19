@@ -16,7 +16,7 @@ var imagesList []string
 // Resize the image to create a thumbnail.
 // If a thumbnail already exists just do nothing
 func ResizeImage(image string) string {
-	thumbPath := generateThumbnail(image)
+	thumbPath := generateThnPath(image)
 
 	// if the thumnail does not exists
 	if _, err := os.Stat(thumbPath); err != nil {
@@ -45,7 +45,7 @@ func ListImagesRecursivelly() []string {
 				return filepath.SkipDir
 			}
 			// ignore directories
-			if !info.IsDir() && extensionIsValid(file) {
+			if !info.IsDir() && hasValidExtension(file) {
 				imagesList = append(imagesList, file)
 			}
 			return nil
@@ -65,7 +65,7 @@ func GetImagesList() []string {
 }
 
 // Returns a new name for an image thumbnail
-func generateThumbnail(image string) string {
+func generateThnPath(image string) string {
 	// replace backslashes with normal slashes (for windows)
 	image = strings.ReplaceAll(image, `\`, `/`)
 	res := strings.Split(image, "/")
@@ -77,7 +77,7 @@ func generateThumbnail(image string) string {
 
 // Determine if the file has a valid extension.
 // It can be jpg, jpeg or png.
-func extensionIsValid(file string) bool {
+func hasValidExtension(file string) bool {
 	// isolate file extension
 	aux := strings.Split(file, ".")
 	file = aux[len(aux)-1]
@@ -85,20 +85,4 @@ func extensionIsValid(file string) bool {
 	validos := map[string]int{"jpg": 1, "jpeg": 1, "png": 1}
 	_, res := validos[file]
 	return res
-}
-
-// TODO  change characters size depending of the card size
-// Returns the first 12 letters of the name of a image. This is for fitting into the captions
-func IsolateImageName(name string) string {
-	// Change backslashes to normal ones
-	name = strings.ReplaceAll(name, `\`, `/`)
-	res := strings.Split(name, "/")
-
-	largo := len(res) - 1
-	aux := res[largo]
-	if len(res[largo]) > 12 {
-		aux = res[largo][0:12]
-		aux = aux + " ..."
-	}
-	return aux
 }

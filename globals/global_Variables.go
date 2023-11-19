@@ -22,7 +22,6 @@ var (
 // Grid config variables
 var (
 	GridSize   = MyApp.Preferences().StringWithFallback("GridSize", "default")
-	GridTitles = MyApp.Preferences().StringWithFallback("GridTitles", "Borderless")
 )
 
 // Layout styles

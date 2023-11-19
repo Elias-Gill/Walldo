@@ -2,7 +2,7 @@ package utils
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"io"
 	"log"
 	"os"
 	"strings"
@@ -24,7 +24,7 @@ func readConfigFile() map[string][]string {
 	}
 	defer fileContent.Close()
 
-	byteResult, _ := ioutil.ReadAll(fileContent)
+	byteResult, _ := io.ReadAll(fileContent)
 
 	var res map[string][]string
 	json.Unmarshal([]byte(byteResult), &res)
