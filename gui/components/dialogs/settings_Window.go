@@ -22,21 +22,12 @@ func ConfigWindow(win *fyne.Window, app fyne.App, refresh func()) {
 		})
 	grid_size_selector.SetSelected(globals.GridSize)
 
-	// grid style selector (Borderless or captions)
-	gridStyleSelector := widget.NewRadioGroup(
-		[]string{"Borderless", "Captions"},
-		func(sel string) {
-			selGridStyle = sel
-		})
-	gridStyleSelector.SetSelected(globals.GridTitles)
-
 	// entry to display and set the configured paths
 	input := newEntryPaths()
 
 	// Window content
 	cont := []*widget.FormItem{
 		widget.NewFormItem("Images size", grid_size_selector),
-		widget.NewFormItem("Grid style", gridStyleSelector),
 		widget.NewFormItem("", input),
 	}
 
@@ -50,7 +41,6 @@ func ConfigWindow(win *fyne.Window, app fyne.App, refresh func()) {
 				globals.MyApp.Preferences().SetString("GridSize", selGridSize)
 
 				// update global variables
-				globals.GridTitles = selGridStyle
 				globals.GridSize = selGridSize
 
 				// update configured paths

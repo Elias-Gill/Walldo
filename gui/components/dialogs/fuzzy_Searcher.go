@@ -56,7 +56,7 @@ func NewFuzzyDialog(w fyne.Window) {
 	fuzzy_searcher.OnChanged = entryChanged
 	fuzzy_searcher.SetPlaceHolder("Search Image")
 	fuzzy_list.OnSelected = func(id int) {
-		wallpaper.SetWallpaper(data[id])
+		wallpaper.SetFromFile(data[id])
 	}
 
 	dial.Show()

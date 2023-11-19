@@ -1,4 +1,4 @@
-package gui
+package components
 
 import (
 	"log"
@@ -19,9 +19,18 @@ type wallpapersGrid struct {
 }
 
 func NewImageGrid() wallpapersGrid {
-	res := wallpapersGrid{content: fyne.NewContainer()}
+	res := wallpapersGrid{content: container.NewWithoutLayout()}
 	res.defineCardSize()
 	return res
+}
+
+func (c *wallpapersGrid) GetGridContent() *fyne.Container {
+	return c.content
+}
+
+func (c *wallpapersGrid) RefreshImgGrid() {
+	c.defineCardSize()
+	c.FillGrid()
 }
 
 // Generates and return a new layout acording to the user configurations
@@ -39,7 +48,7 @@ func (c *wallpapersGrid) defineCardSize() {
 }
 
 // fills the container with the correspondent content
-func (c wallpapersGrid) fillGridWithCards() {
+func (c wallpapersGrid) FillGrid() {
 	c.content.RemoveAll()
 	imagesList := utils.ListImagesRecursivelly() // search original images
 
@@ -57,42 +66,25 @@ func (c wallpapersGrid) fillGridWithCards() {
 }
 
 // Recibes the channel with the list of images and creates a new card from the every entry
+// WARN: needs a rework to possibly improve performace
 func (c wallpapersGrid) addNewCard(chanel chan string) {
 	for image := range chanel {
-		content := generateCardContent(image)
+		button := widget.NewButton("", func() {
+			// the button has the index of the original image
+			err := wallpaper.SetFromFile(image)
+			if err != nil {
+				log.Println(err.Error())
+			}
+		})
 
-		switch globals.GridTitles {
-		// grid without captions
-		case "Borderless":
-			c.content.Add(content)
+		// resize the image and get the thumbnail name
+		thumbail := utils.ResizeImage(image)
+		aux := canvas.NewImageFromFile(thumbail)
+		aux.ScaleMode = canvas.ImageScaleFastest
+		aux.FillMode = canvas.ImageFillContain
 
-		// normal grid with captions
-		default:
-			card := widget.NewCard("", utils.IsolateImageName(image), content)
-			c.content.Add(card)
-		}
+		// With the max layout we can overlap the button and the thumbnail
+		c.content.Add(container.NewMax(aux, button))
 		c.content.Refresh()
 	}
-}
-
-// Creates the new component of the wallpapers grid
-// Every component has a container, a button with the position of one image from the images list and its thumbnail
-func generateCardContent(image string) *fyne.Container {
-	button := widget.NewButton("", func() {
-		// the button has the index of the original image
-		err := wallpaper.SetWallpaper(image)
-		if err != nil {
-			log.Println(err.Error())
-		}
-	})
-
-	// resize the image and get the thumbnail name
-	thumbail := utils.ResizeImage(image)
-	aux := canvas.NewImageFromFile(thumbail)
-	aux.ScaleMode = canvas.ImageScaleFastest
-	aux.FillMode = canvas.ImageFillContain
-
-	// A bit of "magia" (With the max layout we can overlap the button and the thumbnail)
-	cont := container.NewMax(aux, button)
-	return cont
 }
