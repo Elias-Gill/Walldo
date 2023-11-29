@@ -50,8 +50,8 @@ func (c wallpapersGrid) fillGrid() {
 	imagesList := utils.GetImagesList()
 
 	// Save all images into a go channel to manage concurrently load/generate thumbnails
-	// PERF: Addes a new container with a button (without an image) as a empty frame, this makes loading times 
-    // a lot faster. Then create some go routines to display thumbnails concurrently.
+	// PERF: Addes a new container with a button (without an image) as a empty frame, this makes loading times
+	// a lot faster. Then create some go routines to display thumbnails concurrently.
 	channel := make(chan card, len(imagesList))
 	for _, image := range imagesList {
 		channel <- c.newEmptyFrame(image)

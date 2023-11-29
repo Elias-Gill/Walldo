@@ -1,0 +1,39 @@
+linters:
+ enable:
+   - asasalint
+   - asciicheck
+   - bidichk
+   - bodyclose
+   - containedctx
+   - govet
+   - grouper
+   - ifshort
+   - importas
+   - ineffassign
+   - interfacebloat
+   - nakedret
+   - nestif
+   - wsl
+   - gosimple
+   - errname
+ presets:
+   - bugs
+   - comment
+   - complexity
+ fast: true
+
+output:
+ format: json
+ print-issued-lines: false
+ print-linter-name: false
+ uniq-by-line: false
+ path-prefix: ""
+ sort-results: false
+
+severity:
+ default-severity: error
+ case-sensitive: true
+ rules:
+   - linters:
+       - dupl
+     severity: info
