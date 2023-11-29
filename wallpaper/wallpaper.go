@@ -28,7 +28,10 @@ func SetFromFile(file string) error {
 func ListAvailableModes() []string {
 	switch runtime.GOOS {
 	case "linux":
-		return []string{globals.FILL_ZOOM, globals.FILL_CENTER, globals.FILL_TILE, globals.FILL_ORIGINAL, globals.FILL_SCALE}
+		return []string{
+			globals.FILL_ZOOM, globals.FILL_CENTER,
+			globals.FILL_TILE, globals.FILL_ORIGINAL,
+			globals.FILL_SCALE}
 	default:
 		return []string{globals.FILL_ZOOM}
 	}

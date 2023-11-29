@@ -80,9 +80,12 @@ func (c *wallpapersGrid) newEmptyFrame(image string) card {
 	}
 }
 
-/* Recibes the channel with a list of "cards" (image + button inside a container).
+/*
+	Recibes the channel with a list of "cards" (image + button inside a container).
+
 generates the thumbnail for the card and refresh the container.
-create as many threads as cpus for resizing images to make thumbnails. */
+create as many threads as cpus for resizing images to make thumbnails.
+*/
 func (c wallpapersGrid) fillContainers(channel chan card) {
 	print("\n Usando ", runtime.NumCPU()-2, " Hilos")
 

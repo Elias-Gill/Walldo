@@ -25,7 +25,7 @@ const (
 )
 
 var (
-    GridSize = MyApp.Preferences().StringWithFallback("GridSize", SIZE_DEFAULT)
+	GridSize = MyApp.Preferences().StringWithFallback("GridSize", SIZE_DEFAULT)
 )
 
 var Sizes map[string]Size = map[string]Size{

@@ -89,6 +89,13 @@ func windowsSetMode(mode Mode) error {
 	}
 }
 
+func ListAvailableModes() []string {
+	return []string{
+		globals.FILL_ZOOM, globals.FILL_CENTER,
+		globals.FILL_TILE, globals.FILL_ORIGINAL,
+		globals.FILL_SCALE}
+}
+
 func windowsGetCacheDir() (string, error) {
 	return os.TempDir(), nil
 }

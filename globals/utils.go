@@ -13,7 +13,7 @@ import (
 // ~/AppData/Local/walldo/config.json (windows)
 func SetupEnvVariables() {
 	os.Setenv("FYNE_THEME", "dark")
-    Window.Resize(fyne.NewSize(float32(WindowWidth), float32(WindowHeight)))
+	Window.Resize(fyne.NewSize(float32(WindowWidth), float32(WindowHeight)))
 
 	home, err := os.UserHomeDir()
 	if err != nil {
