@@ -66,11 +66,11 @@ func windowsSetMode() error {
 
 	var style string
 	switch mode {
-	case globals.FILL_TILE, globals.FILL_CENTER:
+	case globals.FILL_CENTER:
 		style = "0"
-	case globals.FILL_ZOOM:
-		style = "6"
 	case globals.FILL_ORIGINAL:
+		style = "6"
+	case globals.FILL_ZOOM:
 		style = "22"
 	case globals.FILL_SCALE:
 		style = "2"
