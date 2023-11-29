@@ -46,7 +46,6 @@ func SetupGui() {
 		},
 		func(sel string) {
 			global.FillStrategy = sel
-			global.MyApp.Preferences().SetString("FillStrategy", sel)
 		},
 	)
 	strategySelector.SetSelected(global.FillStrategy)

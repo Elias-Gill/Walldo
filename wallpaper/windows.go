@@ -29,6 +29,12 @@ var (
 
 // SetFromFile sets the wallpaper for the current user.
 func SetFromFile(filename string) error {
+    mode := Mode(globals.FillStrategy)
+    err := windowsSetMode(mode)
+    if err != nil {
+        return err
+    }
+
 	filenameUTF16, err := syscall.UTF16PtrFromString(filename)
 	if err != nil {
 		return err
@@ -81,14 +87,6 @@ func windowsSetMode(mode Mode) error {
 	if err != nil {
 		return err
 	}
-
-	// updates wallpaper
-	path, err := Get()
-	if err != nil {
-		return err
-	}
-
-	return windowsSetFromFile(path)
 }
 
 func windowsGetCacheDir() (string, error) {

@@ -1,3 +1,4 @@
+//go:build linux || darwin
 package linux
 
 import (
@@ -5,6 +6,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/elias-gill/walldo-in-go/globals"
 	yaml "gopkg.in/yaml.v2"
 )
 
@@ -38,24 +40,21 @@ func isGNOMECompliant() bool {
 
 func (mode Mode) getGNOMEString() string {
 	switch mode {
-	case Center:
+	case globals.FILL_CENTER:
 		return "centered"
-	case Crop:
+	case globals.FILL_ZOOM:
 		return "zoom"
-	case Fit:
+	case globals.FILL_SCALE:
 		return "scaled"
-	case Span:
-		return "spanned"
-	case Stretch:
-		return "stretched"
-	case Tile:
+	case globals.FILL_TILE:
 		return "wallpaper"
 	default:
 		panic("invalid wallpaper mode")
 	}
 }
 
-func setForGnome(file string) error {
+func setForGnome(file string, mode Mode) error {
+	exec.Command("gsettings", "set", "org.gnome.desktop.background", "picture-options", strconv.Quote(mode.getGNOMEString())).Run()
 	return exec.Command("gsettings", "set", "org.gnome.desktop.background", "picture-uri", strconv.Quote("file://"+file)).Run()
 
 }

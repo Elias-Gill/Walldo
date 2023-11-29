@@ -38,7 +38,6 @@ var (
 	GridSize = MyApp.Preferences().StringWithFallback("GridSize", SIZE_DEFAULT)
 )
 
-
 const FILL_ZOOM = "Zoom Fill"
 const FILL_SCALE = "Scale"
 const FILL_CENTER = "Center"
@@ -46,7 +45,7 @@ const FILL_ORIGINAL = "Original"
 const FILL_TILE = "Tile"
 
 var (
-	FillStrategy = MyApp.Preferences().StringWithFallback("FillStrategy", "Zoom Fill")
+	FillStrategy = MyApp.Preferences().StringWithFallback("FillStrategy", FILL_ZOOM)
 )
 
 // Config files

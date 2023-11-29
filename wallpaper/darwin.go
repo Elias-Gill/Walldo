@@ -1,3 +1,5 @@
+//go:build linux || darwin
+
 package wallpaper
 
 import (
@@ -10,11 +12,6 @@ import (
 // SetFromFile uses AppleScript to tell Finder to set the desktop wallpaper to specified file.
 func darwinSetFromFile(file string) error {
 	return exec.Command("osascript", "-e", `tell application "System Events" to tell every desktop to set picture to `+strconv.Quote(file)).Run()
-}
-
-// SetMode does nothing on macOS.
-func darwinSetMode(mode Mode) error {
-	return nil
 }
 
 func darwinGetCacheDir() (string, error) {

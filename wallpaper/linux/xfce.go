@@ -1,9 +1,12 @@
+//go:build linux || darwin
 package linux
 
 import (
 	"os/exec"
 	"path"
 	"strings"
+
+	"github.com/elias-gill/walldo-in-go/globals"
 )
 
 func getXFCEProps(key string) ([]string, error) {
@@ -37,7 +40,12 @@ func getXFCE() (string, error) {
 	return strings.TrimSpace(string(output)), nil
 }
 
-func setXFCE(file string) error {
+func setXFCE(file string, mode Mode) error {
+    err := setXFCEMode(mode)
+    if err != nil {
+        return err
+    }
+
 	desktops, err := getXFCEProps("last-image")
 	if err != nil {
 		return err
@@ -69,17 +77,15 @@ func setXFCEMode(mode Mode) error {
 
 func (mode Mode) getXFCEString() string {
 	switch mode {
-	case Center:
+	case globals.FILL_CENTER:
 		return "1"
-	case Crop:
-		return "5"
-	case Fit:
+	case globals.FILL_ZOOM:
 		return "4"
-	case Span:
+	case globals.FILL_ORIGINAL:
 		return "5"
-	case Stretch:
+	case globals.FILL_SCALE:
 		return "3"
-	case Tile:
+	case globals.FILL_TILE:
 		return "2"
 	default:
 		panic("invalid wallpaper mode")
