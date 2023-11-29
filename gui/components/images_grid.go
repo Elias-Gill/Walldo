@@ -22,6 +22,7 @@ type wallpapersGrid struct {
 func NewImageGrid() wallpapersGrid {
 	res := wallpapersGrid{content: container.NewWithoutLayout()}
 	res.fillGrid()
+
 	return res
 }
 
@@ -41,7 +42,7 @@ type card struct {
 	button    *widget.Button
 }
 
-// fills the container with the correspondent content
+// fills the container with the correspondent content.
 func (c wallpapersGrid) fillGrid() {
 	// define the cards size
 	size := globals.Sizes[globals.GridSize]
@@ -56,11 +57,12 @@ func (c wallpapersGrid) fillGrid() {
 	for _, image := range imagesList {
 		channel <- c.newEmptyFrame(image)
 	}
+
 	c.fillContainers(channel)
 }
 
 // NOTE: keep this as a separate function
-// Creates a new container for the card with a button
+// Creates a new container for the card with a button.
 func (c *wallpapersGrid) newEmptyFrame(image string) card {
 	button := widget.NewButton("", func() {
 		err := wallpaper.SetFromFile(strings.Clone(image))
@@ -78,11 +80,12 @@ func (c *wallpapersGrid) newEmptyFrame(image string) card {
 	}
 }
 
-// Recibes the channel with a list of "cards" (image + button inside a container).
-// generates the thumbnail for the card and refresh the container
+/* Recibes the channel with a list of "cards" (image + button inside a container).
+generates the thumbnail for the card and refresh the container.
+create as many threads as cpus for resizing images to make thumbnails. */
 func (c wallpapersGrid) fillContainers(channel chan card) {
-	// create as many threads as cpus for resizing images to make thumbnails
 	print("\n Usando ", runtime.NumCPU()-2, " Hilos")
+
 	for i := 0; i < runtime.NumCPU()-2; i++ {
 		go func() {
 			for card := range channel {

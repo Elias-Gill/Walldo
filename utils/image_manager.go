@@ -18,13 +18,15 @@ var imagesList []string
 func ResizeImage(image string) string {
 	thumbPath := generateThnPath(image)
 
-	// if the thumnail does not exists
-	if _, err := os.Stat(thumbPath); err != nil {
-		src, _ := imaging.Open(image)
-		src = imaging.Thumbnail(src, 200, 180, imaging.NearestNeighbor)
-		// save the thumbnail on a folder
-		imaging.Save(src, thumbPath)
+	// if the thumnail does exists
+	if _, err := os.Stat(thumbPath); err == nil {
+		return thumbPath
 	}
+
+	src, _ := imaging.Open(image)
+	src = imaging.Thumbnail(src, 200, 180, imaging.NearestNeighbor)
+	imaging.Save(src, thumbPath)
+
 	return thumbPath
 }
 

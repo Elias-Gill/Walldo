@@ -10,24 +10,26 @@ import (
 	"github.com/elias-gill/walldo-in-go/utils"
 )
 
-// Configuration window
+// Configuration window.
 func ConfigWindow(win *fyne.Window, app fyne.App, refresh func()) {
-	var selGridStyle string
-	var selGridSize string
+	var selGridStyle, selGridSize string
 
 	// selector to determine grid size
-	grid_size_selector := widget.NewRadioGroup([]string{"large", "default", "small"},
-		func(sel string) {
-			selGridSize = sel
-		})
-	grid_size_selector.SetSelected(globals.GridSize)
+	sizeSelector := widget.NewRadioGroup([]string{
+		globals.SIZE_LARGE,
+		globals.SIZE_DEFAULT,
+		globals.SIZE_SMALL,
+	}, func(sel string) {
+		selGridSize = sel
+	})
+	sizeSelector.SetSelected(globals.GridSize)
 
 	// entry to display and set the configured paths
 	input := newEntryPaths()
 
 	// Window content
 	cont := []*widget.FormItem{
-		widget.NewFormItem("Images size", grid_size_selector),
+		widget.NewFormItem("Images size", sizeSelector),
 		widget.NewFormItem("", input),
 	}
 
@@ -57,32 +59,36 @@ func ConfigWindow(win *fyne.Window, app fyne.App, refresh func()) {
 	dia.Show()
 }
 
-// format the input of the user
+// format the input of the user.
 func formatInput(s string) string {
 	var res string
+
 	for _, i := range strings.Split(s, "\n") {
 		aux := strings.TrimSpace(i)
 		strings.Replace(aux, ",", "", 1)
 		res += aux
 	}
+
 	return res
 }
 
-// Creates a new input field to display the configured paths inside
+// Creates a new input field to display the configured paths inside.
 func newEntryPaths() *widget.Entry {
 	input := widget.NewEntry()
 	input.MultiLine = true
 	input.SetPlaceHolder(`C:/User/fondos, \nC:/Example/images`)
 
 	// format the configured paths for the fyne input
-	p := utils.GetConfiguredPaths()
 	paths := ""
+
+	p := utils.GetConfiguredPaths()
 	for i, path := range p {
 		paths += path
 		if i < len(p)-1 { // to avoid putting a extra line jump at the end
 			paths += ",\n"
 		}
 	}
+
 	input.SetText(paths)
 
 	return input

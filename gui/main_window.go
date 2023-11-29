@@ -11,6 +11,7 @@ import (
 	global "github.com/elias-gill/walldo-in-go/globals"
 	"github.com/elias-gill/walldo-in-go/gui/components"
 	"github.com/elias-gill/walldo-in-go/gui/components/dialogs"
+	"github.com/elias-gill/walldo-in-go/wallpaper"
 )
 
 func SetupGui() {
@@ -41,13 +42,10 @@ func SetupGui() {
 
 	// scale mode selector
 	strategySelector := widget.NewSelect(
-		[]string{
-			global.FILL_ZOOM, global.FILL_TILE, global.FILL_SCALE, global.FILL_CENTER, global.FILL_ORIGINAL,
-		},
+		wallpaper.ListAvailableModes(),
 		func(sel string) {
 			global.FillStrategy = sel
-		},
-	)
+		})
 	strategySelector.SetSelected(global.FillStrategy)
 
 	// assemble app layout
@@ -58,15 +56,13 @@ func SetupGui() {
 		// FUTURE: imageName,
 		layout.NewSpacer(),
 		refreshButton,
-		configsButton,
-	)
+		configsButton)
+
 	content := container.New(layout.NewBorderLayout(title, body, nil, nil), title, mainFrame, body)
 	global.Window.SetContent(content)
 
-	// load images and thumbnails just after initializing the GUI
-	global.MyApp.Lifecycle().SetOnStarted(func() {
-		grid.RefreshImgGrid()
-	})
+	// load images and thumbnails while initializing the GUI
+	go grid.RefreshImgGrid()
 
 	// save the window size on close
 	global.MyApp.Lifecycle().SetOnStopped(func() {

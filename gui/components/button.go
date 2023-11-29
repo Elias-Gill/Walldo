@@ -12,6 +12,7 @@ func NewButtonWithIcon(text string, f func(), icon string) *widget.Button {
 		ico := fyne.ThemeIconName(icon)
 		return widget.NewButtonWithIcon(text, globals.MyApp.Settings().Theme().Icon(ico), f)
 	}
+
 	return widget.NewButton(text, f)
 }
 

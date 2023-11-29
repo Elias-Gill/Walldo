@@ -13,14 +13,15 @@ import (
 )
 
 var (
-	data       = []string{}
-	fuzzy_list *widget.List
+	data          = []string{}
+	resultsWidget *widget.List
 )
 
-// refresh the content search list with every keystroke
+// refresh the content search list with every keystroke.
 func entryChanged(entry string) {
 	data = []string{}
 	imagesList := utils.GetImagesList()
+
 	if len(entry) >= 1 {
 		// search for the matching results
 		matches := matching.FindAll(entry, imagesList)
@@ -29,15 +30,22 @@ func entryChanged(entry string) {
 			data = append(data, imagesList[matches[i].Idx])
 		}
 	}
-	fuzzy_list.Refresh()
+
+	resultsWidget.Refresh()
 }
 
-// Create a new Fuzzy finder dialog and displays it
+// Create a new Fuzzy finder dialog and display it.
 func NewFuzzyDialog(w fyne.Window) {
-	// variables
-	fuzzy_searcher := widget.NewEntry()
-	// list of results
-	fuzzy_list = widget.NewList(
+	// searcher configuration
+	searcherWiget := widget.NewEntry()
+	searcherWiget.SetPlaceHolder("Search Image")
+	searcherWiget.OnChanged = entryChanged
+	resultsWidget.OnSelected = func(id int) {
+		wallpaper.SetFromFile(data[id])
+	}
+
+	// list of results widget
+	resultsWidget = widget.NewList(
 		func() int {
 			return len(data)
 		},
@@ -48,16 +56,8 @@ func NewFuzzyDialog(w fyne.Window) {
 			o.(*widget.Label).SetText(data[i])
 		})
 
-	cont := container.New(layout.NewBorderLayout(fuzzy_searcher, nil, nil, nil), fuzzy_searcher, fuzzy_list)
+	cont := container.New(layout.NewBorderLayout(searcherWiget, nil, nil, nil), searcherWiget, resultsWidget)
 	dial := dialog.NewCustom("Fuzzy search", "Cancel", cont, globals.Window)
 	dial.Resize(fyne.NewSize(500, 300))
-
-	// opciones
-	fuzzy_searcher.OnChanged = entryChanged
-	fuzzy_searcher.SetPlaceHolder("Search Image")
-	fuzzy_list.OnSelected = func(id int) {
-		wallpaper.SetFromFile(data[id])
-	}
-
 	dial.Show()
 }
