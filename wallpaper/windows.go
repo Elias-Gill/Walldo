@@ -7,6 +7,7 @@ import (
 	"syscall"
 	"unsafe"
 
+    "github.com/elias-gill/walldo-in-go/globals"
 	"golang.org/x/sys/windows/registry"
 )
 
@@ -29,8 +30,7 @@ var (
 
 // SetFromFile sets the wallpaper for the current user.
 func SetFromFile(filename string) error {
-	mode := Mode(globals.FillStrategy)
-	err := windowsSetMode(mode)
+	err := windowsSetMode()
 	if err != nil {
 		return err
 	}
@@ -50,50 +50,41 @@ func SetFromFile(filename string) error {
 }
 
 // SetMode sets the wallpaper mode.
-func windowsSetMode(mode Mode) error {
+func windowsSetMode() error {
+    mode := globals.FillStrategy
+
 	key, _, err := registry.CreateKey(registry.CURRENT_USER, "Control Panel\\Desktop", registry.SET_VALUE)
 	if err != nil {
 		return err
 	}
 	defer key.Close()
 
-	var tile string
-	if mode == Tile {
-		tile = "1"
-	} else {
-		tile = "0"
-	}
-	err = key.SetStringValue("TileWallpaper", tile)
+	err = key.SetStringValue("TileWallpaper", "0")
 	if err != nil {
 		return err
 	}
 
 	var style string
 	switch mode {
-	case Center, Tile:
+	case globals.FILL_TILE, globals.FILL_CENTER:
 		style = "0"
-	case Fit:
+	case globals.FILL_ZOOM:
 		style = "6"
-	case Span:
+	case globals.FILL_ORIGINAL:
 		style = "22"
-	case Stretch:
+	case globals.FILL_SCALE:
 		style = "2"
-	case Crop:
-		style = "10"
 	default:
 		panic("invalid wallpaper mode")
 	}
-	err = key.SetStringValue("WallpaperStyle", style)
-	if err != nil {
-		return err
-	}
+
+    return key.SetStringValue("WallpaperStyle", style)
 }
 
 func ListAvailableModes() []string {
 	return []string{
 		globals.FILL_ZOOM, globals.FILL_CENTER,
-		globals.FILL_TILE, globals.FILL_ORIGINAL,
-		globals.FILL_SCALE}
+		globals.FILL_ORIGINAL, globals.FILL_SCALE}
 }
 
 func windowsGetCacheDir() (string, error) {
