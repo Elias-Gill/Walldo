@@ -1,4 +1,5 @@
 //go:build linux || darwin
+
 package linux
 
 import (
@@ -38,7 +39,7 @@ func isGNOMECompliant() bool {
 	return strings.Contains(Desktop, "GNOME") || Desktop == "Unity" || Desktop == "Pantheon"
 }
 
-func (mode Mode) getGNOMEString() string {
+func getGNOMEString(mode string) string {
 	switch mode {
 	case globals.FILL_CENTER:
 		return "centered"
@@ -53,8 +54,8 @@ func (mode Mode) getGNOMEString() string {
 	}
 }
 
-func setForGnome(file string, mode Mode) error {
-	exec.Command("gsettings", "set", "org.gnome.desktop.background", "picture-options", strconv.Quote(mode.getGNOMEString())).Run()
+func setForGnome(file string, mode string) error {
+	exec.Command("gsettings", "set", "org.gnome.desktop.background", "picture-options", strconv.Quote(getGNOMEString(mode))).Run()
 	return exec.Command("gsettings", "set", "org.gnome.desktop.background", "picture-uri", strconv.Quote("file://"+file)).Run()
 
 }

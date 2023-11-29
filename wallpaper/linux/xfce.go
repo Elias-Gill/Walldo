@@ -1,4 +1,5 @@
 //go:build linux || darwin
+
 package linux
 
 import (
@@ -40,11 +41,11 @@ func getXFCE() (string, error) {
 	return strings.TrimSpace(string(output)), nil
 }
 
-func setXFCE(file string, mode Mode) error {
-    err := setXFCEMode(mode)
-    if err != nil {
-        return err
-    }
+func setXFCE(file string, mode string) error {
+	err := setXFCEMode(mode)
+	if err != nil {
+		return err
+	}
 
 	desktops, err := getXFCEProps("last-image")
 	if err != nil {
@@ -59,14 +60,14 @@ func setXFCE(file string, mode Mode) error {
 	return nil
 }
 
-func setXFCEMode(mode Mode) error {
+func setXFCEMode(mode string) error {
 	styles, err := getXFCEProps("image-style")
 	if err != nil {
 		return err
 	}
 
 	for _, style := range styles {
-		err = exec.Command("xfconf-query", "--channel", "xfce4-desktop", "--property", style, "--set", mode.getXFCEString()).Run()
+		err = exec.Command("xfconf-query", "--channel", "xfce4-desktop", "--property", style, "--set", getXFCEString(mode)).Run()
 		if err != nil {
 			return err
 		}
@@ -75,7 +76,7 @@ func setXFCEMode(mode Mode) error {
 	return nil
 }
 
-func (mode Mode) getXFCEString() string {
+func getXFCEString(mode string) string {
 	switch mode {
 	case globals.FILL_CENTER:
 		return "1"

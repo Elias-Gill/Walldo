@@ -1,4 +1,5 @@
 //go:build linux || darwin
+
 package linux
 
 import (
@@ -7,11 +8,11 @@ import (
 	"github.com/elias-gill/walldo-in-go/globals"
 )
 
-func setFehBackground(file string, mode Mode) error {
-	return exec.Command("feh", mode.setFehMode(), file).Run()
+func setFehBackground(file string, mode string) error {
+	return exec.Command("feh", getFehString(mode), file).Run()
 }
 
-func (mode Mode) setFehMode() (string) {
+func getFehString(mode string) string {
 	switch mode {
 	case globals.FILL_CENTER:
 		return "--bg-center"

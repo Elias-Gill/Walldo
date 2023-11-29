@@ -1,4 +1,5 @@
 //go:build linux || darwin
+
 package linux
 
 import (
@@ -8,11 +9,11 @@ import (
 	"github.com/elias-gill/walldo-in-go/globals"
 )
 
-func setKDE(path string, mode Mode) error {
-    err := setKDEMode(mode)
-    if err != nil {
-        return err
-    }
+func setKDE(path string, mode string) error {
+	err := setKDEMode(mode)
+	if err != nil {
+		return err
+	}
 
 	return evalKDE(`
 		for (const desktop of desktops()) {
@@ -22,11 +23,11 @@ func setKDE(path string, mode Mode) error {
 	`)
 }
 
-func setKDEMode(mode Mode) error {
+func setKDEMode(mode string) error {
 	return evalKDE(`
 		for (const desktop of desktops()) {
 			desktop.currentConfigGroup = ["Wallpaper", "org.kde.image", "General"]
-			desktop.writeConfig("FillMode", ` + mode.getKDEString() + `)
+			desktop.writeConfig("FillMode", ` + getKDEString(mode) + `)
 		}
 	`)
 }
@@ -35,7 +36,7 @@ func evalKDE(script string) error {
 	return exec.Command("qdbus", "org.kde.plasmashell", "/PlasmaShell", "org.kde.PlasmaShell.evaluateScript", script).Run()
 }
 
-func (mode Mode) getKDEString() string {
+func getKDEString(mode string) string {
 	switch mode {
 	case globals.FILL_CENTER:
 		return "6"

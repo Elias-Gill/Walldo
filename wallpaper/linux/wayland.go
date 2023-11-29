@@ -1,4 +1,5 @@
 //go:build linux || darwin
+
 package linux
 
 import (
@@ -8,8 +9,8 @@ import (
 	"github.com/elias-gill/walldo-in-go/globals"
 )
 
-func (m Mode) getWaylandString() string {
-	switch m {
+func getWaylandString(mode string) string {
+	switch mode {
 	case globals.FILL_CENTER:
 		return "center"
 	case globals.FILL_ORIGINAL:
@@ -19,18 +20,18 @@ func (m Mode) getWaylandString() string {
 	case globals.FILL_ZOOM:
 		return "fill"
 	case globals.FILL_TILE:
-        return "tile"
+		return "tile"
 	default:
 		panic("invalid wallpaper mode")
 	}
 }
 
 // INFO: It depends on swaybg
-func setWaylandBackground(file string, mode Mode) error {
+func setForWayland(file string, mode string) error {
 	// first kill all instances of swaybg then run swaybg
 	exec.Command("killall", "swaybg").Run()
 
-	cmd := exec.Command("swaybg", "-m", mode.getWaylandString(), "-i", file)
+	cmd := exec.Command("swaybg", "-m", getWaylandString(mode), "-i", file)
 	err := cmd.Start()
 	if err != nil {
 		return err

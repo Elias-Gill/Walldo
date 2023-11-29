@@ -29,9 +29,9 @@ const SIZE_SMALL = "small"
 const SIZE_LARGE = "large"
 
 var Sizes map[string]Size = map[string]Size{
-	SIZE_SMALL:   {Width: 110, Height: 100},
 	SIZE_LARGE:   {Width: 195, Height: 175},
-	SIZE_DEFAULT: {Width: 150, Height: 130},
+	SIZE_DEFAULT: {Width: 115, Height: 105},
+	SIZE_SMALL:   {Width: 90, Height: 80},
 }
 
 var (

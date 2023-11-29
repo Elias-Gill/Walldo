@@ -29,11 +29,11 @@ var (
 
 // SetFromFile sets the wallpaper for the current user.
 func SetFromFile(filename string) error {
-    mode := Mode(globals.FillStrategy)
-    err := windowsSetMode(mode)
-    if err != nil {
-        return err
-    }
+	mode := Mode(globals.FillStrategy)
+	err := windowsSetMode(mode)
+	if err != nil {
+		return err
+	}
 
 	filenameUTF16, err := syscall.UTF16PtrFromString(filename)
 	if err != nil {
