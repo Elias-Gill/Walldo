@@ -21,7 +21,7 @@ type wallpapersGrid struct {
 
 func NewImageGrid() wallpapersGrid {
 	res := wallpapersGrid{content: container.NewWithoutLayout()}
-	res.fillGrid()
+	res.generateFrames()
 
 	return res
 }
@@ -33,7 +33,9 @@ func (c wallpapersGrid) GetGridContent() *fyne.Container {
 func (c *wallpapersGrid) RefreshImgGrid() {
 	c.content.RemoveAll()
 	utils.ListImagesRecursivelly()
-	c.fillGrid()
+
+	channel := c.generateFrames()
+	c.fillContainers(channel)
 }
 
 type card struct {
@@ -42,8 +44,8 @@ type card struct {
 	button    *widget.Button
 }
 
-// fills the container with the correspondent content.
-func (c wallpapersGrid) fillGrid() {
+// fills the image grid with frame containers.
+func (c wallpapersGrid) generateFrames() chan card {
 	// define the cards size
 	size := globals.Sizes[globals.GridSize]
 	c.content.Layout = layout.NewGridWrapLayout(fyne.NewSize(size.Width, size.Height))
@@ -58,7 +60,9 @@ func (c wallpapersGrid) fillGrid() {
 		channel <- c.newEmptyFrame(image)
 	}
 
-	c.fillContainers(channel)
+	c.content.Refresh()
+
+	return channel
 }
 
 // NOTE: keep this as a separate function
@@ -81,8 +85,7 @@ func (c *wallpapersGrid) newEmptyFrame(image string) card {
 }
 
 /*
-	Recibes the channel with a list of "cards" (image + button inside a container).
-
+Recibes the channel with a list of "cards" (image + button inside a container).
 generates the thumbnail for the card and refresh the container.
 create as many threads as cpus for resizing images to make thumbnails.
 */
