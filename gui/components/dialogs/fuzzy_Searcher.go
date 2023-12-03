@@ -1,6 +1,8 @@
 package dialogs
 
 import (
+	"strings"
+
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
@@ -35,16 +37,13 @@ func entryChanged(entry string) {
 }
 
 // Create a new Fuzzy finder dialog and display it.
-func NewFuzzyDialog(w fyne.Window) {
-	// searcher configuration
+func NewFuzzyDialog() {
+	// search input
 	searcherWiget := widget.NewEntry()
 	searcherWiget.SetPlaceHolder("Search Image")
 	searcherWiget.OnChanged = entryChanged
-	resultsWidget.OnSelected = func(id int) {
-		wallpaper.SetFromFile(data[id])
-	}
 
-	// list of results widget
+	// list of results
 	resultsWidget = widget.NewList(
 		func() int {
 			return len(data)
@@ -55,6 +54,9 @@ func NewFuzzyDialog(w fyne.Window) {
 		func(i widget.ListItemID, o fyne.CanvasObject) {
 			o.(*widget.Label).SetText(data[i])
 		})
+	resultsWidget.OnSelected = func(id int) {
+		wallpaper.SetFromFile(strings.Clone(data[id]))
+	}
 
 	cont := container.New(layout.NewBorderLayout(searcherWiget, nil, nil, nil), searcherWiget, resultsWidget)
 	dial := dialog.NewCustom("Fuzzy search", "Cancel", cont, globals.Window)
