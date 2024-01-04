@@ -1,8 +1,6 @@
 package dialogs
 
 import (
-	"strings"
-
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
@@ -14,7 +12,7 @@ import (
 func ConfigWindow(win *fyne.Window, app fyne.App, refresh func()) {
 	var selGridStyle, selGridSize string
 
-	// selector to determine grid size
+	// grid size selector
 	sizeSelector := widget.NewRadioGroup([]string{
 		globals.SIZE_LARGE,
 		globals.SIZE_DEFAULT,
@@ -25,7 +23,7 @@ func ConfigWindow(win *fyne.Window, app fyne.App, refresh func()) {
 	sizeSelector.SetSelected(globals.GridSize)
 
 	// entry to display and set the configured paths
-	input := newEntryPaths()
+	input := newPathsInput()
 
 	// Window content
 	cont := []*widget.FormItem{
@@ -46,9 +44,9 @@ func ConfigWindow(win *fyne.Window, app fyne.App, refresh func()) {
 				globals.GridSize = selGridSize
 
 				// update configured paths
-				paths := formatInput(input.Text)
-				f := utils.SetConfig(paths)
-				f.Close()
+				config := utils.NewConfig()
+				config.WithPaths(formatInput(input.Text))
+				utils.MustWriteConfig(config)
 
 				// refresh the main window
 				refresh()
@@ -59,21 +57,8 @@ func ConfigWindow(win *fyne.Window, app fyne.App, refresh func()) {
 	dia.Show()
 }
 
-// format the input of the user.
-func formatInput(s string) string {
-	var res string
-
-	for _, i := range strings.Split(s, "\n") {
-		aux := strings.TrimSpace(i)
-		strings.Replace(aux, ",", "", 1)
-		res += aux
-	}
-
-	return res
-}
-
 // Creates a new input field to display the configured paths inside.
-func newEntryPaths() *widget.Entry {
+func newPathsInput() *widget.Entry {
 	input := widget.NewEntry()
 	input.MultiLine = true
 	input.SetPlaceHolder(`C:/User/fondos, \nC:/Example/images`)
@@ -92,4 +77,24 @@ func newEntryPaths() *widget.Entry {
 	input.SetText(paths)
 
 	return input
+}
+
+func NewPathsList() fyne.Widget {
+	data := utils.GetConfiguredPaths()
+
+	resultsWidget := widget.NewList(
+		func() int {
+			return len(data)
+		},
+		func() fyne.CanvasObject {
+			return widget.NewLabel("template")
+		},
+		func(i widget.ListItemID, o fyne.CanvasObject) {
+			o.(*widget.Label).SetText(data[i])
+		})
+
+    // TODO: delete function
+	resultsWidget.OnSelected = func(id int) {}
+
+	return resultsWidget
 }
