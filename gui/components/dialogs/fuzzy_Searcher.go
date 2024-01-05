@@ -16,7 +16,7 @@ import (
 
 // Create a new Fuzzy finder dialog and display it.
 func NewFuzzyDialog() {
-    data := []string{}
+	data := []string{}
 
 	// list of results
 	resultsWidget := widget.NewList(

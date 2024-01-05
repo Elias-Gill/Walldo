@@ -19,7 +19,7 @@ func NewConfig() Config {
 
 func (c Config) WithPaths(paths []string) Config {
 	c.Paths = paths
-    return c
+	return c
 }
 
 // Return all folders configured by the user in the configuration file.

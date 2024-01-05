@@ -46,8 +46,8 @@ func ConfigWindow(win *fyne.Window, app fyne.App, refresh func()) {
 				aux = append(aux, data[i])
 			}
 		}
-        data = aux
-        pathsList.Refresh()
+		data = aux
+		pathsList.Refresh()
 	}
 
 	// path pathInput
