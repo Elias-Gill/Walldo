@@ -61,11 +61,20 @@ func ConfigWindow(win *fyne.Window, app fyne.App, refresh func()) {
 		pathInput.Refresh()
 		pathsList.Refresh()
 	}
+	pathInput.Resize(fyne.NewSize(200, 500))
+
+	// open the file explorer to select a folder
+	pathPickerButton := widget.NewButton("+", func() {
+		NewPathPicker(*win, func(s string) {
+			pathInput.Text = s
+			pathInput.Refresh()
+		})
+	})
 
 	// Window content
 	cont := []*widget.FormItem{
 		widget.NewFormItem("Images size", sizeSelector),
-		widget.NewFormItem("", pathInput),
+		widget.NewFormItem("", container.NewBorder(container.NewMax(pathInput), nil, nil, container.NewHBox(pathPickerButton))),
 		widget.NewFormItem("", container.NewMax(pathsList)),
 	}
 
