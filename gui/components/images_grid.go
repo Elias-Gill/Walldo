@@ -16,22 +16,28 @@ import (
 )
 
 type wallpapersGrid struct {
-	content *fyne.Container
+	container *fyne.Container
+	grid      *fyne.Container
 }
 
-func NewImageGrid() wallpapersGrid {
-	res := wallpapersGrid{content: container.NewWithoutLayout()}
-	res.generateFrames()
+func NewImageGrid() *wallpapersGrid {
+	grid := container.NewWithoutLayout()
+	res := &wallpapersGrid{
+		grid: grid,
+		container: container.New(
+			layout.NewPaddedLayout(),
+			container.NewScroll(grid)),
+	}
 
 	return res
 }
 
 func (c wallpapersGrid) GetGridContent() *fyne.Container {
-	return c.content
+	return c.container
 }
 
 func (c *wallpapersGrid) RefreshImgGrid() {
-	c.content.RemoveAll()
+	c.grid.RemoveAll()
 	utils.ListImagesRecursivelly()
 
 	channel := c.generateFrames()
@@ -48,7 +54,7 @@ type card struct {
 func (c wallpapersGrid) generateFrames() chan card {
 	// define the cards size
 	size := globals.Sizes[globals.GridSize]
-	c.content.Layout = layout.NewGridWrapLayout(fyne.NewSize(size.Width, size.Height))
+	c.grid.Layout = layout.NewGridWrapLayout(fyne.NewSize(size.Width, size.Height))
 
 	imagesList := utils.GetImagesList()
 
@@ -60,7 +66,7 @@ func (c wallpapersGrid) generateFrames() chan card {
 		channel <- c.newEmptyFrame(image)
 	}
 
-	c.content.Refresh()
+	c.grid.Refresh()
 
 	return channel
 }
@@ -75,7 +81,7 @@ func (c *wallpapersGrid) newEmptyFrame(image string) card {
 		}
 	})
 	cont := container.NewMax(button)
-	c.content.Add(cont)
+	c.grid.Add(cont)
 
 	return card{
 		imgPath:   image,

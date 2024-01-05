@@ -9,5 +9,6 @@ func main() {
 	// set all global variables and run
 	globals.SetupEnvVariables()
 	gui.SetupGui()
+	globals.Window.CenterOnScreen()
 	globals.Window.ShowAndRun()
 }

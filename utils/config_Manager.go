@@ -2,89 +2,61 @@ package utils
 
 import (
 	"encoding/json"
-	"io"
-	"log"
 	"os"
-	"strings"
 
 	global "github.com/elias-gill/walldo-in-go/globals"
 )
 
-// Return all folders configured by the user in the configuration file
-func GetConfiguredPaths() []string {
-	return readConfigFile()["Paths"]
+type Config struct {
+	Paths []string `json:"Paths"`
 }
 
-// Reads and parse the config file
-func readConfigFile() map[string][]string {
-	// Si no se encuentra el archivo de configuracion entonces lo crea
+func NewConfig() Config {
+	return Config{
+		Paths: []string{},
+	}
+}
+
+func (c Config) WithPaths(paths []string) Config {
+	c.Paths = paths
+	return c
+}
+
+// Return all folders configured by the user in the configuration file.
+func GetConfiguredPaths() []string {
+	return parseConfigFile().Paths
+}
+
+func parseConfigFile() Config {
+	// create a new config file if it does not exists.
 	fileContent, err := os.Open(global.ConfigFile)
 	if err != nil {
-		fileContent = SetConfig("")
+		MustWriteConfig(Config{})
 	}
 	defer fileContent.Close()
 
-	byteResult, _ := io.ReadAll(fileContent)
+	var res Config
 
-	var res map[string][]string
-	json.Unmarshal([]byte(byteResult), &res)
+	json.NewDecoder(fileContent).Decode(&res)
 
 	return res
 }
 
-type Path struct {
-	Paths []string
-}
-
-// Creates the config folder and the config.json if is not created yet
-func SetConfig(paths string) *os.File {
+// Creates the config folder and the config.json if is not created yet.
+// This function may pannic if cannot modify/create the configuration file.
+func MustWriteConfig(config Config) {
 	// create the folders
 	// os.MkdirAll(global.ConfigPath, 0o777)
-	os.MkdirAll(global.ConfigPath+"resized_images", 0o777)
-	os.Create(global.ConfigPath + "config.json")
-
-	var data *[]byte
-	if paths != "" {
-		data = setJsonData(paths)
-	} else {
-		data = setJsonData("")
-	}
-	return writeJsonData(data, global.ConfigFile)
-}
-
-// This is for setting the default data of the config.json file
-func setJsonData(paths string) *[]byte {
-	// split paths
-	aux := strings.Split(paths, ",")
-
-	// Trim all white spaces
-	for x, e := range aux {
-		aux[x] = strings.TrimSpace(e)
-	}
-
-	// Delete all backslashes (necesary due to a weird problem with fyne inputs)
-	for x, i := range aux {
-		aux[x] = strings.ReplaceAll(i, `"\`, "")
-	}
-
-	// set the paths and the json content
-	content := Path{Paths: aux}
-	data, err := json.Marshal(content)
+	err := os.MkdirAll(global.ConfigPath+"resized_images", 0o777)
 	if err != nil {
-		log.Fatal(err)
+		panic("Cannot create configuration path: " + err.Error())
 	}
-	return &data
-}
 
-// Write the new file with the data specified.
-// Returns the config file opened.
-func writeJsonData(data *[]byte, fileName string) *os.File {
-	// create the file and write
-	err := os.WriteFile(fileName, *data, 0o777)
+	file, err := os.Create(global.ConfigPath + "config.json")
 	if err != nil {
-		log.Fatal(err)
+		panic("Cannot create the configuration file: " + err.Error())
 	}
+	defer file.Close()
 
-	file, _ := os.Open(fileName)
-	return file
+	json.NewEncoder(file).Encode(config)
 }

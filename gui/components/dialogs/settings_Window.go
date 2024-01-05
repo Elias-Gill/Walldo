@@ -1,9 +1,8 @@
 package dialogs
 
 import (
-	"strings"
-
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
 	"github.com/elias-gill/walldo-in-go/globals"
@@ -11,10 +10,12 @@ import (
 )
 
 // Configuration window.
+//
+//nolint:all
 func ConfigWindow(win *fyne.Window, app fyne.App, refresh func()) {
 	var selGridStyle, selGridSize string
 
-	// selector to determine grid size
+	// grid size selector
 	sizeSelector := widget.NewRadioGroup([]string{
 		globals.SIZE_LARGE,
 		globals.SIZE_DEFAULT,
@@ -24,13 +25,60 @@ func ConfigWindow(win *fyne.Window, app fyne.App, refresh func()) {
 	})
 	sizeSelector.SetSelected(globals.GridSize)
 
-	// entry to display and set the configured paths
-	input := newEntryPaths()
+	// path list
+	data := utils.GetConfiguredPaths()
+	pathsList := widget.NewList(
+		func() int {
+			return len(data)
+		},
+		func() fyne.CanvasObject {
+			return widget.NewLabel("template")
+		},
+		func(i widget.ListItemID, o fyne.CanvasObject) {
+			o.(*widget.Label).SetText(data[i])
+		})
+
+	pathsList.OnSelected = func(id int) {
+		// delete the selected element
+		var aux []string
+		for i := 0; i < len(data); i++ {
+			if i != id {
+				aux = append(aux, data[i])
+			}
+		}
+		data = aux
+		pathsList.Refresh()
+	}
+
+	// path pathInput
+	pathInput := widget.NewEntry()
+	pathInput.MultiLine = false
+	pathInput.SetPlaceHolder(`C:/User/user/fondos`)
+	pathInput.OnSubmitted = func(t string) {
+		data = append(data, t)
+		pathInput.SetText("")
+
+		pathInput.Refresh()
+		pathsList.Refresh()
+	}
+	pathInput.Resize(fyne.NewSize(200, 500))
+
+	// open the file explorer to select a folder
+	pathPickerButton := widget.NewButton("Open explorer", func() {
+		NewPathPicker(*win, func(path string) {
+			data = append(data, path)
+			pathInput.SetText("")
+			pathInput.Refresh()
+			pathsList.Refresh()
+		})
+	})
 
 	// Window content
 	cont := []*widget.FormItem{
 		widget.NewFormItem("Images size", sizeSelector),
-		widget.NewFormItem("", input),
+		widget.NewFormItem("", pathInput),
+		widget.NewFormItem("", pathPickerButton),
+		widget.NewFormItem("", container.NewMax(pathsList)),
 	}
 
 	// Create the new dialog window (the main container)
@@ -46,50 +94,20 @@ func ConfigWindow(win *fyne.Window, app fyne.App, refresh func()) {
 				globals.GridSize = selGridSize
 
 				// update configured paths
-				paths := formatInput(input.Text)
-				f := utils.SetConfig(paths)
-				f.Close()
+				utils.MustWriteConfig(utils.
+					NewConfig().
+					WithPaths(data),
+				)
 
 				// refresh the main window
 				refresh()
 			}
 		}, *win)
-	dia.Resize(fyne.NewSize(400, 400))
+
+	dia.Resize(fyne.NewSize(
+		globals.Window.Canvas().Size().Width,
+		globals.Window.Canvas().Size().Height),
+	)
 
 	dia.Show()
-}
-
-// format the input of the user.
-func formatInput(s string) string {
-	var res string
-
-	for _, i := range strings.Split(s, "\n") {
-		aux := strings.TrimSpace(i)
-		strings.Replace(aux, ",", "", 1)
-		res += aux
-	}
-
-	return res
-}
-
-// Creates a new input field to display the configured paths inside.
-func newEntryPaths() *widget.Entry {
-	input := widget.NewEntry()
-	input.MultiLine = true
-	input.SetPlaceHolder(`C:/User/fondos, \nC:/Example/images`)
-
-	// format the configured paths for the fyne input
-	paths := ""
-
-	p := utils.GetConfiguredPaths()
-	for i, path := range p {
-		paths += path
-		if i < len(p)-1 { // to avoid putting a extra line jump at the end
-			paths += ",\n"
-		}
-	}
-
-	input.SetText(paths)
-
-	return input
 }

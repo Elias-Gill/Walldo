@@ -7,7 +7,7 @@ import (
 	"syscall"
 	"unsafe"
 
-    "github.com/elias-gill/walldo-in-go/globals"
+	"github.com/elias-gill/walldo-in-go/globals"
 	"golang.org/x/sys/windows/registry"
 )
 
@@ -51,7 +51,7 @@ func SetFromFile(filename string) error {
 
 // SetMode sets the wallpaper mode.
 func windowsSetMode() error {
-    mode := globals.FillStrategy
+	mode := globals.FillStrategy
 
 	key, _, err := registry.CreateKey(registry.CURRENT_USER, "Control Panel\\Desktop", registry.SET_VALUE)
 	if err != nil {
@@ -78,7 +78,7 @@ func windowsSetMode() error {
 		panic("invalid wallpaper mode")
 	}
 
-    return key.SetStringValue("WallpaperStyle", style)
+	return key.SetStringValue("WallpaperStyle", style)
 }
 
 func ListAvailableModes() []string {

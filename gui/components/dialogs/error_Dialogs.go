@@ -5,7 +5,7 @@ import (
 	"github.com/elias-gill/walldo-in-go/globals"
 )
 
-// display a dialog error with the current error
+// display a dialog error with the current error.
 func DisplayError(err error) {
 	dia := dialog.NewError(err, globals.Window)
 	dia.Show()
