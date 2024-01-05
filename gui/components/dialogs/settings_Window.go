@@ -56,7 +56,7 @@ func ConfigWindow(win *fyne.Window, app fyne.App, refresh func()) {
 	pathInput.SetPlaceHolder(`C:/User/user/fondos`)
 	pathInput.OnSubmitted = func(t string) {
 		data = append(data, t)
-		pathInput.Text = ""
+		pathInput.SetText("")
 
 		pathInput.Refresh()
 		pathsList.Refresh()
@@ -64,17 +64,20 @@ func ConfigWindow(win *fyne.Window, app fyne.App, refresh func()) {
 	pathInput.Resize(fyne.NewSize(200, 500))
 
 	// open the file explorer to select a folder
-	pathPickerButton := widget.NewButton("+", func() {
-		NewPathPicker(*win, func(s string) {
-			pathInput.Text = s
+    pathPickerButton := widget.NewButton("Open explorer", func() {
+		NewPathPicker(*win, func(path string) {
+			data = append(data, path)
+			pathInput.SetText("")
 			pathInput.Refresh()
+			pathsList.Refresh()
 		})
 	})
 
 	// Window content
 	cont := []*widget.FormItem{
 		widget.NewFormItem("Images size", sizeSelector),
-		widget.NewFormItem("", container.NewBorder(container.NewMax(pathInput), nil, nil, container.NewHBox(pathPickerButton))),
+		widget.NewFormItem("", pathInput),
+		widget.NewFormItem("", pathPickerButton),
 		widget.NewFormItem("", container.NewMax(pathsList)),
 	}
 
