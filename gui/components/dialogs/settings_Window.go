@@ -64,7 +64,7 @@ func ConfigWindow(win *fyne.Window, app fyne.App, refresh func()) {
 	pathInput.Resize(fyne.NewSize(200, 500))
 
 	// open the file explorer to select a folder
-    pathPickerButton := widget.NewButton("Open explorer", func() {
+	pathPickerButton := widget.NewButton("Open explorer", func() {
 		NewPathPicker(*win, func(path string) {
 			data = append(data, path)
 			pathInput.SetText("")
