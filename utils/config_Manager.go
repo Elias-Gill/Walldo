@@ -17,8 +17,9 @@ func NewConfig() Config {
 	}
 }
 
-func (c *Config) WithPaths(paths []string) {
+func (c Config) WithPaths(paths []string) Config {
 	c.Paths = paths
+    return c
 }
 
 // Return all folders configured by the user in the configuration file.
