@@ -8,9 +8,9 @@ import (
 	"fyne.io/fyne/v2"
 )
 
-// Thise are the used config files
-// ~/.config/walldo/config.json (unix)
-// ~/AppData/Local/walldo/config.json (windows)
+// Thise are the used config files.
+// ~/.config/walldo/config.json (unix).
+// ~/AppData/Local/walldo/config.json (windows).
 func SetupEnvVariables() {
 	os.Setenv("FYNE_THEME", "dark")
 	Window.Resize(fyne.NewSize(float32(WindowWidth), float32(WindowHeight)))

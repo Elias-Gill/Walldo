@@ -24,6 +24,10 @@ func ResizeImage(image string) string {
 	}
 
 	src, _ := imaging.Open(image)
+    if err != nil {
+        fmt.Println("Image not found: ", image)
+        return ""
+    }
 	src = imaging.Thumbnail(src, 200, 180, imaging.NearestNeighbor)
 	imaging.Save(src, thumbPath)
 
