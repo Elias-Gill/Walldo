@@ -1,4 +1,4 @@
-# Walldo-in-Go
+# Walldo
 A simple wallpaper changer written in Go with the main goal of being light and fast.
 
 Mainly inspired by Nitrogen, Walldo searches for your images, lists them all 
@@ -19,7 +19,7 @@ simple way and as fast as possible. In Linux there are many applications that ca
 but in Windows most of them are very slow and bloated.
 
 ## Instalation
-We have pre-compiled binaries for windows and linux. Check out our [releases](https://github.com/Elias-Gill/walldo-in-Go/releases) section (windows may complain because the binary is unisgned).
+We have pre-compiled binaries for windows and linux. Check out our [releases](https://github.com/Elias-Gill/walldo/releases) section (windows may complain because the binary is unisgned).
 
 We don't provide precompiled builds for `macOS` because it's [not straightforward to cross-compose Fyne projects for it](https://github.com/fyne-io/fyne-cross#build-the-docker-image-for-osxdarwinapple-cross-compiling).
 
