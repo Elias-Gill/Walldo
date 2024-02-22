@@ -73,16 +73,16 @@ func ConfigWindow(win *fyne.Window, app fyne.App, refresh func()) {
 		})
 	})
 
+	pathsList.Resize(fyne.NewSize(float32(pathsList.Size().Width), 25))
+
 	// Window content
-	cont := []*widget.FormItem{
-		widget.NewFormItem("Images size", sizeSelector),
-		widget.NewFormItem("", pathInput),
-		widget.NewFormItem("", pathPickerButton),
-		widget.NewFormItem("", container.NewMax(pathsList)),
-	}
+	layout := container.NewGridWithRows(2,
+		container.NewVBox(sizeSelector, widget.NewSeparator()),
+		container.NewGridWithRows(2, pathsList, container.NewVBox(pathPickerButton)),
+	)
 
 	// Create the new dialog window (the main container)
-	dia := dialog.NewForm("Settings", "Confirm", "Cancel", cont,
+	dia := dialog.NewCustomConfirm("Settings", "Confirm", "Cancel", layout,
 		// function to refresh the content with the new given config
 		func(status bool) {
 			if status {
