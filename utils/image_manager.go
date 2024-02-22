@@ -1,20 +1,24 @@
 package utils
 
 import (
+	"fmt"
+	"hash/fnv"
 	"log"
 	"os"
+	"path"
 	"path/filepath"
+	"strconv"
 	"strings"
 
 	"github.com/disintegration/imaging"
 	"github.com/elias-gill/walldo-in-go/globals"
 )
 
-// used for GetImagesList(), so we dont need to re-search for images
+// used for GetImagesList(), so we dont need to re-search for images.
 var imagesList []string
 
 // Resize the image to create a thumbnail.
-// If a thumbnail already exists just do nothing
+// If a thumbnail already exists just do nothing.
 func ResizeImage(image string) string {
 	thumbPath := generateThnPath(image)
 
@@ -23,11 +27,12 @@ func ResizeImage(image string) string {
 		return thumbPath
 	}
 
-	src, _ := imaging.Open(image)
-    if err != nil {
-        fmt.Println("Image not found: ", image)
-        return ""
-    }
+	src, err := imaging.Open(image)
+	if err != nil {
+		fmt.Println("Image not found: ", image)
+		return ""
+	}
+
 	src = imaging.Thumbnail(src, 200, 180, imaging.NearestNeighbor)
 	imaging.Save(src, thumbPath)
 
@@ -35,7 +40,7 @@ func ResizeImage(image string) string {
 }
 
 // Goes trought the configured folders recursivelly and list all the supported image files.
-func ListImagesRecursivelly() {
+func RefreshImagesList() {
 	imagesList = []string{}
 	folders := GetConfiguredPaths()
 
@@ -56,6 +61,7 @@ func ListImagesRecursivelly() {
 			if !info.IsDir() && hasValidExtension(file) {
 				imagesList = append(imagesList, file)
 			}
+
 			return nil
 		})
 		if err != nil {
@@ -66,20 +72,18 @@ func ListImagesRecursivelly() {
 
 // This returns the image list. The difference from ListImagesRecursivelly is that
 // this does not have to search again through the folders in order to improve performance for the
-// fuzzy engine
+// fuzzy engine.
 func GetImagesList() []string {
 	return imagesList
 }
 
-// Returns a new name for an image thumbnail
+// Returns a new (hashed) path for an image thumbnail.
 func generateThnPath(image string) string {
-	// replace backslashes with normal slashes (for windows)
-	image = strings.ReplaceAll(image, `\`, `/`)
-	res := strings.Split(image, "/")
-	// generate a thumbnail name with format "parent + file"
-	largo := len(res) - 1
-	thumbnail := res[largo] + res[largo-1]
-	return globals.ThumbnailsPath + thumbnail + ".jpg"
+	h := fnv.New32a()
+	name := strings.Split(path.Base(image), ".")[0]
+	h.Write([]byte(name))
+
+	return globals.ThumbnailsPath + strconv.Itoa(int(h.Sum32())) + ".jpg"
 }
 
 // Determine if the file has a valid extension.
@@ -91,5 +95,6 @@ func hasValidExtension(file string) bool {
 
 	validos := map[string]int{"jpg": 1, "jpeg": 1, "png": 1}
 	_, res := validos[file]
+
 	return res
 }

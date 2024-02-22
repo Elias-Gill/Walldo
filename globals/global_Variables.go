@@ -1,6 +1,10 @@
 package globals
 
 import (
+	"log"
+	"os"
+
+	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 )
 
@@ -53,3 +57,41 @@ var (
 	ConfigPath     string
 	ThumbnailsPath string
 )
+
+// Restores the window size of the last time the app has oppened.
+func RestoreWindowSize() {
+	Window.Resize(fyne.NewSize(float32(WindowWidth), float32(WindowHeight)))
+}
+
+// Thise are the used config files.
+// ~/.config/walldo/config.json (unix).
+// ~/AppData/Local/walldo/config.json (windows).
+func InitApp() {
+    // set darkmode
+	os.Setenv("FYNE_THEME", "dark")
+
+    // set configuration paths
+	userConfig, err := os.UserConfigDir()
+	if err != nil {
+		log.Fatal("Cannot establish users home directory: ", err.Error())
+	}
+
+	cacheDir, err := os.UserCacheDir()
+	if err != nil {
+		log.Fatal("Cannot establish users home directory: ", err.Error())
+	}
+
+	ConfigPath = userConfig + "walldo/"
+	ConfigFile = ConfigPath + "config.json"
+	ThumbnailsPath = cacheDir + "/walldo/"
+
+	err = os.MkdirAll(ConfigPath, 0o770)
+    if err != nil {
+        panic("Cannot create config directory " + err.Error())
+    }
+
+	err = os.MkdirAll(ThumbnailsPath, 0o770)
+    if err != nil {
+        panic("Cannot create cache directory " + err.Error())
+    }
+}
