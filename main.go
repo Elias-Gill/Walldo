@@ -7,7 +7,7 @@ import (
 
 func main() {
 	// set all global variables and run
-	globals.SetupEnvVariables()
+	globals.InitApp()
 	gui.SetupGui()
 	globals.Window.CenterOnScreen()
 	globals.Window.ShowAndRun()

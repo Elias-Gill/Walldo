@@ -15,6 +15,12 @@ import (
 	"github.com/elias-gill/walldo-in-go/wallpaper"
 )
 
+type card struct {
+	imgPath   string
+	container *fyne.Container
+	button    *widget.Button
+}
+
 type wallpapersGrid struct {
 	container *fyne.Container
 	grid      *fyne.Container
@@ -38,19 +44,15 @@ func (c wallpapersGrid) GetGridContent() *fyne.Container {
 
 func (c *wallpapersGrid) RefreshImgGrid() {
 	c.grid.RemoveAll()
-	utils.ListImagesRecursivelly()
+	utils.RefreshImagesList()
 
-	channel := c.generateFrames()
-	c.fillContainers(channel)
+	cardsChannel := c.generateFrames()
+
+	c.fillContainers(cardsChannel)
 }
 
-type card struct {
-	imgPath   string
-	container *fyne.Container
-	button    *widget.Button
-}
-
-// fills the image grid with frame containers.
+// fills the image grid with frame containers. Returns a channel with cards that
+// are going to be filled latter asynchronously.
 func (c wallpapersGrid) generateFrames() chan card {
 	// define the cards size
 	size := globals.Sizes[globals.GridSize]
@@ -96,7 +98,7 @@ generates the thumbnail for the card and refresh the container.
 create as many threads as cpus for resizing images to make thumbnails.
 */
 func (c wallpapersGrid) fillContainers(channel chan card) {
-	print("\n Usando ", runtime.NumCPU()-2, " Hilos")
+	log.Println("\n Usando ", runtime.NumCPU()-2, " Hilos")
 
 	for i := 0; i < runtime.NumCPU()-2; i++ {
 		go func() {
@@ -108,7 +110,6 @@ func (c wallpapersGrid) fillContainers(channel chan card) {
 				image.FillMode = canvas.ImageFillContain
 
 				// With the max layout we can overlap the button and the thumbnail
-				card.container.RemoveAll()
 				card.container.Add(image)
 				card.container.Add(card.button)
 				card.container.Refresh()

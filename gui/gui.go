@@ -7,11 +7,15 @@ import (
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/layout"
+	"github.com/elias-gill/walldo-in-go/globals"
 	global "github.com/elias-gill/walldo-in-go/globals"
 	"github.com/elias-gill/walldo-in-go/gui/components"
 )
 
 func SetupGui() {
+	// restore previous window size
+	globals.RestoreWindowSize()
+
 	// title
 	title := canvas.NewText("Select your wallpaper", color.White)
 	title.TextStyle = fyne.TextStyle{Bold: true}

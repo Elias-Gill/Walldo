@@ -45,14 +45,7 @@ func parseConfigFile() Config {
 // Creates the config folder and the config.json if is not created yet.
 // This function may pannic if cannot modify/create the configuration file.
 func MustWriteConfig(config Config) {
-	// create the folders
-	// os.MkdirAll(global.ConfigPath, 0o777)
-	err := os.MkdirAll(global.ConfigPath+"resized_images", 0o777)
-	if err != nil {
-		panic("Cannot create configuration path: " + err.Error())
-	}
-
-	file, err := os.Create(global.ConfigPath + "config.json")
+	file, err := os.Create(global.ConfigFile)
 	if err != nil {
 		panic("Cannot create the configuration file: " + err.Error())
 	}
