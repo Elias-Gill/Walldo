@@ -67,10 +67,10 @@ func RestoreWindowSize() {
 // ~/.config/walldo/config.json (unix).
 // ~/AppData/Local/walldo/config.json (windows).
 func InitApp() {
-    // set darkmode
+	// set darkmode
 	os.Setenv("FYNE_THEME", "dark")
 
-    // set configuration paths
+	// set configuration paths
 	userConfig, err := os.UserConfigDir()
 	if err != nil {
 		log.Fatal("Cannot establish users home directory: ", err.Error())
@@ -86,12 +86,12 @@ func InitApp() {
 	ThumbnailsPath = cacheDir + "/walldo/"
 
 	err = os.MkdirAll(ConfigPath, 0o770)
-    if err != nil {
-        panic("Cannot create config directory " + err.Error())
-    }
+	if err != nil {
+		panic("Cannot create config directory " + err.Error())
+	}
 
 	err = os.MkdirAll(ThumbnailsPath, 0o770)
-    if err != nil {
-        panic("Cannot create cache directory " + err.Error())
-    }
+	if err != nil {
+		panic("Cannot create cache directory " + err.Error())
+	}
 }
