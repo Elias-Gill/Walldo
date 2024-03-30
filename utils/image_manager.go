@@ -33,7 +33,7 @@ func ResizeImage(image string) string {
 		return ""
 	}
 
-	src = imaging.Thumbnail(src, 200, 180, imaging.NearestNeighbor)
+	src = imaging.Thumbnail(src, 140, 120, imaging.NearestNeighbor)
 	imaging.Save(src, thumbPath)
 
 	return thumbPath

@@ -110,8 +110,8 @@ func (c wallpapersGrid) fillContainers(channel chan card) {
 				image.FillMode = canvas.ImageFillContain
 
 				// With the max layout we can overlap the button and the thumbnail
+                card.container.Add(card.button)
 				card.container.Add(image)
-				card.container.Add(card.button)
 				card.container.Refresh()
 			}
 		}()

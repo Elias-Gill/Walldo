@@ -33,7 +33,7 @@ var (
 )
 
 var Sizes map[string]Size = map[string]Size{
-	SIZE_LARGE:   {Width: 195, Height: 175},
+	SIZE_LARGE:   {Width: 145, Height: 125},
 	SIZE_DEFAULT: {Width: 115, Height: 105},
 	SIZE_SMALL:   {Width: 90, Height: 80},
 }
