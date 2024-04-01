@@ -10,7 +10,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/disintegration/imaging"
+	"github.com/cognusion/imaging"
 	"github.com/elias-gill/walldo-in-go/globals"
 )
 
