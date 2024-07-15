@@ -6,6 +6,8 @@ import (
 	"os"
 	"os/exec"
 	"strconv"
+
+	"github.com/elias-gill/walldo-in-go/globals"
 )
 
 // Desktop contains the current desktop environment on Linux.
@@ -20,7 +22,7 @@ var DesktopSession = os.Getenv("DESKTOP_SESSION")
 
 // SetFromFile sets wallpaper from a file path.
 // Recibe the mode if feh is the (just one)
-func LinuxSetFromFile(file string, mode string) error {
+func LinuxSetFromFile(file string, mode globals.FillStyle) error {
 	if isWaylandCompliant() {
 		return setForWayland(file, mode)
 	}

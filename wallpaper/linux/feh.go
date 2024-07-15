@@ -8,11 +8,11 @@ import (
 	"github.com/elias-gill/walldo-in-go/globals"
 )
 
-func setFehBackground(file string, mode string) error {
+func setFehBackground(file string, mode globals.FillStyle) error {
 	return exec.Command("feh", getFehString(mode), file).Run()
 }
 
-func getFehString(mode string) string {
+func getFehString(mode globals.FillStyle) string {
 	switch mode {
 	case globals.FILL_CENTER:
 		return "--bg-center"

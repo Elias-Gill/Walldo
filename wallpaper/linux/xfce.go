@@ -41,7 +41,7 @@ func getXFCE() (string, error) {
 	return strings.TrimSpace(string(output)), nil
 }
 
-func setXFCE(file string, mode string) error {
+func setXFCE(file string, mode globals.FillStyle) error {
 	err := setXFCEMode(mode)
 	if err != nil {
 		return err
@@ -60,7 +60,7 @@ func setXFCE(file string, mode string) error {
 	return nil
 }
 
-func setXFCEMode(mode string) error {
+func setXFCEMode(mode globals.FillStyle) error {
 	styles, err := getXFCEProps("image-style")
 	if err != nil {
 		return err
@@ -76,7 +76,7 @@ func setXFCEMode(mode string) error {
 	return nil
 }
 
-func getXFCEString(mode string) string {
+func getXFCEString(mode globals.FillStyle) string {
 	switch mode {
 	case globals.FILL_CENTER:
 		return "1"

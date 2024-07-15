@@ -29,8 +29,8 @@ var (
 )
 
 // SetFromFile sets the wallpaper for the current user.
-func SetFromFile(filename string) error {
-	err := windowsSetMode()
+func SetFromFile(filename string, mode globals.FillStyle) error {
+	err := windowsSetMode(mode)
 	if err != nil {
 		return err
 	}
@@ -50,9 +50,7 @@ func SetFromFile(filename string) error {
 }
 
 // SetMode sets the wallpaper mode.
-func windowsSetMode() error {
-	mode := globals.FillStrategy
-
+func windowsSetMode(mode globals.FillStyle) error {
 	key, _, err := registry.CreateKey(registry.CURRENT_USER, "Control Panel\\Desktop", registry.SET_VALUE)
 	if err != nil {
 		return err
@@ -83,8 +81,8 @@ func windowsSetMode() error {
 
 func ListAvailableModes() []string {
 	return []string{
-		globals.FILL_ZOOM, globals.FILL_CENTER,
-		globals.FILL_ORIGINAL, globals.FILL_SCALE}
+		string(globals.FILL_ZOOM), string(globals.FILL_CENTER),
+		string(globals.FILL_ORIGINAL), string(globals.FILL_SCALE)}
 }
 
 func windowsGetCacheDir() (string, error) {

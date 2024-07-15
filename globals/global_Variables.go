@@ -1,97 +1,84 @@
 package globals
 
 import (
-	"log"
-	"os"
-
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 )
 
-type Size struct {
-	Width  float32
-	Height float32
-}
+type FillStyle string
+type GridDimension string
 
-// App initializers.
-var (
-	MyApp        = app.NewWithID("walldo")
-	Window       = MyApp.NewWindow("Walldo in go")
-	WindowHeight = MyApp.Preferences().FloatWithFallback("WindowHeight", 600)
-	WindowWidth  = MyApp.Preferences().FloatWithFallback("WindowWidth", 1020)
-)
-
-// Grid cards sizes.
 const (
-	SIZE_DEFAULT = "Default"
-	SIZE_SMALL   = "Small"
-	SIZE_LARGE   = "Large"
+	// Grid cards sizes.
+	SIZE_DEFAULT GridDimension = "Default"
+	SIZE_SMALL   GridDimension = "Small"
+	SIZE_LARGE   GridDimension = "Large"
+
+	// wallpaper fill strategies.
+	FILL_ZOOM     FillStyle = "Zoom Fill"
+	FILL_SCALE    FillStyle = "Scale"
+	FILL_CENTER   FillStyle = "Center"
+	FILL_ORIGINAL FillStyle = "Original"
+	FILL_TILE     FillStyle = "Tile"
+
+	// Config constants.
+	WindowWidth  = "WindowWidth"
+	WindowHeight = "WindowHeight"
+	FillStrategy = "FillStrategy"
+	GridSize     = "GridSize"
 )
 
-var (
-	GridSize = MyApp.Preferences().StringWithFallback("GridSize", SIZE_DEFAULT)
-)
-
-var Sizes map[string]Size = map[string]Size{
+var Sizes map[GridDimension]Size = map[GridDimension]Size{
 	SIZE_LARGE:   {Width: 145, Height: 125},
 	SIZE_DEFAULT: {Width: 115, Height: 105},
 	SIZE_SMALL:   {Width: 90, Height: 80},
 }
 
-// wallpaper fill strategies.
-const (
-	FILL_ZOOM     = "Zoom Fill"
-	FILL_SCALE    = "Scale"
-	FILL_CENTER   = "Center"
-	FILL_ORIGINAL = "Original"
-	FILL_TILE     = "Tile"
-)
-
-var (
-	FillStrategy = MyApp.Preferences().StringWithFallback("FillStrategy", FILL_ZOOM)
-)
-
-// Config files.
-var (
-	ConfigFile     string
-	ConfigPath     string
-	ThumbnailsPath string
-)
-
-// Restores the window size of the last time the app has oppened.
-func RestoreWindowSize() {
-	Window.Resize(fyne.NewSize(float32(WindowWidth), float32(WindowHeight)))
+type App struct {
+	App     fyne.App
+	Window  fyne.Window
+	AppSize Size
+	Config  Config
 }
 
-// Thise are the used config files.
-// ~/.config/walldo/config.json (unix).
-// ~/AppData/Local/walldo/config.json (windows).
-func InitApp() {
-	// set darkmode
-	os.Setenv("FYNE_THEME", "dark")
+// NOTE: this is internal app config related, os is not necessary to put it inside Config.
+type Size struct {
+	Width  float32
+	Height float32
+}
 
-	// set configuration paths
-	userConfig, err := os.UserConfigDir()
-	if err != nil {
-		log.Fatal("Cannot establish users home directory: ", err.Error())
+// return the current grid size of the current configuration.
+func (a App) CurrGridSize() Size {
+	return Sizes[a.Config.GridSize]
+}
+
+func NewApp() *App {
+	app := app.NewWithID("walldo")
+
+	aux := &App{
+		App:    app,
+		Window: app.NewWindow("Walldo in go"),
+		Config: initConfig(),
+		AppSize: Size{
+			// NOTE: keep in mind float types
+			Height: float32(app.Preferences().FloatWithFallback(WindowHeight, 600)),
+			Width:  float32(app.Preferences().FloatWithFallback(WindowWidth, 1020)),
+		},
 	}
 
-	cacheDir, err := os.UserCacheDir()
-	if err != nil {
-		log.Fatal("Cannot establish users home directory: ", err.Error())
-	}
+	// resize to the last size
+	aux.Window.Resize(fyne.NewSize(float32(aux.AppSize.Width), float32(aux.AppSize.Height)))
+	aux.Window.CenterOnScreen()
 
-	ConfigPath = userConfig + "walldo/"
-	ConfigFile = ConfigPath + "config.json"
-	ThumbnailsPath = cacheDir + "/walldo/"
+	// save size on close
+	aux.App.Lifecycle().SetOnStopped(func() {
+		aux.App.Preferences().SetFloat(WindowHeight, float64(aux.Window.Canvas().Size().Height))
+		aux.App.Preferences().SetFloat(WindowWidth, float64(aux.Window.Canvas().Size().Width))
+	})
 
-	err = os.MkdirAll(ConfigPath, 0o770)
-	if err != nil {
-		panic("Cannot create config directory " + err.Error())
-	}
+	aux.App.Lifecycle().SetOnStopped(func() {
+		aux.WriteConfig()
+	})
 
-	err = os.MkdirAll(ThumbnailsPath, 0o770)
-	if err != nil {
-		panic("Cannot create cache directory " + err.Error())
-	}
+	return aux
 }

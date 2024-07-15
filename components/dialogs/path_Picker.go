@@ -3,7 +3,6 @@ package dialogs
 import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/dialog"
-	"github.com/elias-gill/walldo-in-go/globals"
 )
 
 // generates and show a new path picker from the file system.
@@ -18,6 +17,6 @@ func NewPathPicker(win fyne.Window, callback func(string)) {
 		}
 	}, win)
 
-	picker.Resize(fyne.NewSize(globals.Window.Canvas().Size().Width, globals.Window.Canvas().Size().Height))
+	picker.Resize(fyne.NewSize(win.Canvas().Size().Width, win.Canvas().Size().Height))
 	picker.Show()
 }

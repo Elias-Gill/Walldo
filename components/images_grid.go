@@ -11,7 +11,6 @@ import (
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 	"github.com/elias-gill/walldo-in-go/globals"
-	"github.com/elias-gill/walldo-in-go/utils"
 	"github.com/elias-gill/walldo-in-go/wallpaper"
 )
 
@@ -21,15 +20,18 @@ type card struct {
 	button    *widget.Button
 }
 
-type wallpapersGrid struct {
+type WallpapersGrid struct {
 	container *fyne.Container
 	grid      *fyne.Container
+	app       *globals.App
+	images    []string
 }
 
-func NewImageGrid() *wallpapersGrid {
+func NewImageGrid(app *globals.App) *WallpapersGrid {
 	grid := container.NewWithoutLayout()
-	res := &wallpapersGrid{
+	res := &WallpapersGrid{
 		grid: grid,
+		app:  app,
 		container: container.New(
 			layout.NewPaddedLayout(),
 			container.NewScroll(grid)),
@@ -38,14 +40,12 @@ func NewImageGrid() *wallpapersGrid {
 	return res
 }
 
-func (c wallpapersGrid) GetGridContent() *fyne.Container {
+func (c WallpapersGrid) GetGridContent() *fyne.Container {
 	return c.container
 }
 
-func (c *wallpapersGrid) RefreshImgGrid() {
+func (c *WallpapersGrid) RefreshImgGrid() {
 	c.grid.RemoveAll()
-	utils.RefreshImagesList()
-
 	cardsChannel := c.generateFrames()
 
 	c.fillContainers(cardsChannel)
@@ -53,12 +53,12 @@ func (c *wallpapersGrid) RefreshImgGrid() {
 
 // fills the image grid with frame containers. Returns a channel with cards that
 // are going to be filled latter asynchronously.
-func (c wallpapersGrid) generateFrames() chan card {
+func (c WallpapersGrid) generateFrames() chan card {
 	// define the cards size
-	size := globals.Sizes[globals.GridSize]
+	size := c.app.CurrGridSize()
 	c.grid.Layout = layout.NewGridWrapLayout(fyne.NewSize(size.Width, size.Height))
 
-	imagesList := utils.GetImagesList()
+	imagesList := c.app.RefreshImagesList()
 
 	// Save all images into a go channel to manage concurrently load/generate thumbnails
 	// PERF: Addes a new container with a button (without an image) as a empty frame, this makes loading times
@@ -75,14 +75,14 @@ func (c wallpapersGrid) generateFrames() chan card {
 
 // NOTE: keep this as a separate function
 // Creates a new container for the card with a button.
-func (c *wallpapersGrid) newEmptyFrame(image string) card {
+func (c *WallpapersGrid) newEmptyFrame(image string) card {
 	button := widget.NewButton("", func() {
-		err := wallpaper.SetFromFile(strings.Clone(image))
+		err := wallpaper.SetFromFile(strings.Clone(image), c.app.Config.FillStrategy)
 		if err != nil {
 			log.Println(err.Error())
 		}
 	})
-	cont := container.NewMax(button)
+	cont := container.NewStack(button)
 	c.grid.Add(cont)
 
 	return card{
@@ -97,20 +97,20 @@ Recibes the channel with a list of "cards" (image + button inside a container).
 generates the thumbnail for the card and refresh the container.
 create as many threads as cpus for resizing images to make thumbnails.
 */
-func (c wallpapersGrid) fillContainers(channel chan card) {
+func (c WallpapersGrid) fillContainers(channel chan card) {
 	log.Println("\n Usando ", runtime.NumCPU()-2, " Hilos")
 
 	for i := 0; i < runtime.NumCPU()-2; i++ {
 		go func() {
 			for card := range channel {
 				// resize the image and get the thumbnail name
-				thumbail := utils.ResizeImage(card.imgPath)
+				thumbail := globals.ResizeImage(card.imgPath, c.app.Config.ThumbnailsPath)
 				image := canvas.NewImageFromFile(thumbail)
 				image.ScaleMode = canvas.ImageScaleFastest
 				image.FillMode = canvas.ImageFillContain
 
 				// With the max layout we can overlap the button and the thumbnail
-                card.container.Add(card.button)
+				card.container.Add(card.button)
 				card.container.Add(image)
 				card.container.Refresh()
 			}

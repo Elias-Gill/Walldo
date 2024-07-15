@@ -9,7 +9,7 @@ import (
 	"github.com/elias-gill/walldo-in-go/globals"
 )
 
-func getWaylandString(mode string) string {
+func getWaylandString(mode globals.FillStyle) string {
 	switch mode {
 	case globals.FILL_CENTER:
 		return "center"
@@ -27,7 +27,7 @@ func getWaylandString(mode string) string {
 }
 
 // INFO: It depends on swaybg
-func setForWayland(file string, mode string) error {
+func setForWayland(file string, mode globals.FillStyle) error {
 	// first kill all instances of swaybg then run swaybg
 	exec.Command("killall", "swaybg").Run()
 

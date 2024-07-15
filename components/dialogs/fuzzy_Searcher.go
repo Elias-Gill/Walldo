@@ -10,12 +10,11 @@ import (
 	"fyne.io/fyne/v2/widget"
 	"github.com/elias-gill/walldo-in-go/fuzzyEngine/matching"
 	"github.com/elias-gill/walldo-in-go/globals"
-	"github.com/elias-gill/walldo-in-go/utils"
 	"github.com/elias-gill/walldo-in-go/wallpaper"
 )
 
 // Create a new Fuzzy finder dialog and display it.
-func NewFuzzyDialog() {
+func NewFuzzyDialog(app *globals.App) {
 	data := []string{}
 
 	// list of results
@@ -31,7 +30,7 @@ func NewFuzzyDialog() {
 		})
 
 	resultsWidget.OnSelected = func(id int) {
-		wallpaper.SetFromFile(strings.Clone(data[id]))
+		wallpaper.SetFromFile(strings.Clone(data[id]), app.Config.FillStrategy)
 	}
 
 	// search input
@@ -39,7 +38,7 @@ func NewFuzzyDialog() {
 	searchInput.SetPlaceHolder("Search Image")
 	searchInput.OnChanged =
 		func(entry string) {
-			imagesList := utils.GetImagesList()
+			imagesList := app.RefreshImagesList()
 			data = []string{}
 
 			if len(entry) >= 1 {
@@ -55,7 +54,7 @@ func NewFuzzyDialog() {
 		}
 
 	cont := container.New(layout.NewBorderLayout(searchInput, nil, nil, nil), searchInput, resultsWidget)
-	dial := dialog.NewCustom("Fuzzy search", "Cancel", cont, globals.Window)
+	dial := dialog.NewCustom("Fuzzy search", "Cancel", cont, app.Window)
 	dial.Resize(fyne.NewSize(500, 300))
 	dial.Show()
 }

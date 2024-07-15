@@ -39,7 +39,7 @@ func isGNOMECompliant() bool {
 	return strings.Contains(Desktop, "GNOME") || Desktop == "Unity" || Desktop == "Pantheon"
 }
 
-func getGNOMEString(mode string) string {
+func getGNOMEString(mode globals.FillStyle) string {
 	switch mode {
 	case globals.FILL_CENTER:
 		return "centered"
@@ -54,7 +54,7 @@ func getGNOMEString(mode string) string {
 	}
 }
 
-func setForGnome(file string, mode string) error {
+func setForGnome(file string, mode globals.FillStyle) error {
 	exec.Command("gsettings", "set", "org.gnome.desktop.background", "picture-options", strconv.Quote(getGNOMEString(mode))).Run()
 	return exec.Command("gsettings", "set", "org.gnome.desktop.background", "picture-uri", strconv.Quote("file://"+file)).Run()
 

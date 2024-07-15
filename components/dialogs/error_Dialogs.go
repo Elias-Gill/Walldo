@@ -6,7 +6,7 @@ import (
 )
 
 // display a dialog error with the current error.
-func DisplayError(err error) {
-	dia := dialog.NewError(err, globals.Window)
+func DisplayError(err error, app globals.App) {
+	dia := dialog.NewError(err, app.Window)
 	dia.Show()
 }

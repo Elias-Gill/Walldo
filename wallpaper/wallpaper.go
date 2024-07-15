@@ -12,9 +12,7 @@ import (
 
 var ErrUnsupportedDE = errors.New("Your desktop environment is not supported")
 
-func SetFromFile(file string) error {
-	mode := globals.FillStrategy
-
+func SetFromFile(file string, mode globals.FillStyle) error {
 	switch runtime.GOOS {
 	case "linux":
 		return linux.LinuxSetFromFile(file, mode)
@@ -29,10 +27,10 @@ func ListAvailableModes() []string {
 	switch runtime.GOOS {
 	case "linux":
 		return []string{
-			globals.FILL_ZOOM, globals.FILL_CENTER,
-			globals.FILL_TILE, globals.FILL_ORIGINAL,
-			globals.FILL_SCALE}
+			string(globals.FILL_ZOOM), string(globals.FILL_CENTER),
+			string(globals.FILL_TILE), string(globals.FILL_ORIGINAL),
+			string(globals.FILL_SCALE)}
 	default:
-		return []string{globals.FILL_ZOOM}
+		return []string{string(globals.FILL_ZOOM)}
 	}
 }

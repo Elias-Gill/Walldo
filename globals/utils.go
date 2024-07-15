@@ -1,4 +1,4 @@
-package utils
+package globals
 
 import (
 	"fmt"
@@ -11,16 +11,12 @@ import (
 	"strings"
 
 	"github.com/cognusion/imaging"
-	"github.com/elias-gill/walldo-in-go/globals"
 )
-
-// used for GetImagesList(), so we dont need to re-search for images.
-var imagesList []string
 
 // Resize the image to create a thumbnail.
 // If a thumbnail already exists just do nothing.
-func ResizeImage(image string) string {
-	thumbPath := generateThnPath(image)
+func ResizeImage(image string, outPath string) string {
+	thumbPath := outPath + generateThnName(image)
 
 	// if the thumnail does exists
 	if _, err := os.Stat(thumbPath); err == nil {
@@ -40,9 +36,9 @@ func ResizeImage(image string) string {
 }
 
 // Goes trought the configured folders recursivelly and list all the supported image files.
-func RefreshImagesList() {
-	imagesList = []string{}
-	folders := GetConfiguredPaths()
+func (app App) RefreshImagesList() []string {
+	imagesList := []string{}
+	folders := app.GetConfiguredPaths()
 
 	// loop trought folders recursivelly
 	for _, folder := range folders {
@@ -68,22 +64,17 @@ func RefreshImagesList() {
 			log.Print(err)
 		}
 	}
-}
 
-// This returns the image list. The difference from ListImagesRecursivelly is that
-// this does not have to search again through the folders in order to improve performance for the
-// fuzzy engine.
-func GetImagesList() []string {
 	return imagesList
 }
 
 // Returns a new (hashed) path for an image thumbnail.
-func generateThnPath(image string) string {
+func generateThnName(image string) string {
 	h := fnv.New32a()
 	name := strings.Split(path.Base(image), ".")[0]
 	h.Write([]byte(name))
 
-	return globals.ThumbnailsPath + strconv.Itoa(int(h.Sum32())) + ".jpg"
+	return strconv.Itoa(int(h.Sum32())) + ".jpg"
 }
 
 // Determine if the file has a valid extension.
