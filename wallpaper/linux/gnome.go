@@ -1,4 +1,4 @@
-//go:build linux || darwin
+//go:build linux
 
 package linux
 
@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/elias-gill/walldo-in-go/globals"
+	"github.com/elias-gill/walldo-in-go/wallpaper/modes"
 	yaml "gopkg.in/yaml.v2"
 )
 
@@ -35,26 +35,26 @@ func parseDconf(command string, args ...string) (string, error) {
 	return removeProtocol(unquoted), nil
 }
 
-func isGNOMECompliant() bool {
-	return strings.Contains(Desktop, "GNOME") || Desktop == "Unity" || Desktop == "Pantheon"
+func IsGNOMECompliant(desktop string) bool {
+	return strings.Contains(desktop, "GNOME") || desktop == "Unity" || desktop == "Pantheon"
 }
 
-func getGNOMEString(mode globals.FillStyle) string {
+func getGNOMEString(mode modes.FillStyle) string {
 	switch mode {
-	case globals.FILL_CENTER:
+	case modes.FILL_CENTER:
 		return "centered"
-	case globals.FILL_ZOOM:
+	case modes.FILL_ZOOM:
 		return "zoom"
-	case globals.FILL_SCALE:
+	case modes.FILL_SCALE:
 		return "scaled"
-	case globals.FILL_TILE:
+	case modes.FILL_TILE:
 		return "wallpaper"
 	default:
 		panic("invalid wallpaper mode")
 	}
 }
 
-func setForGnome(file string, mode globals.FillStyle) error {
+func SetGnome(file string, mode modes.FillStyle) error {
 	exec.Command("gsettings", "set", "org.gnome.desktop.background", "picture-options", strconv.Quote(getGNOMEString(mode))).Run()
 	return exec.Command("gsettings", "set", "org.gnome.desktop.background", "picture-uri", strconv.Quote("file://"+file)).Run()
 

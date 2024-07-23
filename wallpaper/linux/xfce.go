@@ -1,4 +1,4 @@
-//go:build linux || darwin
+//go:build linux
 
 package linux
 
@@ -7,7 +7,7 @@ import (
 	"path"
 	"strings"
 
-	"github.com/elias-gill/walldo-in-go/globals"
+	"github.com/elias-gill/walldo-in-go/wallpaper/modes"
 )
 
 func getXFCEProps(key string) ([]string, error) {
@@ -16,10 +16,9 @@ func getXFCEProps(key string) ([]string, error) {
 		return nil, err
 	}
 
-	lines := strings.Split(strings.Trim(string(output), "\n"), "\n")
 	var desktops []string
 
-	for _, line := range lines {
+	for _, line := range strings.Split(strings.Trim(string(output), "\n"), "\n") {
 		if path.Base(line) == key {
 			desktops = append(desktops, line)
 		}
@@ -41,7 +40,7 @@ func getXFCE() (string, error) {
 	return strings.TrimSpace(string(output)), nil
 }
 
-func setXFCE(file string, mode globals.FillStyle) error {
+func SetXFCE(file string, mode modes.FillStyle) error {
 	err := setXFCEMode(mode)
 	if err != nil {
 		return err
@@ -51,6 +50,7 @@ func setXFCE(file string, mode globals.FillStyle) error {
 	if err != nil {
 		return err
 	}
+
 	for _, desktop := range desktops {
 		err := exec.Command("xfconf-query", "--channel", "xfce4-desktop", "--property", desktop, "--set", file).Run()
 		if err != nil {
@@ -60,7 +60,7 @@ func setXFCE(file string, mode globals.FillStyle) error {
 	return nil
 }
 
-func setXFCEMode(mode globals.FillStyle) error {
+func setXFCEMode(mode modes.FillStyle) error {
 	styles, err := getXFCEProps("image-style")
 	if err != nil {
 		return err
@@ -76,17 +76,17 @@ func setXFCEMode(mode globals.FillStyle) error {
 	return nil
 }
 
-func getXFCEString(mode globals.FillStyle) string {
+func getXFCEString(mode modes.FillStyle) string {
 	switch mode {
-	case globals.FILL_CENTER:
+	case modes.FILL_CENTER:
 		return "1"
-	case globals.FILL_ZOOM:
+	case modes.FILL_ZOOM:
 		return "4"
-	case globals.FILL_ORIGINAL:
+	case modes.FILL_ORIGINAL:
 		return "5"
-	case globals.FILL_SCALE:
+	case modes.FILL_SCALE:
 		return "3"
-	case globals.FILL_TILE:
+	case modes.FILL_TILE:
 		return "2"
 	default:
 		panic("invalid wallpaper mode")

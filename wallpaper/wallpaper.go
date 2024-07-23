@@ -1,36 +1,33 @@
-//go:build linux || darwin
-
 package wallpaper
 
 import (
 	"errors"
-	"runtime"
 
-	"github.com/elias-gill/walldo-in-go/globals"
-	"github.com/elias-gill/walldo-in-go/wallpaper/linux"
+	"github.com/elias-gill/walldo-in-go/wallpaper/modes"
 )
 
 var ErrUnsupportedDE = errors.New("Your desktop environment is not supported")
 
-func SetFromFile(file string, mode globals.FillStyle) error {
-	switch runtime.GOOS {
-	case "linux":
-		return linux.LinuxSetFromFile(file, mode)
-	case "darwin":
-		return darwinSetFromFile(file)
-	default:
-		return ErrUnsupportedDE
-	}
+var mode modes.FillStyle = modes.FILL_ORIGINAL
+
+func SetWallpaper(file string) error {
+	return setFromFile(file, mode)
 }
 
-func ListAvailableModes() []string {
-	switch runtime.GOOS {
-	case "linux":
-		return []string{
-			string(globals.FILL_ZOOM), string(globals.FILL_CENTER),
-			string(globals.FILL_TILE), string(globals.FILL_ORIGINAL),
-			string(globals.FILL_SCALE)}
-	default:
-		return []string{string(globals.FILL_ZOOM)}
+func GetCurMode() modes.FillStyle {
+	return mode
+}
+
+func SetMode(m modes.FillStyle) {
+	mode = m
+}
+
+func ListModes() []string {
+	return []string{
+		modes.STRING_SCALE,
+		modes.STRING_TILE,
+		modes.STRING_CENTER,
+		modes.STRING_ORIGINAL,
+		modes.STRING_ZOOM,
 	}
 }

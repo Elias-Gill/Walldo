@@ -1,4 +1,4 @@
-//go:build linux || darwin
+//go:build linux
 
 package linux
 
@@ -6,10 +6,10 @@ import (
 	"os/exec"
 	"strconv"
 
-	"github.com/elias-gill/walldo-in-go/globals"
+	"github.com/elias-gill/walldo-in-go/wallpaper/modes"
 )
 
-func setKDE(path string, mode globals.FillStyle) error {
+func SetKDE(path string, mode modes.FillStyle) error {
 	err := setKDEMode(mode)
 	if err != nil {
 		return err
@@ -23,7 +23,7 @@ func setKDE(path string, mode globals.FillStyle) error {
 	`)
 }
 
-func setKDEMode(mode globals.FillStyle) error {
+func setKDEMode(mode modes.FillStyle) error {
 	return evalKDE(`
 		for (const desktop of desktops()) {
 			desktop.currentConfigGroup = ["Wallpaper", "org.kde.image", "General"]
@@ -36,17 +36,17 @@ func evalKDE(script string) error {
 	return exec.Command("qdbus", "org.kde.plasmashell", "/PlasmaShell", "org.kde.PlasmaShell.evaluateScript", script).Run()
 }
 
-func getKDEString(mode globals.FillStyle) string {
+func getKDEString(mode modes.FillStyle) string {
 	switch mode {
-	case globals.FILL_CENTER:
+	case modes.FILL_CENTER:
 		return "6"
-	case globals.FILL_ZOOM:
+	case modes.FILL_ZOOM:
 		return "1"
-	case globals.FILL_ORIGINAL:
+	case modes.FILL_ORIGINAL:
 		return "2"
-	case globals.FILL_SCALE:
+	case modes.FILL_SCALE:
 		return "0"
-	case globals.FILL_TILE:
+	case modes.FILL_TILE:
 		return "3"
 	default:
 		panic("invalid walllpaper mode")

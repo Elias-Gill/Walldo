@@ -1,28 +1,28 @@
-//go:build linux || darwin
+//go:build linux
 
 package linux
 
 import (
 	"os/exec"
 
-	"github.com/elias-gill/walldo-in-go/globals"
+	"github.com/elias-gill/walldo-in-go/wallpaper/modes"
 )
 
-func setFehBackground(file string, mode globals.FillStyle) error {
+func SetFehBackground(file string, mode modes.FillStyle) error {
 	return exec.Command("feh", getFehString(mode), file).Run()
 }
 
-func getFehString(mode globals.FillStyle) string {
+func getFehString(mode modes.FillStyle) string {
 	switch mode {
-	case globals.FILL_CENTER:
+	case modes.FILL_CENTER:
 		return "--bg-center"
-	case globals.FILL_SCALE:
+	case modes.FILL_SCALE:
 		return "--bg-scale"
-	case globals.FILL_ZOOM:
+	case modes.FILL_ZOOM:
 		return "--bg-fill"
-	case globals.FILL_ORIGINAL:
+	case modes.FILL_ORIGINAL:
 		return "--bg-max"
-	case globals.FILL_TILE:
+	case modes.FILL_TILE:
 		return "--bg-tile"
 	default:
 		panic("invalid wallpaper mode")

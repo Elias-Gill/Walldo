@@ -1,29 +1,47 @@
-package dialogs
+package gui
 
 import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
-	"github.com/elias-gill/walldo-in-go/globals"
+	"github.com/elias-gill/walldo-in-go/config"
 )
 
+const (
+	large  = "Large"
+	normal = "Default"
+	small  = "Small"
+)
+
+var names = map[config.GridSize]string{
+	config.LARGE:  large,
+	config.NORMAL: normal,
+	config.SMALL:  small,
+}
+
+var sizes = map[string]config.GridSize{
+	large:  config.LARGE,
+	normal: config.NORMAL,
+	small:  config.SMALL,
+}
+
 // Configuration window.
-func ConfigWindow(app *globals.App, refresh func()) {
+//
+//nolint:all
+func newConfigWindow(refresh func()) {
 	var selGridSize string
 
 	// grid size selector
 	sizeSelector := widget.NewRadioGroup([]string{
-		string(globals.SIZE_LARGE),
-		string(globals.SIZE_DEFAULT),
-		string(globals.SIZE_SMALL),
+		small, normal, large,
 	}, func(sel string) {
 		selGridSize = sel
 	})
-	sizeSelector.SetSelected(string(app.Config.GridSize))
+	sizeSelector.SetSelected(names[config.GetGridSize()])
 
 	// path list
-	data := app.GetConfiguredPaths()
+	data := config.GetPaths()
 	pathsList := widget.NewList(
 		func() int {
 			return len(data)
@@ -38,15 +56,12 @@ func ConfigWindow(app *globals.App, refresh func()) {
 	pathsList.OnSelected = func(id int) {
 		// delete the selected element
 		var aux []string
-
 		for i := 0; i < len(data); i++ {
 			if i != id {
 				aux = append(aux, data[i])
 			}
 		}
-
 		data = aux
-
 		pathsList.Refresh()
 	}
 
@@ -56,8 +71,8 @@ func ConfigWindow(app *globals.App, refresh func()) {
 	pathInput.SetPlaceHolder(`C:/User/user/fondos`)
 	pathInput.OnSubmitted = func(t string) {
 		data = append(data, t)
-
 		pathInput.SetText("")
+
 		pathInput.Refresh()
 		pathsList.Refresh()
 	}
@@ -65,9 +80,8 @@ func ConfigWindow(app *globals.App, refresh func()) {
 
 	// open the file explorer to select a folder
 	pathPickerButton := widget.NewButton("Open explorer", func() {
-		NewPathPicker(app.Window, func(path string) {
+		NewPathPicker(config.GetWindow(), func(path string) {
 			data = append(data, path)
-
 			pathInput.SetText("")
 			pathInput.Refresh()
 			pathsList.Refresh()
@@ -88,20 +102,16 @@ func ConfigWindow(app *globals.App, refresh func()) {
 		func(status bool) {
 			if status {
 				// update fyne config API
-				app.Config.GridSize = globals.GridDimension(selGridSize)
-
-				// update configured paths
-				app.Config.Paths = data
-				app.WriteConfig()
+				config.SetGridSize(sizes[selGridSize])
 
 				// refresh the main window
 				refresh()
 			}
-		}, app.Window)
+		}, config.GetWindow())
 
 	dia.Resize(fyne.NewSize(
-		app.Window.Canvas().Size().Width,
-		app.Window.Canvas().Size().Height),
+		config.GetWindow().Canvas().Size().Width,
+		config.GetWindow().Canvas().Size().Height),
 	)
 
 	dia.Show()
