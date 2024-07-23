@@ -107,6 +107,10 @@ func GetPaths() []string {
 	return conf.Paths
 }
 
+func SetPaths(s []string) {
+	conf.Paths = s
+}
+
 func SetWallpFillMode(m modes.FillStyle) {
 	conf.WallpfillMode = m
 	wallpaper.SetMode(m)

@@ -103,6 +103,7 @@ func newConfigWindow(refresh func()) {
 			if status {
 				// update fyne config API
 				config.SetGridSize(sizes[selGridSize])
+				config.SetPaths(data)
 
 				// refresh the main window
 				refresh()
