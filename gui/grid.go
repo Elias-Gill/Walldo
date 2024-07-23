@@ -15,17 +15,6 @@ import (
 	"github.com/elias-gill/walldo-in-go/wallpaper"
 )
 
-func gridScale() (float32, float32) {
-	switch config.GetGridSize() {
-	case config.LARGE:
-		return 145, 128
-	case config.SMALL:
-		return 90, 80
-	default:
-		return 115, 105
-	}
-}
-
 type card struct {
 	image     config.Image
 	container *fyne.Container
@@ -38,10 +27,6 @@ type wallpapersGrid struct {
 	images    []card
 }
 
-func (w wallpapersGrid) GetContent() *fyne.Container {
-	return w.container
-}
-
 func NewImageGrid() *wallpapersGrid {
 	grid := container.NewWithoutLayout()
 
@@ -51,6 +36,10 @@ func NewImageGrid() *wallpapersGrid {
 			layout.NewPaddedLayout(),
 			container.NewScroll(grid)),
 	}
+}
+
+func (w wallpapersGrid) GetContent() *fyne.Container {
+	return w.container
 }
 
 func (c *wallpapersGrid) RefreshImgGrid() {
@@ -135,5 +124,16 @@ func (c wallpapersGrid) fillContainers() {
 		k-- // return one to not ignore the next card
 
 		wg.Wait()
+	}
+}
+
+func gridScale() (float32, float32) {
+	switch config.GetGridSize() {
+	case config.LARGE:
+		return 145, 128
+	case config.SMALL:
+		return 90, 80
+	default:
+		return 115, 105
 	}
 }

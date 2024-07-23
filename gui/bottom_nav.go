@@ -20,9 +20,9 @@ func NewBottomNav(refresh func()) *fyne.Container {
 	}, ICON_SETTINGS)
 
 	// fuzzy finder button
-	// fuzzyButton := NewButtonWithIcon("", func() {
-	// 	dialogs.NewFuzzyDialog()
-	// }, ICON_SEARCH)
+	fuzzyButton := NewButtonWithIcon("", func() {
+		NewFuzzyDialog()
+	}, ICON_SEARCH)
 
 	// scale mode selector
 	strategySelector := widget.NewSelect(
@@ -35,7 +35,7 @@ func NewBottomNav(refresh func()) *fyne.Container {
 	// assemble app layout
 	bottomNav := container.New(layout.NewHBoxLayout(),
 		strategySelector,
-		// fuzzyButton,
+		fuzzyButton,
 		layout.NewSpacer(),
 		layout.NewSpacer(),
 		refreshButton,
