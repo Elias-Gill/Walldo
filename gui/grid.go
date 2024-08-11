@@ -44,6 +44,7 @@ func (w wallpapersGrid) GetContent() *fyne.Container {
 
 func (c *wallpapersGrid) RefreshImgGrid() {
 	c.grid.RemoveAll()
+	c.images = []card{}
 
 	images := config.ListImages()
 
@@ -60,7 +61,7 @@ func (c *wallpapersGrid) RefreshImgGrid() {
 		c.grid.Refresh()
 	}
 
-	c.fillContainers()
+	go c.fillContainers()
 }
 
 // NOTE: keep this as a separate function
@@ -91,39 +92,32 @@ cpu does not get overwhelmed.
 func (c wallpapersGrid) fillContainers() {
 	log.Println("\n Usando ", runtime.NumCPU()-2, " Hilos")
 
-	cpus := runtime.NumCPU() - 2
 	wg := sync.WaitGroup{}
 
-	// Generate cpus-2 thumbnails at a time
-	for k := 0; k < len(c.images); k++ {
-		for i := 0; i < cpus; i++ {
-			// trick for older golang versions
-			x := k
-			card := c.images[x]
+	for k := range c.images {
+		card := c.images[k]
 
-			wg.Add(1)
+		wg.Add(1)
 
-			go func(wg *sync.WaitGroup) {
-				// resize the image and get the thumbnail name
-				card.image.GenerateThumbnail()
-				image := canvas.NewImageFromFile(card.image.Thumbnail)
-				image.ScaleMode = canvas.ImageScaleFastest
-				image.FillMode = canvas.ImageFillContain
+		go func(wg *sync.WaitGroup) {
+			// resize the image and get the thumbnail name
+			card.image.GenerateThumbnail()
+			image := canvas.NewImageFromFile(card.image.Thumbnail)
+			image.ScaleMode = canvas.ImageScaleFastest
+			image.FillMode = canvas.ImageFillContain
 
-				// With the max layout we can overlap the button and the thumbnail
-				card.container.Add(card.button)
-				card.container.Add(image)
-				card.container.Refresh()
+			// With the max layout we can overlap the button and the thumbnail
+			card.container.Add(card.button)
+			card.container.Add(image)
+			card.container.Refresh()
 
-				wg.Done()
-			}(&wg)
+			wg.Done()
+		}(&wg)
 
-			k++
+		// generate only as many thumbnails as number of cpus-2
+		if k%(runtime.NumCPU()-2) == 0 {
+			wg.Wait()
 		}
-
-		k-- // return one to not ignore the next card
-
-		wg.Wait()
 	}
 }
 
