@@ -11,7 +11,7 @@ Change your wallpaper as fast as you want. Nothing more and nothing less, simple
 + PNG
 + JPEG
 
-https://user-images.githubusercontent.com/79729891/180588701-e58b76ca-60a5-4333-b573-171f988a3592.mp4
+https://github.com/user-attachments/assets/89c2ad3e-d5c8-4928-8bca-bddffefd0b12
 
 #### A wallpaper changer app ? Why ?... 
 As a person who likes to change his wallpaper very often, I was looking for an app that would allow me to do it in a 
@@ -43,21 +43,12 @@ go install github.com/elias-gill/walldo-in-go@latest
 You can now run "walldo-in-go" in your terminal. If you are using a Desktop environment, you can create a shortcut for the command.
 
 ## First run
- After the first run you have to setup your wallpapers folder. To do this open the config menu ( “⚙” button) and put your folders absolute path. 
-You can put more than one folder separating them with commas (you can add line jumps between folders too).
- 
-You can reload Walldo with the reload button ("⟳") in the bottom right.
-##### *Path format example:*
-```
-  C:/Users/walldo/Desktop/fondos,
-  C:/Users/walldo/Desktop/wallpapers2
-```
-*NOTE: do not use backslashes, instead use normal slashes (/)*
+ After the first run you have to setup your wallpapers folder. To do this open the config menu ( “⚙” button) and use the file explorer to add new folders.
 
 ## Important (Linux users)
 Walldo supports a variaty of desktop enviroments:
 - Gnome
-- LXDE
+- LXDE | LXQT
 - XFCE
 - Cinnamon 
 - Mate 
