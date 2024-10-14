@@ -86,11 +86,16 @@ func newEmptyFrame(image config.Image) card {
 /*
 Generates the thumbnail for the card and refresh the container.
 
-Creates as many threads as cpus-2, so the app runs faster but the
+Creates as many threads as ceil(cpus/2), so the app runs faster but the
 cpu does not get overwhelmed.
 */
 func (c wallpapersGrid) fillContainers() {
-	log.Println("\n Usando ", runtime.NumCPU()-2, " Hilos")
+    hilos := int(runtime.NumCPU()/2)
+    if hilos <= 0 {
+        hilos = 1
+    }
+
+	log.Println("\n Usando ", hilos, " Hilos")
 
 	wg := sync.WaitGroup{}
 
@@ -115,7 +120,7 @@ func (c wallpapersGrid) fillContainers() {
 		}(&wg)
 
 		// generate only as many thumbnails as number of cpus-2
-		if k%(runtime.NumCPU()-2) == 0 {
+		if k%(hilos) == 0 {
 			wg.Wait()
 		}
 	}
