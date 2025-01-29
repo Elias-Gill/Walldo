@@ -16,8 +16,7 @@ func main() {
 	app := app.NewWithID("Walldo")
 	window := app.NewWindow("Walldo")
 
-	config.SetFyneSettings(app.Settings())
-	config.SetWindow(window)
+	config.InitConfig(window, app.Settings())
 
 	// title
 	title := canvas.NewText("Select your wallpaper", color.White)
@@ -26,28 +25,30 @@ func main() {
 	title.TextSize = 18
 
 	// scrollable image grid
-	grid := gui.NewImageGrid()
+	grid := gui.NewGallery()
 
-	// bottom nav with buttons
-	nav := gui.NewBottomNav(grid.RefreshImgGrid)
+	// NOTE: NewBottomNav receives a callback to refresh the gallery.
+	// While this approach may not be the most elegant, introducing a complex
+	// event manager would be overkill for the scope of this project.
+	nav := gui.NewBottomNav(grid.RefreshGallery)
 
 	window.SetContent(
 		container.New(
 			layout.NewBorderLayout(title, nav, nil, nil),
 			title,
-			grid.GetContent(),
+			grid.View(),
 			nav,
 		),
 	)
 
 	// load images and thumbnails while initializing the GUI
-	go grid.RefreshImgGrid()
+	go grid.RefreshGallery()
 
 	// save the window size on close
 	app.Lifecycle().SetOnStopped(func() {
 		app.Preferences().SetFloat("WindowHeight", float64(window.Canvas().Size().Height))
 		app.Preferences().SetFloat("WindowWidth", float64(window.Canvas().Size().Width))
-		config.WriteConfig()
+		config.PersistConfig()
 	})
 
 	// restore previous window size

@@ -1,4 +1,4 @@
-package config
+package utils
 
 import (
 	"fmt"
@@ -11,6 +11,7 @@ import (
 	"strings"
 
 	"github.com/cognusion/imaging"
+	"github.com/elias-gill/walldo-in-go/config"
 )
 
 type Image struct {
@@ -18,16 +19,12 @@ type Image struct {
 	Path      string
 }
 
-func ListImages() []Image {
-	return conf.searchImages()
-}
-
 // Goes trought the configured folders recursivelly and list all the supported image files.
-func (c Configuration) searchImages() []Image {
+func ListImages() []Image {
 	imagesList := []Image{}
 
 	// loop trought folders recursivelly
-	for _, folder := range c.Paths {
+	for _, folder := range config.GetWallpaperSearchPaths() {
 		err := filepath.Walk(folder, func(file string, info os.FileInfo, err error) error {
 			if err != nil {
 				log.Print(err)
@@ -48,7 +45,8 @@ func (c Configuration) searchImages() []Image {
 						name := strings.Split(path.Base(image), ".")[0]
 						h.Write([]byte(name))
 
-						return c.cachePath + strconv.Itoa(int(h.Sum32())) + ".jpg"
+						filename := strconv.Itoa(int(h.Sum32())) + ".jpg"
+						return path.Join(config.GetCachePath(), filename)
 					}(file),
 				})
 			}

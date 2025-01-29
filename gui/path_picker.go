@@ -6,7 +6,7 @@ import (
 	"github.com/elias-gill/walldo-in-go/config"
 )
 
-// generates and show a new path picker from the file system.
+// Generates and show a new path picker from the file system.
 func NewPathPicker(win fyne.Window, callback func(string)) {
 	picker := dialog.NewFolderOpen(func(uri fyne.ListableURI, err error) {
 		if err != nil {

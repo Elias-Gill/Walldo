@@ -1,12 +1,8 @@
 package wallpaper
 
 import (
-	"errors"
-
 	"github.com/elias-gill/walldo-in-go/wallpaper/modes"
 )
-
-var ErrUnsupportedDE = errors.New("Your desktop environment is not supported")
 
 var mode modes.FillStyle = modes.FILL_ORIGINAL
 

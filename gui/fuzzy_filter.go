@@ -10,6 +10,7 @@ import (
 	"fyne.io/fyne/v2/widget"
 	"github.com/elias-gill/walldo-in-go/config"
 	"github.com/elias-gill/walldo-in-go/fuzzyEngine/matching"
+	"github.com/elias-gill/walldo-in-go/utils"
 	"github.com/elias-gill/walldo-in-go/wallpaper"
 )
 
@@ -40,7 +41,7 @@ func NewFuzzyDialog() {
 		func(entry string) {
 			var imagesList []string
 
-			for _, v := range config.ListImages() {
+			for _, v := range utils.ListImages() {
 				imagesList = append(imagesList, v.Path)
 			}
 

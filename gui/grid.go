@@ -3,7 +3,6 @@ package gui
 import (
 	"log"
 	"runtime"
-	"strings"
 	"sync"
 
 	"fyne.io/fyne/v2"
@@ -12,75 +11,75 @@ import (
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 	"github.com/elias-gill/walldo-in-go/config"
+	"github.com/elias-gill/walldo-in-go/utils"
 	"github.com/elias-gill/walldo-in-go/wallpaper"
 )
 
-type card struct {
-	image     config.Image
+type wallpaperCard struct {
+	image     utils.Image
 	container *fyne.Container
-	button    *widget.Button
+
+	// Store a reference to the button for when refreshing the grid
+	applyButton *widget.Button
 }
 
-type wallpapersGrid struct {
-	container *fyne.Container
-	grid      *fyne.Container
-	images    []card
+type wallpaperGallery struct {
+	// Holds the main container that wraps the entire scrollable gallery UI
+	rootContainer *fyne.Container
+
+	// Arranges image cards in a fluid grid layout. Separated from rootContainer to
+	// enable asynchronously image loading and refreshing.
+	gridLayout *fyne.Container
+
+	cards []wallpaperCard
 }
 
-func NewImageGrid() *wallpapersGrid {
+func NewGallery() *wallpaperGallery {
 	grid := container.NewWithoutLayout()
+	rootContainer := container.New(
+		layout.NewPaddedLayout(),
+		container.NewScroll(grid))
 
-	return &wallpapersGrid{
-		grid: grid,
-		container: container.New(
-			layout.NewPaddedLayout(),
-			container.NewScroll(grid)),
+	return &wallpaperGallery{
+		gridLayout:    grid,
+		rootContainer: rootContainer,
 	}
 }
 
-func (w wallpapersGrid) GetContent() *fyne.Container {
-	return w.container
-}
+// Repopulates the wallpaper gallery by clearing existing items,
+// creating placeholders, and asynchronously loading images.
+func (w *wallpaperGallery) RefreshGallery() {
+	w.gridLayout.RemoveAll()
+	w.cards = []wallpaperCard{}
 
-func (c *wallpapersGrid) RefreshImgGrid() {
-	c.grid.RemoveAll()
-	c.images = []card{}
+	// Generate placeholder cards for images before they are rendered
+	for _, img := range utils.ListImages() {
+		imgCopy := img.Path
+		button := widget.NewButton("", func() {
+			err := wallpaper.SetWallpaper(imgCopy)
+			if err != nil {
+				log.Println(err.Error())
+			}
+		})
+		cont := container.NewStack(button)
 
-	images := config.ListImages()
-
-	for _, img := range images {
-		card := newEmptyFrame(img)
-
-		c.images = append(c.images, card)
-
-		c.grid.Add(card.container)
-
-		c.grid.Layout = layout.NewGridWrapLayout(
-			fyne.NewSize(gridScale()),
-		)
-		c.grid.Refresh()
-	}
-
-	go c.fillContainers()
-}
-
-// NOTE: keep this as a separate function
-// Creates a new empty card.
-func newEmptyFrame(image config.Image) card {
-	button := widget.NewButton("", func() {
-		err := wallpaper.SetWallpaper(strings.Clone(image.Path))
-		if err != nil {
-			log.Println(err.Error())
+		// Construct an empty image card
+		card := wallpaperCard{
+			image:       img,
+			container:   cont,
+			applyButton: button,
 		}
-	})
+		w.cards = append(w.cards, card)
 
-	cont := container.NewStack(button)
-
-	return card{
-		image:     image,
-		container: cont,
-		button:    button,
+		w.gridLayout.Add(card.container)
+		w.gridLayout.Layout = layout.NewGridWrapLayout(fyne.NewSize(gridScale()))
 	}
+
+	// Refresh the UI to reflect the updated grid layout
+	w.gridLayout.Refresh()
+
+	// Start filling the placeholders with images asynchronously
+	go w.fillContainers()
 }
 
 /*
@@ -89,18 +88,18 @@ Generates the thumbnail for the card and refresh the container.
 Creates as many threads as ceil(cpus/2), so the app runs faster but the
 cpu does not get overwhelmed.
 */
-func (c wallpapersGrid) fillContainers() {
-    hilos := int(runtime.NumCPU()/2)
-    if hilos <= 0 {
-        hilos = 1
-    }
+func (c wallpaperGallery) fillContainers() {
+	threads := int(runtime.NumCPU() / 2)
+	if threads <= 0 {
+		threads = 1
+	}
 
-	log.Println("\n Usando ", hilos, " Hilos")
+	log.Println("\n Usando ", threads, " Hilos")
 
 	wg := sync.WaitGroup{}
 
-	for k := range c.images {
-		card := c.images[k]
+	for k := range c.cards {
+		card := c.cards[k]
 
 		wg.Add(1)
 
@@ -112,20 +111,26 @@ func (c wallpapersGrid) fillContainers() {
 			image.FillMode = canvas.ImageFillContain
 
 			// With the max layout we can overlap the button and the thumbnail
-			card.container.Add(card.button)
+			card.container.Add(card.applyButton)
 			card.container.Add(image)
 			card.container.Refresh()
 
 			wg.Done()
 		}(&wg)
 
-		// generate only as many thumbnails as number of cpus-2
-		if k%(hilos) == 0 {
+		if k%(threads) == 0 {
 			wg.Wait()
 		}
 	}
 }
 
+// Returns the scrollable container that holds the wallpaperGallery
+func (w wallpaperGallery) View() *fyne.Container {
+	return w.rootContainer
+}
+
+// Transform GridSize enums from config to actual pixel size values
+// TODO: refactor this and the hole config model
 func gridScale() (float32, float32) {
 	switch config.GetGridSize() {
 	case config.LARGE:

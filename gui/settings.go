@@ -26,10 +26,12 @@ var sizes = map[string]config.GridSize{
 	small:  config.SMALL,
 }
 
-// Configuration window.
+// Generates and displays the configuration window.
 //
-//nolint:all
-func newConfigWindow(refresh func()) {
+// The "onUpdate" parameter is a callback function that gets executed after the configuration
+// has been successfully updated. It is intended to refresh the wallpaper gallery and update
+// other UI elements in response to configuration changes.
+func newConfigWindow(onUpdate func()) {
 	var selGridSize string
 
 	// grid size selector
@@ -41,7 +43,7 @@ func newConfigWindow(refresh func()) {
 	sizeSelector.SetSelected(names[config.GetGridSize()])
 
 	// path list
-	data := config.GetPaths()
+	data := config.GetWallpaperSearchPaths()
 	pathsList := widget.NewList(
 		func() int {
 			return len(data)
@@ -106,7 +108,7 @@ func newConfigWindow(refresh func()) {
 				config.SetPaths(data)
 
 				// refresh the main window
-				refresh()
+				onUpdate()
 			}
 		}, config.GetWindow())
 
