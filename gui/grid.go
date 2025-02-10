@@ -35,6 +35,8 @@ type wallpaperGallery struct {
 }
 
 func NewGallery() *wallpaperGallery {
+	// NOTE: the layout format of "GridWrap" is given in the "RefreshGallery" function because
+	// the grid size is defined later, this is just a placeholder.
 	grid := container.NewWithoutLayout()
 	rootContainer := container.New(
 		layout.NewPaddedLayout(),
