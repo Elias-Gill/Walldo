@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"path"
+	"strings"
 
 	"fyne.io/fyne/v2"
 	"github.com/elias-gill/walldo-in-go/wallpaper"
@@ -50,6 +51,11 @@ func InitConfig(window fyne.Window, fyneSettings fyne.Settings) {
 		configPath: path.Join(configDir, "walldo"),
 		cachePath:  path.Join(cacheDir, "walldo"),
 		configFile: path.Join(configDir, "walldo", "config.json"),
+		WallpaperFolders: []string{
+			path.Join("~", "Pictures"),
+			path.Join("~", "Wallpapers"),
+			path.Join("~", "Images"),
+		},
 	}
 
 	err = os.MkdirAll(conf.configPath, 0o770)
@@ -105,8 +111,25 @@ func GetGridSize() GridSize {
 	return Config.GridSize
 }
 
-func GetWallpaperSearchPaths() []string {
+func GetRawSearchPaths() []string {
 	return Config.WallpaperFolders
+}
+
+func GetWallpaperSearchPaths() []string {
+	var folders []string
+	for _, folder := range Config.WallpaperFolders {
+		var err error
+		folder, err = expandPath(folder)
+		// ignore malformed folders
+		if err != nil { 
+			log.Print(err)
+			continue
+		}
+
+		folders = append(folders, folder)
+	}
+
+	return folders
 }
 
 func SetPaths(s []string) {
@@ -144,4 +167,20 @@ func GetConfigPath() string {
 
 func GetConfigFile() string {
 	return Config.configFile
+}
+
+func expandPath(path string) (string, error) {
+	// Expand environment variables
+	path = os.ExpandEnv(path)
+
+	// Expand ~ to the home directory
+	if strings.HasPrefix(path, "~/") {
+		homeDir, err := os.UserHomeDir()
+		if err != nil {
+			return "", fmt.Errorf("failed to get home directory: %w", err)
+		}
+		path = strings.Replace(path, "~", homeDir, 1)
+	}
+
+	return path, nil
 }

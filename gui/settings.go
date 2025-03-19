@@ -43,7 +43,7 @@ func newConfigWindow(onUpdate func()) {
 	sizeSelector.SetSelected(names[config.GetGridSize()])
 
 	// path list
-	data := config.GetWallpaperSearchPaths()
+	data := config.GetRawSearchPaths()
 	pathsList := widget.NewList(
 		func() int {
 			return len(data)
