@@ -1,6 +1,8 @@
 package gui
 
 import (
+	"runtime"
+
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
@@ -28,19 +30,22 @@ var sizes = map[string]config.GridSize{
 
 // Generates and displays the configuration window.
 //
-// The "onUpdate" parameter is a callback function that gets executed after the configuration
-// has been successfully updated. It is intended to refresh the wallpaper gallery and update
+// The callback function that gets executed after the configuration
+// has been successfully updated, is intended to refresh the wallpaper gallery and update
 // other UI elements in response to configuration changes.
-func newConfigWindow(onUpdate func()) {
-	var selGridSize string
+func newConfigWindow(callback func()) {
+	var selectedGridSize string
 
 	// grid size selector
 	sizeSelector := widget.NewRadioGroup([]string{
 		small, normal, large,
 	}, func(sel string) {
-		selGridSize = sel
+		selectedGridSize = sel
 	})
 	sizeSelector.SetSelected(names[config.GetGridSize()])
+	selectorLabel := widget.NewLabel("Image grid cell size")
+	selectorLabel.TextStyle.Bold = true
+	sizeSelectorContainer := container.NewVBox(selectorLabel, sizeSelector)
 
 	// path list
 	data := config.GetRawSearchPaths()
@@ -67,10 +72,20 @@ func newConfigWindow(onUpdate func()) {
 		pathsList.Refresh()
 	}
 
-	// path pathInput
+	// Wallpapers paths selection
+	pathsSelectorLabel := widget.NewLabel("Wallpapers paths")
+	pathsSelectorLabel.TextStyle.Bold = true
+
+	// input
 	pathInput := widget.NewEntry()
 	pathInput.MultiLine = false
-	pathInput.SetPlaceHolder(`C:/User/user/fondos`)
+
+	if runtime.GOOS == "windows" {
+		pathInput.SetPlaceHolder(`C:/User/user/wallpapers`)
+	} else {
+		pathInput.SetPlaceHolder(`~/wallpapers`)
+	}
+
 	pathInput.OnSubmitted = func(t string) {
 		data = append(data, t)
 		pathInput.SetText("")
@@ -80,8 +95,8 @@ func newConfigWindow(onUpdate func()) {
 	}
 	pathInput.Resize(fyne.NewSize(200, 500))
 
-	// open the file explorer to select a folder
-	pathPickerButton := widget.NewButton("Open explorer", func() {
+	// File explorer
+	fileExplorerButton := widget.NewButton("Open explorer", func() {
 		NewPathPicker(config.GetWindow(), func(path string) {
 			data = append(data, path)
 			pathInput.SetText("")
@@ -90,32 +105,39 @@ func newConfigWindow(onUpdate func()) {
 		})
 	})
 
-	pathsList.Resize(fyne.NewSize(float32(pathsList.Size().Width), 25))
-
 	// Window content
-	layout := container.NewGridWithRows(2,
-		container.NewVBox(sizeSelector, widget.NewSeparator()),
-		container.NewGridWithRows(2, pathsList, container.NewVBox(pathPickerButton)),
+	layout := container.NewBorder(
+		container.NewVBox(
+			sizeSelectorContainer,
+			widget.NewSeparator(),
+			pathsSelectorLabel,
+			pathInput,
+			fileExplorerButton,
+		),
+		nil, nil, nil,
+		pathsList,
 	)
 
 	// Create the new dialog window (the main container)
-	dia := dialog.NewCustomConfirm("Settings", "Confirm", "Cancel", layout,
-		// function to refresh the content with the new given config
-		func(status bool) {
-			if status {
+	configDialog := dialog.NewCustomConfirm("🔧  Application Settings", "Confirm", "Cancel", layout,
+		// When the user confirms the changes
+		func(confirm bool) {
+			if confirm {
 				// update fyne config API
-				config.SetGridSize(sizes[selGridSize])
+				config.SetGridSize(sizes[selectedGridSize])
 				config.SetPaths(data)
 
 				// refresh the main window
-				onUpdate()
+				callback()
 			}
 		}, config.GetWindow())
 
-	dia.Resize(fyne.NewSize(
-		config.GetWindow().Canvas().Size().Width,
-		config.GetWindow().Canvas().Size().Height),
+	configDialog.Resize(
+		fyne.NewSize(
+			config.GetWindow().Canvas().Size().Width*0.85,
+			config.GetWindow().Canvas().Size().Height*0.85,
+		),
 	)
 
-	dia.Show()
+	configDialog.Show()
 }
