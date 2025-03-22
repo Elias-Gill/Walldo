@@ -1,67 +1,139 @@
-# Walldo
-A simple wallpaper changer written in Go with the main goal of being light and fast.
+# Walldo 🖼️
 
-Mainly inspired by Nitrogen, Walldo searches for your images, lists them all 
-and displays them on a single screen.
+**A lightning-fast, lightweight wallpaper changer written in Go.** Walldo is designed to make
+changing wallpapers simple, fast, and hassle-free.
+Whether you're on Windows, Linux, or macOS, Walldo delivers a seamless experience with minimal
+bloat.
 
-Change your wallpaper as fast as you want. Nothing more and nothing less, simple and functional.
+## ✨ Features
 
-### Currently supported formats
-+ JPG
-+ PNG
-+ JPEG
+- **Simple, Fast and Lightweight**:
+  Built for simplicity and speed.
+- **Multi-Platform Support**:
+  Works on Windows, Linux, and macOS.
+- **Automatic Image Detection**:
+  Scans folders recursivelly to search images.
+
+---
+
+## 🖼️ Supported Formats
+
+- JPG
+- PNG
+- JPEG
+
+---
+
+## 🚀 Installation
+
+### Pre-Compiled Binaries
+We provide pre-compiled binaries for **Windows** and **Linux**.
+Check out our [releases section](https://github.com/Elias-Gill/walldo/releases) to download the
+latest version.
+
+`Note`:
+Windows may complain about the binary being unsigned.
+
+### Manual Installation
+To compile Walldo manually, you need to have [Go](https://go.dev/doc/install) installed.
+
+#### Windows
+1. Open a terminal session (`cmd`).
+2. Run the following command:
+   ```sh
+   go install -ldflags -H=windowsgui github.com/elias-gill/walldo-in-go@latest
+   ```
+3. Walldo will be available in your search bar (`Win`+`S`) as "waldo-in-go".
+4. (Optional) Create a shortcut and customize the icon.
+
+#### Linux and macOS
+1. Open a terminal session.
+2. Run the following command:
+   ```sh
+   go install github.com/elias-gill/walldo-in-go@latest
+   ```
+3. You can now run Walldo by typing `walldo-in-go` in your terminal.
+4. (Optional) Create a desktop shortcut for easier access.
+
+---
+
+## 🖥️ Supported Desktop Environments
+
+Walldo supports a variety of desktop environments and tools:
+
+| Environment       | Supported? | Dependency       |
+|-------------------|------------|------------------|
+| GNOME             | ✅         | Built-in         |
+| KDE               | ✅         | Built-in         |
+| XFCE              | ✅         | Built-in         |
+| Cinnamon          | ✅         | Built-in         |
+| LXDE / LXQT       | ✅         | Built-in         |
+| MATE              | ✅         | Built-in         |
+| Deepin            | ✅         | Built-in         |
+| Non-DE (Feh)      | ✅         | [Feh](https://wiki.archlinux.org/title/Feh) |
+| Wayland           | ✅         | [swaybg](https://github.com/swaywm/swaybg) |
+
+---
+
+## 🛠️ Uninstallation
+
+To uninstall Walldo, simply run the following command in your terminal:
+
+```sh 
+walldo-in-go -uninstall
+```
+
+This will remove the executable and clean up the installation.
+
+---
+
+## 🎯 Goals
+
+- **Replace Nitrogen or Feh on Windows**:
+  Provide a lightweight alternative for Windows users.
+- **Speed and Efficiency**:
+  Be faster and lighter than other wallpaper-changing apps.
+- **Simplicity and Focus**:
+  Walldo is designed to do one thing and do it well—change your wallpaper as quickly as
+  possible.
+  No bloat, no unnecessary features, and no long startup times.
+  Just a simple, fast, and reliable tool.
+
+---
+
+## 🙏 Mentions
+
+- **ktr0731**:
+  For the amazing fuzzy finder engine.
+- **reujab**:
+  For the original wallpaper-changing library, which was forked and adapted for Walldo.
+
+## 📸 Showcase
 
 https://github.com/user-attachments/assets/89c2ad3e-d5c8-4928-8bca-bddffefd0b12
 
-#### A wallpaper changer app ? Why ?... 
-As a person who likes to change his wallpaper very often, I was looking for an app that would allow me to do it in a 
-simple way and as fast as possible. In Linux there are many applications that can do that, 
-but in Windows most of them are very slow and bloated.
+## ❓ Why Walldo?
 
-## Instalation
-We have pre-compiled binaries for windows and linux. Check out our [releases](https://github.com/Elias-Gill/walldo/releases) section (windows may complain because the binary is unisgned).
+As someone who loves changing wallpapers frequently, I wanted an app that was simple, fast, and
+bloat-free.
+While Linux has many options, Windows often lacks lightweight tools for this purpose.
+Walldo fills that gap, offering a no-nonsense solution for wallpaper enthusiasts.
 
-We don't provide precompiled builds for `macOS` because it's [not straightforward to cross-compose Fyne projects for it](https://github.com/fyne-io/fyne-cross#build-the-docker-image-for-osxdarwinapple-cross-compiling).
+## 🚧 Future Plans
 
-## Manual installation
-To compile Walldo manually you need to have [Go](https://go.dev/doc/install) installed.
+Walldo is almost feature-complete, with future updates focusing on:
+- Enhancing user experience.
+- Adding security checks.
+- Improving performance.
 
-### Windows
-After installing the dependencies, open a terminal session (`cmd`) and run:
-```sh
-go install -ldflags -H=windowsgui github.com/elias-gill/walldo-in-go@latest
-```
-Now Walldo should be available in your search bar (`Win`+`S`) as "waldo-in-go".
+## 💬 Feedback
 
-You can create a shortcut and change the icon if you want.
+Love Walldo?
+Found a bug?
+Let us know by opening an issue on [GitHub](https://github.com/Elias-Gill/walldo/issues).
 
-### Linux and macOS
-After installing the dependencies, open a terminal session and run:
-```sh
-go install github.com/elias-gill/walldo-in-go@latest
-```
-You can now run "walldo-in-go" in your terminal. If you are using a Desktop environment, you can create a shortcut for the command.
+## ⭐ Star the Repo
 
-## First run
- After the first run you have to setup your wallpapers folder. To do this open the config menu ( “⚙” button) and use the file explorer to add new folders.
+If you find Walldo useful, please consider starring the repository to show your support!
 
-## Important (Linux users)
-Walldo supports a variaty of desktop enviroments:
-- Gnome
-- LXDE | LXQT
-- XFCE
-- Cinnamon 
-- Mate 
-- KDE
-- Deepin
-
-For non desktop enviroments Walldo relies on [Feh](https://wiki.archlinux.org/title/Feh).
-Wayland is supported via [swaybg](https://github.com/swaywm/swaybg).
-
-## Goals
-+ Be the replacement for Nitrogen or Feh on Windows Systems. 
-+ Be faster and lighter than similar apps.
-
-## Mentions
-+ To [ktr0731](https://github.com/ktr07310). The fuzzy finder engine is his entire work.
-+ To [reujab](https://github.com/reujab/wallpaper). The library for changing wallapapers is a fork of his original module.
+[![Star on GitHub](https://img.shields.io/github/stars/Elias-Gill/walldo?style=social)](https://github.com/Elias-Gill/walldo)
