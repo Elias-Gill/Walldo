@@ -1,7 +1,9 @@
 package gui
 
 import (
+	"os"
 	"runtime"
+	"strings"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
@@ -48,27 +50,27 @@ func newConfigWindow(callback func()) {
 	sizeSelectorContainer := container.NewVBox(selectorLabel, sizeSelector)
 
 	// path list
-	data := config.GetRawSearchPaths()
+	listedPaths := config.GetRawSearchPaths()
 	pathsList := widget.NewList(
 		func() int {
-			return len(data)
+			return len(listedPaths)
 		},
 		func() fyne.CanvasObject {
 			return widget.NewLabel("template")
 		},
 		func(i widget.ListItemID, o fyne.CanvasObject) {
-			o.(*widget.Label).SetText(data[i])
+			o.(*widget.Label).SetText(listedPaths[i])
 		})
 
 	pathsList.OnSelected = func(id int) {
 		// delete the selected element
 		var aux []string
-		for i := 0; i < len(data); i++ {
+		for i := 0; i < len(listedPaths); i++ {
 			if i != id {
-				aux = append(aux, data[i])
+				aux = append(aux, listedPaths[i])
 			}
 		}
-		data = aux
+		listedPaths = aux
 		pathsList.Refresh()
 	}
 
@@ -81,13 +83,13 @@ func newConfigWindow(callback func()) {
 	pathInput.MultiLine = false
 
 	if runtime.GOOS == "windows" {
-		pathInput.SetPlaceHolder(`C:/User/user/wallpapers`)
+		pathInput.SetPlaceHolder(`C:/Users/user/wallpapers`)
 	} else {
 		pathInput.SetPlaceHolder(`~/wallpapers`)
 	}
 
 	pathInput.OnSubmitted = func(t string) {
-		data = append(data, t)
+		listedPaths = append(listedPaths, t)
 		pathInput.SetText("")
 
 		pathInput.Refresh()
@@ -98,7 +100,12 @@ func newConfigWindow(callback func()) {
 	// File explorer
 	fileExplorerButton := widget.NewButton("Open explorer", func() {
 		NewPathPicker(config.GetWindow(), func(path string) {
-			data = append(data, path)
+			// change user home dir to tilde (~)
+			homeDir, _ := os.UserHomeDir()
+			path = strings.Replace(path, homeDir, "~", 1)
+
+			listedPaths = append(listedPaths, path)
+
 			pathInput.SetText("")
 			pathInput.Refresh()
 			pathsList.Refresh()
@@ -125,7 +132,7 @@ func newConfigWindow(callback func()) {
 			if confirm {
 				// update fyne config API
 				config.SetGridSize(sizes[selectedGridSize])
-				config.SetPaths(data)
+				config.SetPaths(listedPaths)
 
 				// refresh the main window
 				callback()
