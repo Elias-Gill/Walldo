@@ -96,7 +96,7 @@ func (c wallpaperGallery) fillContainers() {
 		threads = 1
 	}
 
-	log.Println("\n Usando ", threads, " Hilos")
+	log.Printf("Starting %d threads for image scaling", threads)
 
 	wg := sync.WaitGroup{}
 
