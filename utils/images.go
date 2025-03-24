@@ -19,125 +19,91 @@ type Image struct {
 	Path      string
 }
 
-var recursiveFolders = make(map[string]struct{})
+// Recursively walks through a directory and collects images found within.
+// Returns the collected images instead of modifying a passed slice, making
+// the function pure and easier to reason about.
+func processPath(root string, processedPaths map[string]struct{}) ([]Image, error) {
+	var collectedImages []Image
 
-func followSymlink(symlink string) ([]Image, error) {
-    realPath, err := filepath.EvalSymlinks(symlink)
-    if err != nil {
-        return nil, err
-    }
-
-    // Only check if we've already processed this exact real path
-    if _, visited := recursiveFolders[realPath]; visited {
-        log.Printf("Ignoring path (symlink cycle): %s", symlink)
-        return nil, nil
-    }
-
-    // Mark as visited after we've checked
-    recursiveFolders[realPath] = struct{}{}
-    log.Printf("Following symlink: %s", symlink)
-
-    var imagesList []Image
-
-    err = filepath.Walk(realPath, func(dirPath string, dirInfo os.FileInfo, err error) error {
-        if err != nil {
-            log.Printf("Error accessing path %q: %v", dirPath, err)
-            return err
-        }
-
-        // Only check if we've already processed this exact real path
-        if _, visited := recursiveFolders[dirPath]; visited {
-            log.Printf("Ignoring path (already processed): %s", dirPath)
-            return filepath.SkipDir
-        }
-
-        // Mark as visited after we've checked
-        recursiveFolders[dirPath] = struct{}{}
-
-        // Ignore .git directory
-        if dirInfo.IsDir() && filepath.Base(dirPath) == ".git" {
-            return filepath.SkipDir
-        }
-
-        // Handle symlinks
-        if dirInfo.Mode()&os.ModeSymlink != 0 {
-            list, err := followSymlink(dirPath)
-            if err != nil {
-                log.Printf("Error following symlink %q: %v", dirPath, err)
-                return nil // Skip this symlink but continue walking
-            }
-            imagesList = append(imagesList, list...)
-            return nil
-        }
-
-        // Process files with valid extensions
-        if !dirInfo.IsDir() && hasValidExtension(dirPath) {
-            imagesList = append(imagesList, Image{
-                Path:      dirPath,
-                Thumbnail: generateUniqName(dirPath),
-            })
-        }
-
-        return nil
-    })
-
-    return imagesList, err
-}
-
-func ListImages() []Image {
-	var imagesList []Image
-
-	// Clear the map before starting
-	recursiveFolders = make(map[string]struct{})
-
-	for _, folder := range config.GetWallpaperSearchPaths() {
-		err := filepath.Walk(folder, func(dirPath string, dirInfo os.FileInfo, err error) error {
-			if err != nil {
-				log.Printf("Error accessing path %q: %v", dirPath, err)
-				return err
-			}
-
-			// Ignore already visited folders
-			if _, visited := recursiveFolders[dirPath]; visited {
-				log.Printf("Ignoring path (already visited): %s", dirPath)
-				return filepath.SkipDir
-			}
-			// Mark path as visited
-			recursiveFolders[dirPath] = struct{}{}
-
-			// Ignore .git directory
-			if dirInfo.IsDir() && filepath.Base(dirPath) == ".git" {
-				return filepath.SkipDir
-			}
-
-			// Handle symlinks
-			if dirInfo.Mode()&os.ModeSymlink != 0 {
-				list, err := followSymlink(dirPath)
-				if err != nil {
-					log.Printf("Error following symlink %q: %v", dirPath, err)
-					return nil
-				}
-				imagesList = append(imagesList, list...)
-				return nil
-			}
-
-			// Process files with valid extensions
-			if !dirInfo.IsDir() && hasValidExtension(dirPath) {
-				imagesList = append(imagesList, Image{
-					Path:      dirPath,
-					Thumbnail: generateUniqName(dirPath),
-				})
-			}
-
-			return nil
-		})
-
+	walkFunc := func(currentPath string, fileInfo os.FileInfo, err error) error {
 		if err != nil {
-			log.Printf("Error walking folder %q: %v", folder, err)
+			log.Printf("Error accessing path %q: %v", currentPath, err)
+			return err
 		}
+
+		// skip .git folder
+		if fileInfo.IsDir() && filepath.Base(currentPath) == ".git" {
+			return filepath.SkipDir
+		}
+
+		// Append image if this is a file
+		if !fileInfo.IsDir() && hasValidExtension(currentPath) {
+			collectedImages = append(collectedImages, Image{
+				Path:      currentPath,
+				Thumbnail: generateUniqName(currentPath),
+			})
+			return nil
+		}
+
+		// Check if the path has already been processed; otherwise, mark it as visited.
+		if _, processed := processedPaths[currentPath]; processed {
+			log.Printf("Ignoring path (already processed): %s", currentPath)
+			return filepath.SkipDir
+		}
+		processedPaths[currentPath] = struct{}{}
+
+		// Expand symlinks
+		if fileInfo.Mode()&os.ModeSymlink != 0 {
+			symlinkImages, err := followSymlink(currentPath, processedPaths)
+			if err != nil {
+				log.Printf("Error following symlink %q: %v", currentPath, err)
+				return filepath.SkipDir
+			}
+			collectedImages = append(collectedImages, symlinkImages...)
+			return nil
+		}
+
+		return nil
 	}
 
-	return imagesList
+	err := filepath.Walk(root, walkFunc)
+	return collectedImages, err
+}
+
+// Resolves the given symlink to its actual path and processes its contents while
+// preventing symlink cycles and duplicate processing.
+func followSymlink(symlink string, processedPaths map[string]struct{}) ([]Image, error) {
+	resolvedPath, err := filepath.EvalSymlinks(symlink)
+	if err != nil {
+		return nil, err
+	}
+
+	if _, processed := processedPaths[resolvedPath]; processed {
+		log.Printf("Ignoring path (symlink cycle): %s --> %s", symlink, resolvedPath)
+		return nil, nil
+	}
+
+	processedPaths[symlink] = struct{}{}
+	log.Printf("Following symlink: %s --> %s", symlink, resolvedPath)
+
+	return processPath(resolvedPath, processedPaths)
+}
+
+// ListImages scans the configured search directories and collects images with valid extensions
+// while avoiding duplicate processing and handling symlinks.
+func ListImages() []Image {
+	processedPaths := make(map[string]struct{})
+	var collectedImages []Image
+
+	for _, searchPath := range config.GetWallpaperSearchPaths() {
+		images, err := processPath(searchPath, processedPaths)
+		if err != nil {
+			log.Printf("Error walking folder %q: %v", searchPath, err)
+		}
+		collectedImages = append(collectedImages, images...)
+	}
+
+	return collectedImages
 }
 
 // Determine if the file has a valid extension.
