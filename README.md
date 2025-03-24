@@ -14,15 +14,27 @@ bloat.
 - **Automatic Image Detection**:
   Scans folders recursivelly to search images.
 
----
-
 ## 🖼️ Supported Formats
 
 - JPG
 - PNG
 - JPEG
 
----
+## 🖥️ Supported Desktop Environments
+
+Walldo supports a variety of desktop environments and tools:
+
+| Environment       | Supported? | Dependency       |
+|-------------------|------------|------------------|
+| GNOME             | ✅         | Built-in         |
+| KDE               | ✅         | Built-in         |
+| XFCE              | ✅         | Built-in         |
+| Cinnamon          | ✅         | Built-in         |
+| LXDE / LXQT       | ✅         | Built-in         |
+| MATE              | ✅         | Built-in         |
+| Deepin            | ✅         | Built-in         |
+| Non-DE (Feh)      | ✅         | [Feh](https://wiki.archlinux.org/title/Feh) |
+| Wayland           | ✅         | [swaybg](https://github.com/swaywm/swaybg) |
 
 ## 🚀 Installation
 
@@ -55,27 +67,7 @@ To compile Walldo manually, you need to have [Go](https://go.dev/doc/install) in
 3. You can now run Walldo by typing `walldo-in-go` in your terminal.
 4. (Optional) Create a desktop shortcut for easier access.
 
----
-
-## 🖥️ Supported Desktop Environments
-
-Walldo supports a variety of desktop environments and tools:
-
-| Environment       | Supported? | Dependency       |
-|-------------------|------------|------------------|
-| GNOME             | ✅         | Built-in         |
-| KDE               | ✅         | Built-in         |
-| XFCE              | ✅         | Built-in         |
-| Cinnamon          | ✅         | Built-in         |
-| LXDE / LXQT       | ✅         | Built-in         |
-| MATE              | ✅         | Built-in         |
-| Deepin            | ✅         | Built-in         |
-| Non-DE (Feh)      | ✅         | [Feh](https://wiki.archlinux.org/title/Feh) |
-| Wayland           | ✅         | [swaybg](https://github.com/swaywm/swaybg) |
-
----
-
-## 🛠️ Uninstallation
+### 🛠️ Uninstallation
 
 To uninstall Walldo, simply run the following command in your terminal:
 
@@ -84,8 +76,6 @@ walldo-in-go -uninstall
 ```
 
 This will remove the executable and clean up the installation.
-
----
 
 ## 🎯 Goals
 
@@ -98,8 +88,6 @@ This will remove the executable and clean up the installation.
   possible.
   No bloat, no unnecessary features, and no long startup times.
   Just a simple, fast, and reliable tool.
-
----
 
 ## 🙏 Mentions
 
