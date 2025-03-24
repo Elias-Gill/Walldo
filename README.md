@@ -96,9 +96,11 @@ This will remove the executable and clean up the installation.
 - **reujab**:
   For the original wallpaper-changing library, which was forked and adapted for Walldo.
 
-## 📸 Showcase
+## 📸 Screenshots
 
-https://github.com/user-attachments/assets/89c2ad3e-d5c8-4928-8bca-bddffefd0b12
+![image](https://github.com/user-attachments/assets/0563faa1-8430-42e2-92e7-22c807e8e236)
+![image](https://github.com/user-attachments/assets/59a14f53-e717-4b31-b009-c9dd2cb80c42)
+![image](https://github.com/user-attachments/assets/9d5fde99-9cda-47d4-ba09-9417f01df531)
 
 ## ❓ Why Walldo?
 
@@ -119,9 +121,3 @@ Walldo is almost feature-complete, with future updates focusing on:
 Love Walldo?
 Found a bug?
 Let us know by opening an issue on [GitHub](https://github.com/Elias-Gill/walldo/issues).
-
-## ⭐ Star the Repo
-
-If you find Walldo useful, please consider starring the repository to show your support!
-
-[![Star on GitHub](https://img.shields.io/github/stars/Elias-Gill/walldo?style=social)](https://github.com/Elias-Gill/walldo)
