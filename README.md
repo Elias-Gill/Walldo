@@ -5,6 +5,13 @@ changing wallpapers simple, fast, and hassle-free.
 Whether you're on Windows, Linux, or macOS, Walldo delivers a seamless experience with minimal
 bloat.
 
+#### ❓ Why another wallpaper changer?
+
+As someone who loves changing wallpapers frequently, I wanted an app that was simple, fast, and
+bloat-free.
+While Linux has many options (like Nitrogen), Windows often lacks lightweight tools for this purpose.
+Walldo fills that gap, offering a no-nonsense solution for wallpaper enthusiasts.
+
 ## ✨ Features
 
 - **Simple, Fast and Lightweight**:
@@ -13,16 +20,23 @@ bloat.
   Works on Windows, Linux, and macOS.
 - **Automatic Image Detection**:
   Scans folders recursivelly to search images.
+- **Support**: for Windows, Linux and Mac.
 
-## 🖼️ Supported Formats
+### 🖼️ Supported Formats
 
 - JPG
 - PNG
 - JPEG
 
-## 🖥️ Supported Desktop Environments
+### Supported OS
 
-Walldo supports a variety of desktop environments and tools:
+- Windows
+- Linux
+- MacOs
+
+#### 🖥️ Supported Desktop Environments (Linux)
+
+Walldo supports a variety of desktop environments:
 
 | Environment       | Supported? | Dependency       |
 |-------------------|------------|------------------|
@@ -77,6 +91,12 @@ walldo-in-go -uninstall
 
 This will remove the executable and clean up the installation.
 
+## 📸 Screenshots
+
+![image](https://github.com/user-attachments/assets/0563faa1-8430-42e2-92e7-22c807e8e236)
+![image](https://github.com/user-attachments/assets/59a14f53-e717-4b31-b009-c9dd2cb80c42)
+![image](https://github.com/user-attachments/assets/9d5fde99-9cda-47d4-ba09-9417f01df531)
+
 ## 🎯 Goals
 
 - **Replace Nitrogen or Feh on Windows**:
@@ -88,26 +108,6 @@ This will remove the executable and clean up the installation.
   possible.
   No bloat, no unnecessary features, and no long startup times.
   Just a simple, fast, and reliable tool.
-
-## 🙏 Mentions
-
-- **ktr0731**:
-  For the amazing fuzzy finder engine.
-- **reujab**:
-  For the original wallpaper-changing library, which was forked and adapted for Walldo.
-
-## 📸 Screenshots
-
-![image](https://github.com/user-attachments/assets/0563faa1-8430-42e2-92e7-22c807e8e236)
-![image](https://github.com/user-attachments/assets/59a14f53-e717-4b31-b009-c9dd2cb80c42)
-![image](https://github.com/user-attachments/assets/9d5fde99-9cda-47d4-ba09-9417f01df531)
-
-## ❓ Why Walldo?
-
-As someone who loves changing wallpapers frequently, I wanted an app that was simple, fast, and
-bloat-free.
-While Linux has many options, Windows often lacks lightweight tools for this purpose.
-Walldo fills that gap, offering a no-nonsense solution for wallpaper enthusiasts.
 
 ## 🚧 Future Plans
 
@@ -121,3 +121,10 @@ Walldo is almost feature-complete, with future updates focusing on:
 Love Walldo?
 Found a bug?
 Let us know by opening an issue on [GitHub](https://github.com/Elias-Gill/walldo/issues).
+
+## 🙏 Mentions
+
+- **ktr0731**:
+  For the amazing fuzzy finder engine.
+- **reujab**:
+  For the original wallpaper-changing library, which was forked and adapted for Walldo.
