@@ -104,7 +104,6 @@ func (c wallpaperGallery) fillContainers() {
 		card := c.cards[k]
 
 		wg.Add(1)
-
 		go func(wg *sync.WaitGroup) {
 			// resize the image and get the thumbnail name
 			card.image.GenerateThumbnail()
@@ -113,7 +112,7 @@ func (c wallpaperGallery) fillContainers() {
 			image.FillMode = canvas.ImageFillContain
 
 			// With the max layout we can overlap the button and the thumbnail
-			fyne.Do(func() {
+			fyne.DoAndWait(func() {
 				card.container.Add(card.applyButton)
 				card.container.Add(image)
 				card.container.Refresh()
