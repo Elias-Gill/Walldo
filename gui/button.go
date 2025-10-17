@@ -20,4 +20,5 @@ const (
 	ICON_SEARCH   = "search"
 	ICON_REFRESH  = "viewRefresh"
 	ICON_SETTINGS = "settings"
+	ICON_FOLDER   = "folder"
 )

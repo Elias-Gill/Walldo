@@ -18,6 +18,8 @@ const (
 	small  = "Small"
 )
 
+const padding float32 = 4
+
 var names = map[config.GridSize]string{
 	config.LARGE:  large,
 	config.NORMAL: normal,
@@ -98,7 +100,7 @@ func newConfigWindow(callback func()) {
 	pathInput.Resize(fyne.NewSize(200, 500))
 
 	// File explorer
-	fileExplorerButton := widget.NewButton("Open explorer", func() {
+	fileExplorerButton := NewButtonWithIcon("Open", func() {
 		NewPathPicker(config.GetWindow(), func(path string) {
 			// change user home dir to tilde (~)
 			homeDir, _ := os.UserHomeDir()
@@ -110,7 +112,7 @@ func newConfigWindow(callback func()) {
 			pathInput.Refresh()
 			pathsList.Refresh()
 		})
-	})
+	}, ICON_FOLDER)
 
 	// Window content
 	layout := container.NewBorder(
@@ -181,7 +183,7 @@ func (l *PriorityLayout) Layout(objects []fyne.CanvasObject, size fyne.Size) {
 	xPos := primarySize
 	for i := 1; i < len(objects); i++ {
 		objects[i].Resize(fyne.Size{Width: secondarySize, Height: size.Height})
-		objects[i].Move(fyne.Position{X: xPos, Y: 0})
+		objects[i].Move(fyne.Position{X: xPos + padding, Y: 0})
 		xPos += secondarySize
 	}
 }
@@ -208,7 +210,7 @@ func (l *PriorityLayout) MinSize(objects []fyne.CanvasObject) fyne.Size {
 		}
 	}
 
-	minSize.Width = primaryMin.Width + secondaryMin.Width*float32(len(objects)-1)
+	minSize.Width = primaryMin.Width + secondaryMin.Width*float32(len(objects)-1) + float32((len(objects)-1))*padding
 	minSize.Height = max(primaryMin.Height, secondaryMin.Height)
 
 	return minSize
