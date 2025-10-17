@@ -113,9 +113,11 @@ func (c wallpaperGallery) fillContainers() {
 			image.FillMode = canvas.ImageFillContain
 
 			// With the max layout we can overlap the button and the thumbnail
-			card.container.Add(card.applyButton)
-			card.container.Add(image)
-			card.container.Refresh()
+			fyne.Do(func() {
+				card.container.Add(card.applyButton)
+				card.container.Add(image)
+				card.container.Refresh()
+			})
 
 			wg.Done()
 		}(&wg)
