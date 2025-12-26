@@ -4,6 +4,7 @@ package linux
 
 import (
 	"os/exec"
+	"os"
 	"strings"
 
 	"github.com/elias-gill/walldo-in-go/wallpaper/modes"
@@ -28,8 +29,14 @@ func getWaylandString(mode modes.FillStyle) string {
 
 // INFO: It depends on swaybg
 func SetWayland(file string, mode modes.FillStyle) error {
-	// first kill all instances of swaybg then run swaybg
+	// first kill all instances of swaybg
 	exec.Command("killall", "swaybg").Run()
+
+	// save the current wallpaper file to $HOME/.config/waybackground
+	configPath := os.ExpandEnv("$HOME/.config/swaybg")
+	if err := os.WriteFile(configPath, []byte(file+"\n"), 0644); err != nil {
+		return err
+	}
 
 	cmd := exec.Command("swaybg", "-m", getWaylandString(mode), "-i", file)
 	err := cmd.Start()

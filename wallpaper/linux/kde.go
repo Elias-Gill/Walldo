@@ -33,7 +33,7 @@ func setKDEMode(mode modes.FillStyle) error {
 }
 
 func evalKDE(script string) error {
-	return exec.Command("qdbus", "org.kde.plasmashell", "/PlasmaShell", "org.kde.PlasmaShell.evaluateScript", script).Run()
+	return exec.Command("qdbus6", "org.kde.plasmashell", "/PlasmaShell", "org.kde.PlasmaShell.evaluateScript", script).Run()
 }
 
 func getKDEString(mode modes.FillStyle) string {

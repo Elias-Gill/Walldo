@@ -81,9 +81,9 @@ func getXFCEString(mode modes.FillStyle) string {
 	case modes.FILL_CENTER:
 		return "1"
 	case modes.FILL_ZOOM:
-		return "4"
-	case modes.FILL_ORIGINAL:
 		return "5"
+	case modes.FILL_ORIGINAL:
+		return "4"
 	case modes.FILL_SCALE:
 		return "3"
 	case modes.FILL_TILE:
