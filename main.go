@@ -43,6 +43,10 @@ func main() {
 
 func startGui() {
 	app := app.NewWithID("Walldo")
+
+	theme := NewDarkTheme()
+	app.Settings().SetTheme(theme)
+
 	window := app.NewWindow("Walldo")
 
 	config.InitConfig(window, app.Settings())
