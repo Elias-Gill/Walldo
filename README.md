@@ -13,7 +13,7 @@ Walldo focuses on doing one thing well:
 browse your wallpaper collection and change your desktop background.
 No background services, no live wallpapers, no video playback, and no unnecessary extras.
 
-## Why another wallpaper changer?
+### Why another wallpaper changer?
 
 Because I couldn't find one that actually matched what I needed.
 
@@ -39,18 +39,18 @@ managers feel much heavier than they need to be.
 - Fast fuzzy search filter.
 - Simple yet visualy pleasing UI.
 
-## Supported Formats
+### Supported Formats
 
 - `.jpg` / `.jpeg`
 - `.png`
 
-## Supported Operating Systems
+# Supported Operating Systems
 
-- Windows
-- Linux
-- macOS*
+- **Windows**
+- **Linux**
+- **macOS** (*)
 
-NOTE:
+`NOTE:`
 In theory, Walldo should compile and run on macOS without any major issues.
 However, since I do not own any Apple hardware, I cannot guarantee that everything works as
 expected. 
@@ -62,7 +62,7 @@ build the application from source.
 
 Bug reports and pull requests from macOS users are always welcome to help improve support.
 
-### Supported Desktop Environments (Linux)
+## Supported Desktop Environments (Linux)
 
 Walldo changes wallpapers by talking directly to the tools or APIs provided by each **desktop
 environment** whenever possible.
@@ -72,23 +72,32 @@ it uses `swaybg`.
 
 If your preferred environment isn't supported yet, feel free to open an issue.
 
-| Environment | Backend |
+| Environment | Dependencies |
 | --- | --- |
-| **GNOME** | Native |
-| **KDE Plasma** | Native |
-| **XFCE** | Native |
-| **Cinnamon** | Native |
-| **LXDE / LXQT** | Native |
-| **MATE** | Native |
-| **Deepin** | Native |
+| **GNOME** | None |
+| **KDE Plasma** | None |
+| **XFCE** | None |
+| **Cinnamon** | None |
+| **LXDE / LXQT** | None |
+| **MATE** | None |
+| **Deepin** | None |
 | **Window Managers (X11)** | [feh](https://wiki.archlinux.org/title/Feh) |
 | **Wayland Compositors** | [swaybg](https://github.com/swaywm/swaybg) |
 
-## Screenshots
+# Screenshots
 
-## Installation
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/5438fab4-f123-43f5-8e18-a9b6be15d200" width="500">
+  <img src="https://github.com/user-attachments/assets/805f6c48-484e-40f3-b8a2-4ad385d41d47" width="500">
+</p>
 
-### Pre-built binaries
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/18643d02-449e-4ce5-b4de-219c38d7d9dd" width="500">
+</p>
+
+# Installation
+
+## Pre-built binaries
 
 Pre-built binaries are available for Windows and Linux from the releases page.
 
@@ -99,19 +108,19 @@ https://github.com/elias-gill/walldo-in-go/releases
 macOS binaries are currently not provided.
 Please build from source.
 
-### Building from source
+## Building from source
 
 Make sure you have Go installed.
 
 https://go.dev/doc/install
 
-#### Windows
+### Windows
 
 ```sh
 go install -ldflags -H=windowsgui github.com/elias-gill/walldo-in-go@latest
 ```
 
-#### Linux & macOS
+### Linux & macOS
 
 ```sh
 go install github.com/elias-gill/walldo-in-go@latest
@@ -134,7 +143,7 @@ walldo-in-go -uninstall
 This removes the installed executable, cache and config files without requiring any additional
 cleanup.
 
-## Roadmap
+# Roadmap
 
 Walldo is very close to being feature complete.
 
@@ -165,7 +174,7 @@ Bug reports, suggestions, and pull requests are always welcome.
 
 https://github.com/elias-gill/walldo-in-go/issues
 
-## Acknowledgments
+# Acknowledgments
 
 - **Fyne**, for providing a clean, simple, and enjoyable cross-platform GUI toolkit for Go.
   Walldo would have been a much larger project without it.
