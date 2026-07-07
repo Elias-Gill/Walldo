@@ -1,4 +1,4 @@
-package main
+package themes
 
 import (
 	"fyne.io/fyne/v2"
@@ -22,6 +22,6 @@ func (DarkTheme) Size(name fyne.ThemeSizeName) float32 {
 	return theme.DefaultTheme().Size(name)
 }
 
-func NewDarkTheme () fyne.Theme {
+func NewDarkTheme() fyne.Theme {
 	return &DarkTheme{}
 }

@@ -3,14 +3,8 @@ package main
 import (
 	"flag"
 	"fmt"
-	"image/color"
 	"os"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/app"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/layout"
 	"github.com/elias-gill/walldo-in-go/config"
 	"github.com/elias-gill/walldo-in-go/gui"
 )
@@ -38,59 +32,7 @@ func main() {
 		return
 	}
 
-	startGui()
-}
+	config.Init()
 
-func startGui() {
-	app := app.NewWithID("Walldo")
-
-	theme := NewDarkTheme()
-	app.Settings().SetTheme(theme)
-
-	window := app.NewWindow("Walldo")
-
-	config.InitConfig(window, app.Settings())
-
-	// title
-	title := canvas.NewText("Select your wallpaper", color.White)
-	title.TextStyle = fyne.TextStyle{Bold: true}
-	title.Alignment = fyne.TextAlignCenter
-	title.TextSize = 18
-
-	// scrollable image grid
-	grid := gui.NewGallery()
-
-	// NOTE: NewBottomNav receives a callback to refresh the gallery.
-	// While this approach may not be the most elegant, introducing a complex
-	// event manager would be overkill for the scope of this project.
-	nav := gui.NewBottomNav(grid.RefreshGallery)
-
-	window.SetContent(
-		container.New(
-			layout.NewBorderLayout(title, nav, nil, nil),
-			title,
-			grid.View(),
-			nav,
-		),
-	)
-
-	// load images and thumbnails while initializing the GUI
-	go grid.RefreshGallery()
-
-	// save the window size on close
-	app.Lifecycle().SetOnStopped(func() {
-		app.Preferences().SetFloat("WindowHeight", float64(window.Canvas().Size().Height))
-		app.Preferences().SetFloat("WindowWidth", float64(window.Canvas().Size().Width))
-		config.PersistConfig()
-	})
-
-	// restore previous window size
-	window.Resize(
-		fyne.NewSize(
-			float32(app.Preferences().FloatWithFallback("WindowWidth", 800)),
-			float32(app.Preferences().FloatWithFallback("WindowHeight", 800)),
-		),
-	)
-
-	window.ShowAndRun()
+	gui.StartGui()
 }
