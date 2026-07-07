@@ -58,7 +58,7 @@ func (w *wallpaperGallery) RefreshGallery() {
 	for _, img := range utils.ListImages() {
 		imgCopy := img.Path
 		button := widget.NewButton("", func() {
-			err := wallpaper.SetWallpaper(imgCopy)
+			err := wallpaper.SetWallpaper(imgCopy, config.GetWallpFillMode())
 			if err != nil {
 				log.Println(err.Error())
 			}

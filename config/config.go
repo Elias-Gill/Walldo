@@ -10,7 +10,6 @@ import (
 
 	"fyne.io/fyne/v2"
 	"github.com/elias-gill/walldo-in-go/wallpaper"
-	"github.com/elias-gill/walldo-in-go/wallpaper/modes"
 )
 
 type GridSize int
@@ -22,9 +21,9 @@ const (
 )
 
 type Configuration struct {
-	WallpfillMode    modes.FillStyle `json:"FillStyle"`
-	GridSize         GridSize        `json:"GridSize"`
-	WallpaperFolders []string        `json:"Paths"`
+	WallpfillMode    wallpaper.FillStyle `json:"FillStyle"`
+	GridSize         GridSize            `json:"GridSize"`
+	WallpaperFolders []string            `json:"Paths"`
 
 	cachePath  string
 	configPath string
@@ -121,7 +120,7 @@ func GetWallpaperSearchPaths() []string {
 		var err error
 		folder, err = expandPath(folder)
 		// ignore malformed folders
-		if err != nil { 
+		if err != nil {
 			log.Print(err)
 			continue
 		}
@@ -136,12 +135,11 @@ func SetPaths(s []string) {
 	Config.WallpaperFolders = s
 }
 
-func SetWallpFillMode(m modes.FillStyle) {
+func SetWallpFillMode(m wallpaper.FillStyle) {
 	Config.WallpfillMode = m
-	wallpaper.SetMode(m)
 }
 
-func GetWallpFillMode() modes.FillStyle {
+func GetWallpFillMode() wallpaper.FillStyle {
 	return Config.WallpfillMode
 }
 

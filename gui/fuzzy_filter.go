@@ -31,7 +31,7 @@ func NewFuzzyDialog() {
 		})
 
 	resultsWidget.OnSelected = func(id int) {
-		wallpaper.SetWallpaper(strings.Clone(data[id]))
+		wallpaper.SetWallpaper(strings.Clone(data[id]), config.GetWallpFillMode())
 	}
 
 	// search input
@@ -51,7 +51,7 @@ func NewFuzzyDialog() {
 				// search for the matching results
 				matches := matching.FindAll(entry, imagesList)
 				// display the results
-				for i := 0; i < len(matches); i++ {
+				for i := range matches {
 					data = append(data, imagesList[matches[i].Idx])
 				}
 			}
