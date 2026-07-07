@@ -1,128 +1,173 @@
-# Walldo 🖼️
+# Walldo
 
-**Walldo** is a minimal, cross-platform wallpaper changer written in Go.
-It focuses on speed, simplicity, and low resource usage — no Electron, no daemons, no unnecessary dependencies.
-Just a small binary that changes your wallpaper instantly.
+**Walldo** is a small cross-platform wallpaper changer written in Go.
 
-Whether you're on Windows, Linux, or macOS, Walldo delivers a consistent experience with minimal system impact.
+It exists because I got tired of using Windows wallpaper managers that felt unnecessarily heavy
+for such a simple task.
+All I wanted was something that could recursively list my wallpapers, let me search through
+them, and change the desktop background.
+Basically, something with the spirit of **Nitrogen** on Linux, but available on every major
+desktop platform.
 
-### Why another wallpaper changer ?
+Walldo focuses on doing one thing well:
+browse your wallpaper collection and change your desktop background.
+No background services, no live wallpapers, no video playback, and no unnecessary extras.
 
-Most wallpaper changers I’ve tried are either heavy, slow, or tied to a specific OS or desktop environment. Many rely on frameworks like Electron or include unnecessary background services that constantly consume CPU and memory. I wanted a tool that behaved differently — something that would:
+## Why another wallpaper changer?
 
-- Start instantly.
-- Do its job and exit.
-- Work the same across all major platforms.
+Because I couldn't find one that actually matched what I needed.
 
-Walldo was built for users who value minimalism and responsiveness, inspired by the simplicity and focus of classic Linux utilities like Nitrogen, where performance and purpose come before everything else.
+Some wallpaper applications try to become full desktop customization suites.
+Others run permanently in the background, offering support for video wallpapers, online
+galleries, scheduling, playlists, transitions, and countless other features. 
+
+On top of that, many modern desktop applications rely heavily on web technologies, shipping an
+entire browser engine just to display a simple interface.
+
+That is perfectly fine if that is what you are looking for, but Walldo is not that.
+
+The goal was simple:
+browse a collection of wallpapers and set one as the desktop background as quickly as possible.
+This project was built with lower-end Windows laptops in mind, where most existing wallpaper
+managers feel much heavier than they need to be.
 
 ## Features
 
-* **Lightweight and fast**:
-  written in Go, designed to start and run instantly.
-* **Cross-platform**:
-  works on Windows, Linux, and macOS.
-* **Automatic image detection**:
-  scans folders recursively to find images.
-* **No background processes**:
-  runs only when needed, then exits cleanly.
+- Recursive wallpaper discovery.
+- Native support for Windows, macOS and most Linux desktop environments.
+- Small native binary, with no background services.
+- Fast fuzzy search filter.
+- Simple yet visualy pleasing UI.
 
-### Supported Formats
+## Supported Formats
 
-* JPG
-* PNG
-* JPEG
+- `.jpg` / `.jpeg`
+- `.png`
+
+## Supported Operating Systems
+
+- Windows
+- Linux
+- macOS*
+
+NOTE:
+In theory, Walldo should compile and run on macOS without any major issues.
+However, since I do not own any Apple hardware, I cannot guarantee that everything works as
+expected. 
+
+Cross-compiling for macOS is also considerably more painful than for Windows or Linux, even
+with the tooling provided by Fyne.
+Because of this, no pre-built binaries are available, and macOS users are currently required to
+build the application from source.
+
+Bug reports and pull requests from macOS users are always welcome to help improve support.
 
 ### Supported Desktop Environments (Linux)
 
-| Environment  | Supported  | Dependency                                  |
-| ------------ | ---------- | ------------------------------------------- |
-| GNOME        | ✅         | Built-in                                    |
-| KDE          | ✅         | Built-in                                    |
-| XFCE         | ✅         | Built-in                                    |
-| Cinnamon     | ✅         | Built-in                                    |
-| LXDE / LXQT  | ✅         | Built-in                                    |
-| MATE         | ✅         | Built-in                                    |
-| Deepin       | ✅         | Built-in                                    |
-| Non-DE (Feh) | ✅         | [Feh](https://wiki.archlinux.org/title/Feh) |
-| Wayland      | ✅         | [swaybg](https://github.com/swaywm/swaybg)  |
+Walldo changes wallpapers by talking directly to the tools or APIs provided by each **desktop
+environment** whenever possible.
+
+For standalone X11 **window managers** it falls back to `feh`, and for **Wayland** compositors
+it uses `swaybg`.
+
+If your preferred environment isn't supported yet, feel free to open an issue.
+
+| Environment | Backend |
+| --- | --- |
+| **GNOME** | Native |
+| **KDE Plasma** | Native |
+| **XFCE** | Native |
+| **Cinnamon** | Native |
+| **LXDE / LXQT** | Native |
+| **MATE** | Native |
+| **Deepin** | Native |
+| **Window Managers (X11)** | [feh](https://wiki.archlinux.org/title/Feh) |
+| **Wayland Compositors** | [swaybg](https://github.com/swaywm/swaybg) |
+
+## Screenshots
 
 ## Installation
 
-### Pre-compiled Binaries
+### Pre-built binaries
 
-Pre-built binaries are available for **Windows** and **Linux**.
-Check the [releases section](https://github.com/Elias-Gill/walldo/releases) for the latest version.
+Pre-built binaries are available for Windows and Linux from the releases page.
 
-There are currently no pre-compiled binaries for macOS due to the difficulty of cross-compiling and testing releases without direct access to Apple hardware.
-In theory, Walldo should build and run correctly on macOS using the manual installation.
+https://github.com/elias-gill/walldo-in-go/releases
 
-`Note:` Windows might warn you about the binary being unsigned.
+> **Windows note:** Since Walldo is an unsigned open source executable, Windows SmartScreen may display a warning the first time you launch it.
 
-### Manual Installation
+macOS binaries are currently not provided.
+Please build from source.
 
-To build Walldo manually, you need [Go](https://go.dev/doc/install) installed.
+### Building from source
+
+Make sure you have Go installed.
+
+https://go.dev/doc/install
 
 #### Windows
 
-1. Open a terminal (`cmd`).
-2. Run:
+```sh
+go install -ldflags -H=windowsgui github.com/elias-gill/walldo-in-go@latest
+```
 
-   ```sh
-   go install -ldflags -H=windowsgui github.com/elias-gill/walldo-in-go@latest
-   ```
-3. Walldo will be available in your search bar (`Win` + `S`) as "walldo-in-go".
-4. (Optional) Create a shortcut and set a custom icon.
+#### Linux & macOS
 
-#### Linux and macOS
+```sh
+go install github.com/elias-gill/walldo-in-go@latest
+```
 
-1. Open a terminal.
-2. Run:
+Run it with:
 
-   ```sh
-   go install github.com/elias-gill/walldo-in-go@latest
-   ```
-3. You can now run Walldo by typing `walldo-in-go` in your terminal.
-4. (Optional) Create a desktop shortcut for easier access.
+```sh
+walldo-in-go
+```
 
-### Uninstallation
+## Uninstallation
 
-To uninstall Walldo, run:
+Walldo includes a simple uninstall flag.
 
 ```sh
 walldo-in-go -uninstall
 ```
 
-This will remove the executable and clean up the installation.
+This removes the installed executable, cache and config files without requiring any additional
+cleanup.
 
-## Screenshots
+## Roadmap
 
-![image](https://github.com/user-attachments/assets/0563faa1-8430-42e2-92e7-22c807e8e236) <img width="1365" height="739" alt="image" src="https://github.com/user-attachments/assets/952bdefe-a55b-4dd8-b29a-7f6e2279b2d7" />
-![image](https://github.com/user-attachments/assets/9d5fde99-9cda-47d4-ba09-9417f01df531)
+Walldo is very close to being feature complete.
 
-## Goals
+Its goal has always been simple:
+recursively list images and change the desktop wallpaper.
 
-* Practical replacement for tools like Nitrogen (small, native and fast).
-* Speed and efficiency over design.
-* Focus and simplicity over features — _"do one thing and do it well"_.
+Future development will mostly focus on:
 
-Walldo will never support live wallpapers or dynamic backgrounds; it is intentionally limited to simple, static wallpaper changes.
-
-## Future Plans
-
-Walldo is mostly feature-complete. Future updates will focus on:
-
-- Minor usability improvements and basic UI adjustments.
-- Code cleanup, performance enhancements, stability checks, and security updates.
-- Support for additional desktop environments.
 - Bug fixes.
-- Command line tool integrations.
+- Supporting additional desktop environments when possible.
+- General code cleanup and maintenance.
+- Small quality-of-life improvements.
 
-## Feedback
+The following features are intentionally out of scope:
 
-If you find a bug or have suggestions, open an issue on [GitHub](https://github.com/Elias-Gill/walldo/issues).
+- Video wallpapers.
+- Live wallpapers.
+- Automatic wallpaper rotation.
+- Scheduled wallpaper changes.
+- Background daemons.
 
-## Mentions 🙏
+Those features require a completely different architecture built around services running
+continuously in the background, which goes against the purpose of this project.
 
-* **ktr0731** — for the fuzzy finder engine.
-* **reujab** — for the original wallpaper-changing library Walldo was based on.
+## Feedback & Contributions
+
+Bug reports, suggestions, and pull requests are always welcome.
+
+https://github.com/elias-gill/walldo-in-go/issues
+
+## Acknowledgments
+
+- **Fyne**, for providing a clean, simple, and enjoyable cross-platform GUI toolkit for Go.
+  Walldo would have been a much larger project without it.
+- **ktr0731**, for the fuzzy matching algorithms.
+- **reujab**, for the wallpaper bindings that inspired Walldo's initial abstraction layer.
