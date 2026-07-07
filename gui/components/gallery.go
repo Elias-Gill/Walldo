@@ -11,6 +11,7 @@ import (
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 	"github.com/elias-gill/walldo-in-go/config"
+	"github.com/elias-gill/walldo-in-go/fuzzyEngine/matching"
 	"github.com/elias-gill/walldo-in-go/utils"
 	"github.com/elias-gill/walldo-in-go/wallpaper"
 )
@@ -25,6 +26,7 @@ type WallpaperGallery struct {
 	rootContainer *fyne.Container
 	gridLayout    *fyne.Container
 	cards         []wallpaperCard
+	allImages     []utils.Image // Memory cache to avoid heavy disk I/O on every keystroke
 }
 
 func NewGallery() *WallpaperGallery {
@@ -44,12 +46,39 @@ func (w *WallpaperGallery) View() *fyne.Container {
 	return w.rootContainer
 }
 
+// RefreshGallery performs a full disk scan and updates the cache
 func (w *WallpaperGallery) RefreshGallery() {
-	w.gridLayout.RemoveAll()
-	w.cards = []wallpaperCard{}
+	w.allImages = utils.ListImages()
+	w.RenderGrid(w.allImages)
+}
 
-	// Draw UI placeholders immediately to preserve UI responsiveness
-	for _, img := range utils.ListImages() {
+// FilterGallery processes fuzzy search matching against the in-memory cache
+func (w *WallpaperGallery) FilterGallery(query string) {
+	if query == "" {
+		w.RenderGrid(w.allImages)
+		return
+	}
+
+	var paths []string
+	for _, img := range w.allImages {
+		paths = append(paths, img.Path)
+	}
+
+	var filtered []utils.Image
+	matches := matching.FindAll(query, paths)
+	for _, match := range matches {
+		filtered = append(filtered, w.allImages[match.Idx])
+	}
+
+	w.RenderGrid(filtered)
+}
+
+// RenderGrid builds the UI elements for a concrete slice of images
+func (w *WallpaperGallery) RenderGrid(images []utils.Image) {
+	w.gridLayout.RemoveAll()
+	w.cards = make([]wallpaperCard, 0, len(images))
+
+	for _, img := range images {
 		imgCopy := img.Path
 		button := widget.NewButton("", func() {
 			err := wallpaper.SetWallpaper(imgCopy, config.Config.WallpfillMode)
@@ -71,21 +100,19 @@ func (w *WallpaperGallery) RefreshGallery() {
 	w.gridLayout.Layout = layout.NewGridWrapLayout(fyne.NewSize(gridScale()))
 	w.gridLayout.Refresh()
 
-	// Process images using a decoupled worker pool
-	go w.fillContainers()
+	// Pass an isolated snapshot slice to prevent concurrency race states on rapid typing
+	go w.fillContainers(w.cards)
 }
 
-func (w *WallpaperGallery) fillContainers() {
+func (w *WallpaperGallery) fillContainers(cards []wallpaperCard) {
 	workers := runtime.NumCPU() / 2
 	if workers <= 0 {
 		workers = 1
 	}
 
-	// Channel to pipe scaling jobs to the worker pool
-	jobs := make(chan wallpaperCard, len(w.cards))
+	jobs := make(chan wallpaperCard, len(cards))
 	var wg sync.WaitGroup
 
-	// Start a fixed number of persistent worker routines
 	for i := 0; i < workers; i++ {
 		wg.Add(1)
 		go func() {
@@ -99,7 +126,6 @@ func (w *WallpaperGallery) fillContainers() {
 				img.ScaleMode = canvas.ImageScaleFastest
 				img.FillMode = canvas.ImageFillContain
 
-				// Thread-safe UI injection via Fyne runtime event loop
 				fyne.DoAndWait(func() {
 					card.container.Add(card.applyButton)
 					card.container.Add(img)
@@ -109,13 +135,10 @@ func (w *WallpaperGallery) fillContainers() {
 		}()
 	}
 
-	// Feed all cards into the concurrent processing queue
-	for _, card := range w.cards {
+	for _, card := range cards {
 		jobs <- card
 	}
 	close(jobs)
-
-	// Keep workers alive until the queue is completely drained
 	wg.Wait()
 }
 

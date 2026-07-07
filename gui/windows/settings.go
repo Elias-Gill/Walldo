@@ -100,7 +100,7 @@ func (s *SettingsWindow) Show() {
 	)
 
 	// Revert back to a Modal Dialog attached to the parent window context
-	d := dialog.NewCustomConfirm("🔧 Application Settings", "Save Changes", "Cancel", content, func(confirm bool) {
+	d := dialog.NewCustomConfirm("Application Settings", "Save Changes", "Cancel", content, func(confirm bool) {
 		if confirm {
 			// Persist states back to global configuration
 			config.Config.GridSize = stringToSize[selectedGridSize]
